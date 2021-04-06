@@ -1,0 +1,178 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-indent
+#
+
+
+    ESCAPE has lots to do spread across several work packages.
+
+    IVOA can help by defining the service interfaces enabling components to connect together.
+
+    IVOA service name :
+
+        ExecutionPlanningProtocol (EPP)
+        ExecutionPlanningService  (EPS)
+
+    WP3 defines the metadata describing the software
+    WP5 is building a portal to deploy software on platforms provided by ESFRIs.
+    .. but it is up to the individual ESFRIs to define what their platform can do.
+
+    IVOA can provide a simple web service interface for the WP5 portal to use to
+    query ESFRI platforms about their capabilities.
+
+    Key thing is to recognise who needs to know what:
+
+        * The ESFRI platform knows what the platform is capable of doing.
+        * The WP3 repository stores metadata about software requirements.
+
+    Putting the selection code in the WP5 portal:
+
+        * One big piece of code that needs to understand all the different task types.
+        * One big piece of code that needs to understand all the different metadata formats.
+        * Splitting it into plugins still puts all of the code in one service.
+        * Other clients (TopCat, Aladin etc) would need to replicate the same code.
+
+    Put the selection code in the ESFRI platforms:
+
+        * The platform knows what it can do.
+        * The question is smaller and specific - can *you* do <this>
+        * Simple implementation can reject 90% of the requests with [No - not supported] response.
+        * AstroPy client that can send the same question to any ESFRI platform
+        * WP5 portal can use the AstroPy client to send the same question to all the platforms
+
+    Initial web service REST method :
+
+        CanYouDoThis <type> <spec>
+
+            <type> is anyURI that indicates the task type
+            <spec> is anyURI that points to the task specification
+
+            Response codes:
+
+                [yes]
+                [no]
+                [maybe]
+
+            Response detail:
+
+                Detail of the [how] section is specific to each task type.
+                Common components :
+
+                    Service endpoint type.
+                    Service endpoint URL.
+
+
+        Including <type> in the params makes it easy for services to reject 90% of the calls with [No - not supported].
+
+        The content pointed to by <spec> depends on the <type>.
+        The schema for each <type> is type specific.
+        No need for an overall global metadata task specification schema.
+        Defining a global schema for task metadata is a difficult problem.
+
+            * A wide range of different tasks
+            * New task types becomming avaiable make a global schema
+
+        Low barrier to entry :
+
+            <type> URL points to Wiki page for myTaskType.
+            <spec> only needs to be understood by myExecutionService.
+            No one else needs to be involved.
+
+            If myTaskType is useful, others will implement it
+            If myExecutionService is useful, others will use it.
+
+            Eventually they may be adopted as IVOA standards.
+
+            Register an IVOA note describing the schema for myTaskType.
+            The registry URI replaces the <type> URI for standard implementations.
+
+            Register an IVOA note describing what myExecutionService does.
+            Registry can be used to find service implementations.
+
+
+    What WP4/IVOA can provide:
+
+        Draft specification for the protocol and service:
+
+        * ExecutionPlanProtocol (EPP)
+        * ExecutionPlanService  (EPS)
+
+        Initial implemetations of service and client in Java and Python.
+
+            * Service response is defined by a static config file.
+            * Mapping of URIs to response codes
+                * accept <uri> with <response>
+                * accept <uri> with <response>
+                * reject <uri> with <response>
+                * reject <*> with <response>
+
+    What ESCAPE WP3 can provide:
+
+        Initial implemetations of metadata schema for common platforms
+
+            JupyterHub platform:
+                * accepts basic JupterNotebook tasks
+                * schema for requirements list TBD
+
+            Zeppelin platform:
+                * accepts basic ZeppelinNotebook tasks
+                * schema for requirements list TBD
+
+            Docker platform:
+                * accepts basic Docker containers
+                * schema for requirements list TBD
+
+    What ESCAPE WP5 can provide:
+
+        Search and select software from the OSS repository
+
+        Iterate the list of known EPS services
+            CanYouDoThis ?
+
+        Collect and display the [yes] responses
+
+        Use the [how] section of the response to execute the task.
+
+
+    Getting buy-in
+
+        Coordinate UEDIN contribution
+        Coordinate WP3/4/5 contributions
+
+        Contacts:
+
+            * WP3 - Jutta Schnabel <jutta.schnabel@fau.de>
+            * WP4 - Mark Allen <mark.allen@astro.unistra.fr>
+            * WP5 - John Swinbank <swinbank@astron.nl>
+            * GWS - Giuliano Taffoni <giuliano.taffoni@inaf.it>
+
+
+
+
+
+
+
+
+
+
+
+
+
