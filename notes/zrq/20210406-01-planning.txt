@@ -124,9 +124,9 @@
                 * reject <uri> with <response>
                 * reject <*> with <response>
 
-    What ESCAPE WP3 can provide:
+    What ESCAPE WP3 would need to provide:
 
-        Initial implemetations of metadata schema for common platforms
+        Metadata schema for common platforms
 
             JupyterHub platform:
                 * accepts basic JupterNotebook tasks
@@ -140,7 +140,11 @@
                 * accepts basic Docker containers
                 * schema for requirements list TBD
 
-    What ESCAPE WP5 can provide:
+    What the ESFRI platforms would need to provide:
+
+        Metadata for the [how] section of the responses.
+
+    What ESCAPE WP5 would need to provide:
 
         Search and select software from the OSS repository
 
@@ -154,8 +158,8 @@
 
     Getting buy-in
 
-        Coordinate UEDIN contribution
-        Coordinate WP3/4/5 contributions
+        UEDIN contribution
+        WP3/4/5 contributions
 
         Contacts:
 
@@ -164,11 +168,20 @@
             * WP5 - John Swinbank <swinbank@astron.nl>
             * GWS - Giuliano Taffoni <giuliano.taffoni@inaf.it>
 
+    Next steps
 
+        Create repo for the protocol standard.
 
+            ExecutionPlanningProtocol (EPP)
+            ExecutionPlanningService  (EPS)
 
+        Create repo for the client/server implemntations
 
+            EPPServiceJava
+            EPPServicePython
 
+            EPPClientJava
+            EPPClientPython
 
 
 
