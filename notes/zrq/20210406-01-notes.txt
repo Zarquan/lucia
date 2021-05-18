@@ -155,19 +155,6 @@
 
         Use the [how] section of the response to execute the task.
 
-
-    Getting buy-in
-
-        UEDIN contribution
-        WP3/4/5 contributions
-
-        Contacts:
-
-            * WP3 - Jutta Schnabel <jutta.schnabel@fau.de>
-            * WP4 - Mark Allen <mark.allen@astro.unistra.fr>
-            * WP5 - John Swinbank <swinbank@astron.nl>
-            * GWS - Giuliano Taffoni <giuliano.taffoni@inaf.it>
-
     Next steps
 
         Create repo for the protocol standard.
@@ -182,10 +169,4 @@
 
             EPPClientJava
             EPPClientPython
-
-
-
-
-
-
 

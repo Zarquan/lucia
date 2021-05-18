@@ -1,0 +1,146 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    ---------------- ----------------
+
+    WP3-WP5 common issues (GitLab)
+    https://gitlab.in2p3.fr/escape2020/wp3-wp5-common-issues/-/issues
+
+        Meetings page - (last updated 20th Nov 2020)
+        https://gitlab.in2p3.fr/escape2020/wp3-wp5-common-issues/-/tree/master/meetings
+
+    WP5+WP3 common topics document
+    https://cloud.escape2020.de/index.php/apps/onlyoffice/3328?filePath=%2FWP3%2BWP5%20common%20topics.docx
+
+    Common WP3+WP5 call - 5th March 2021
+    https://indico.in2p3.fr/event/23696/
+
+    ---------------- ----------------
+
+    WP5 Monthly meeting 19 April 2021
+    https://indico.in2p3.fr/event/22377/#3-4-metadata-task-force
+
+        WP3+WP5 metadata coordination
+        19th April 2021
+        J. Schnabel, WP3/FAU
+        https://indico.in2p3.fr/event/22377/contributions/86808/attachments/63716/87823/WP3%2BWP5%20metadata%20overview.pdf
+
+            * the zenodo interface can serve for the discovery of the workflow from ESAP (analogous to pulling a repository through Zenodo DOI in mybinder)
+            * the "environment.yml" defines the environment for the notebooks in the repository
+            * the workflow is defined in the repository - for integration, the question of granularity (full flow in one step or modularization?) has to be addressed.
+
+    ---------------- ----------------
+
+    Common WP3+WP5 call - 23 April 2021 (missed)
+    https://indico.in2p3.fr/event/24035/
+
+        John Swinbank :
+
+            Interactive Data Analysis WG “reboot”.
+
+                Focus on demonstrating practical integration of ESAP with a Jupyter system.
+                Nice link to ongoing “metadata task force” HCG-16 project: this should provide the enabling technology to make it possible to run notebooks through ESAP.
+
+            IDA WG driving focus on ESAP architecture.
+
+                Write-up on this will be forthcoming.
+
+            Worthwhile discussion meetings with WP2 + WP4.
+
+                WP2 + WP5 collaboration focused on “DAC21” challenge. Opportunity for WP3 involvement here (“Collaboration with WP3 for software repos, image registry, etc” from that document).
+                WP4 tech forum: Dave Morris raised prospect of innovative APIs for scheduling work. Not yet fully understood if/how this fits in to the big picture of WP3/5 interaction.
+
+
+        Elena Cuoco, Jutta Schnabel, Kay Graf
+
+            Outcome of WP3+WP5 metadata meeting (@WP5 monthly meeting): HCG-16 use case: mybinder & Zenodo metadata
+            Software onboarding continuing
+            IWAPP follow-up: Setting up workflow for MM and ML integration
+            WP3 contribution to “DAC21” challenge.
+            Inclusion of software catalogues queries on OSSR or ESAP?
+
+    ---------------- ----------------
+
+    Target use case:
+
+        Pipeline for HCG-16 Project
+        https://github.com/AMIGA-IAA/hcg-16
+
+            Not registered in Zenodo yet ?
+
+        Notebooks for plots are in a subdirectory
+        .. plot_scripts/*.ipynb
+        .. plot_scripts/Fig1-DECaLS_grz_image.ipynb
+
+
+    Example from Zenodo:
+
+        cosimoNigro/agnpy
+            https://github.com/cosimoNigro/agnpy/tree/v0.0.10
+            https://zenodo.org/record/4687123
+
+        Notebooks for tutorials are in a subdirectory
+         .. docs/tutorials/*.ipynb
+         .. docs/tutorials/absorption_targets.ipynb
+
+
+
+    ---------------- ----------------
+
+    WP5 interactive analysis telecon
+    26th April
+
+        3 different methods for launching notebooks
+
+        JupyterHub REST API
+        pop-up JupyterHub + REST API
+        binder
+
+        MVP IS focussing on binder
+
+        Looks like they will end up adopting binder because it meets the 80/20 rule.
+        Metadata will be 'whatever binder needs'
+
+        Hook to integrate with CanIDoThis API ?
+
+            type=https://purl.escape.eu/task-type/mybinder-1.0
+            link=http://..../
+
+        Given that, then the ESCAPE IDA project defines the content of the metadata
+
+
+    ---------------- ----------------
+
+    WP3+5 metadata meeting
+    https://www.when2meet.com/?11480779-STgzi
+
+        Date not set yet.
+
+
+

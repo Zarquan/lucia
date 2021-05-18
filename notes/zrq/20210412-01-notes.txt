@@ -1,0 +1,343 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    ESCAPE wiki
+    https://wiki.escape2020.de/index.php/Main_Page
+
+    ESCAPE wiki - recent changes
+    https://wiki.escape2020.de/index.php?title=Special:RecentChanges&days=300&from=&limit=500
+
+    ESCAPE GitLab
+    https://gitlab.in2p3.fr/escape2020
+
+    Common WP3+WP5 call - 5th March
+    https://indico.in2p3.fr/event/23696/
+
+    Pipeline for HCG-16 Project
+    https://github.com/AMIGA-IAA/hcg-16
+
+        Docker container(s)
+        Jupyter notebooks
+
+    Zenodo search (SKA software)
+    https://zenodo.org/search?page=1&size=20&q=&keywords=SKA&type=software
+
+    SKA NIP Data Models v1.1
+    https://zenodo.org/record/836715
+    https://github.com/scienceguyrob/SKANIP_Data_Models/blob/v1.1/CSP%20to%20SDP%20NIP%20Data%20Rates%20%26%20Data%20Models%20v1.1.pdf
+
+    MyBinder.org
+    https://mybinder.org/
+
+    GESIS Notebooks
+    https://notebooks.gesis.org/
+
+        Have a Binder-Ready repository?
+        With GESIS Notebooks, turn this repository into a persistent
+        Jupyter environment, allowing you to continue your analysis
+        from anywhere at any time.
+
+
+    WP2 - DIOS
+    https://wiki.escape2020.de/index.php/WP2_-_DIOS
+
+        DCache Storage Endpoints
+        https://wiki.escape2020.de/index.php/DCache_Storage_Endpoints
+
+        SURFsara dCacheView TEST
+        https://dolphin12.grid.surfsara.nl:20443/
+
+        rclone
+        https://rclone.org/docs/
+
+        rclone and OIDC
+        https://rclone.org/webdav/
+
+            dCache also supports authenticating with OpenID-Connect access tokens.
+            OpenID-Connect is a protocol (based on OAuth 2.0) that allows services
+            to identify users who have authenticated with some central service.
+
+            Support for OpenID-Connect in rclone is currently achieved using another
+            software package called oidc-agent. This is a command-line tool that
+            facilitates obtaining an access token. Once installed and configured,
+            an access token is obtained by running the oidc-token command.
+
+        https://github.com/indigo-dc/oidc-agent
+
+            oidc-agent is a set of tools to manage OpenID Connect tokens and make
+            them easily usable from the command line.
+
+    WP3 - OSSR
+    https://wiki.escape2020.de/index.php/WP3_-_OSSR
+    https://escape2020.pages.in2p3.fr/wp3/ossr-pages/
+
+
+        ESCAPE metadata template
+        https://gitlab.in2p3.fr/escape2020/wp3/escape_metadata_template
+
+            Try using this to register an IVOA service.
+
+            The keyword list has the term 'VO' - should this be 'IVOA' to better represent the organisation ?
+            https://gitlab.in2p3.fr/escape2020/wp3/escape_metadata_template#keywords-list
+
+
+
+
+
+    WP4 - CEVO
+    https://wiki.escape2020.de/index.php/WP4_-_CEVO
+
+    WP4 - ESCAPE contributions to IVOA
+    https://wiki.escape2020.de/index.php/ESCAPE_contributions_to_IVOA
+
+    WP5 - ESAP
+    https://wiki.escape2020.de/index.php/WP5_-_ESAP
+
+    WP5 use cases
+    https://wiki.escape2020.de/index.php/WP5_and_Related_Use_Cases
+
+        Generic Monte Carlo Production
+        https://wiki.escape2020.de/index.php/Generic_Monte_Carlo_Production
+
+        CTA: Instrument Response Function Generation
+        https://wiki.escape2020.de/index.php/CTA_IRF_Generation
+
+        CTA: Systematic Studies
+        https://wiki.escape2020.de/index.php/CTA_Systematic_Studies
+
+        KM3NeT: CORSIKA container sharing and creation
+        https://wiki.escape2020.de/index.php/KM3NeT_use_cases_for_the_ESAP_platform
+
+            CORSIKA – an Air Shower Simulation Program
+            https://www.iap.kit.edu/corsika/
+
+
+    DIRAC
+    https://dirac.readthedocs.io/en/latest/
+    https://dirac.readthedocs.io/en/latest/DeveloperGuide/Overview/index.html
+
+
+    ESAP API gateway
+
+        ESAP API gateway overview
+        https://git.astron.nl/astron-sdc/esap-api-gateway/-/wikis/ESAP-API-gateway-Overview
+
+
+        ESAP databases
+        https://git.astron.nl/astron-sdc/esap-api-gateway/-/wikis/ESAP-databases
+
+            The ESAP API gateway has a (configuration) database per app (query, staging, rucio, ida),
+            where at this moment the database that is associated with 'query' app (esap_config.sqlite3)
+            also contains tables for the whole project (like user information).
+
+            These databases are more like 'configuration files' than proper databases, because they
+            mainly hold (static) configuration rather than dynamic (meta)data.
+
+
+        Query VO registry
+        https://git.astron.nl/astron-sdc/esap-api-gateway/-/blob/master/esap/query/api/services/vo_reg.py
+
+            Get a list of services from the registry.
+            Uses Astropy to query the VO registry
+
+            ESAP query para 'fov' is equivalent to VO search radius
+            If the ESAP query contains a value for 'fov', then adds ADQL for a CONTAINS(POINT())) cone search.
+
+            This component copes with (some) different VO service types.
+
+                "ivo://ivoa.net/std/tap" : "TAP",
+                "ivo://ivoa.net/std/sia" : "SIA",
+                "ivo://ivoa.net/std/obscore" : "OBSCORE",
+
+            Limit of 250 added to the ADQL.
+            Replaces '+' with ' ' in the ADQL.
+
+            get_tables_fields()
+
+                recusivley gets all the tables and columns for a service
+                potentially very large JSON document in memory
+
+        Query VO service
+        https://git.astron.nl/astron-sdc/esap-api-gateway/-/blob/master/esap/query/api/services/vo.py
+
+            Uses Astropy to query a TAP service
+            Duplicate code from in 'vo.py' and 'vo_reg.py'
+
+            ESAP query para 'fov' is equivalent to VO search radius
+            If the ESAP query contains a value for 'fov', then adds ADQL for a CONTAINS(POINT())) cone search.
+
+            Limit of 1000 added to the ADQL.
+
+            Uses Astropy to query a TAP service using sync request.
+            Field rendering for display assumes ObsCore fields.
+
+
+        SAMP listener
+        https://git.astron.nl/astron-sdc/esap-api-gateway/-/blob/master/esap/query/api/services/samp.py
+
+            The SAMP client is instantiated in JavaScript.
+            Interesting to see where the uploaded file goes.
+
+
+    ESAP GUI
+
+        Interactive launch
+        https://sdc-dev.astron.nl/esap-gui/interactive
+
+        Run ESCAPE ESFRI Jupyter Notebooks
+        Launches the notebook project GitHub URL into mybinder
+        (*) not using a custom kernel ?
+
+            CSIC-IAA- HCG-16 workflow
+            https://mybinder.org/v2/gh/AMIGA-IAA/hcg-16/master
+            ....
+            https://github.com/AMIGA-IAA/hcg-16/tree
+            ....
+            https://hub.gke2.mybinder.org/user/amiga-iaa-hcg-16-niujjt9b/tree
+
+            CDS MOCPy
+            https://mybinder.org/v2/gh/cds-astro/mocpy/master
+            ....
+            https://github.com/cds-astro/mocpy/tree
+            ....
+            https://notebooks.gesis.org/binder/jupyter/user/cds-astro-mocpy-ortmqa07/tree
+
+            JIVE Jupyter CASA
+            https://mybinder.org/v2/gh/aardk/jupyter-casa/master
+            ....
+            https://github.com/aardk/jupyter-casa/tree
+            ....
+            https://hub.gke2.mybinder.org/user/aardk-jupyter-casa-87kbvaoq/tree
+
+            ASTRON VO Apertif
+            https://mybinder.org/v2/gh/zhengmeyer/first-binder.git/master
+            ....
+            https://github.com/zhengmeyer/first-binder/tree
+            ....
+            https://hub.gke2.mybinder.org/user/zhengmeyer-first-binder-2q4975xd/tree
+
+
+        Select ESCAPE JupyterHub Services
+
+            SKAO JupyterHub
+                https://srcdev.skatelescope.org/escape
+                https://srcdev.skatelescope.org/escape/user/dmorris/lab
+
+            ASTRON JupyterHub
+                https://sdc.astron.nl/hub/
+                404
+
+            IFAE-PIC JupyterHub
+                ....
+                PIC Login
+
+            CERN SWAN Service
+                ....
+                CERN Login
+
+        Select HPC/HTC Services
+
+            DIRAC EGI (LOFAR KM3Net)
+            https://dirac.egi.eu/
+            https://dirac.egi.eu/DIRAC/
+                Welcome to the EGI Workload Manager ...
+
+                https://marketplace.egi.eu/
+
+            CTA DIRAC
+            https://ccdcta-web.in2p3.fr/DIRAC/
+
+            Who to talk to about getting access to cloud resources ?
+
+                Openstack VM with a floating IP address ?
+
+            Run CTA workflow within dirac
+            https://gitlab.in2p3.fr/escape2020/wp2/escape_cta/-/tree/master/dirac
+
+                The goal of this project is to run any singularity containers using
+                dirac as a workload manager
+
+
+            ESCAPE-CORSIKA-DIRAC
+            https://gitlab.in2p3.fr/escape-corsika/escape-corsika-dirac/-/tree/master
+                Development of DIRAC integration of CORSIKA containers including command line and Web GUI.
+
+
+            ESCAPE WP-2 Data Injection - Exercise 3 : realistic workflow
+            https://gitlab.in2p3.fr/CC-Escape/data_injection_notebooks
+            https://gitlab.in2p3.fr/CC-Escape/data_injection_notebooks/-/blob/master/draw_fits.ipynb
+
+                NB: We're using a custom IPython kernel, where Rucio clients are installed and configured at launch
+                .. environment contains our ESCAPE x509 proxy and necessary CA certificates
+
+
+
+            What about running a long running (VO) service in the cloud ?
+
+                Needs networking and open ports.
+                    Needs a publishable IP address.
+
+                Docker/Podman run ?
+                Docker/Podman compose ?
+                Kubernetes Helm chart .. ?
+
+
+    Registering IVOA software in ESCAPE.
+
+        Who is the IVOA, and who owns the software ?
+        Would WP4 register a selection of IVOA endorsed applications ?
+
+        Desktop applications
+            Native install - point to the install instructions ?
+            Docker/Podman/Singularity containers ?
+
+        Data access services
+            Docker/Podman containers for a few key services.
+            On-demand pop-up IVOA services.
+                Get the data, deploy a service to access it.
+                VOSpace view as <service> ..
+
+            Interesting if we could do this.
+
+            Who would provide the compute resources for it ?
+            WP4 itself doesn't have a compute platform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

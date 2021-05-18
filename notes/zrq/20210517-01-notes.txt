@@ -1,0 +1,93 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+
+    task-type anyURI
+
+    Can be just a URN, but better to have a URL.
+    If it is a URL, it should point to a resource that describes the type.
+
+        It MAY be a HTML resource.
+        It MAY be a JSON resource.
+        It MAY use HTTP accepts header to choose between them.
+        It MAY use a URL shortening service to create a persisten URI.
+
+    For brevity, this doc will use short form xxxx://types for type URLs.
+    The URLS do not need to be part of the same domain.
+    Anyone can define a type, all they need is a URL.
+    This lowers the barrier to entry.
+
+
+    Some types don't need anything extra.
+
+    xxxx://types/vanilla-jupyter-1.0
+    The resource type is defined by document xxx.
+    The resource is a single vanilla Jupyter notebook with no external requirements.
+    The resource IS the notebook.
+
+    xxxx://types/vanilla-jupyter-set-1.0
+    The resource type is defined by document xxx.
+    The resource is a set of vanilla Jupyter notebooks with no external requirements.
+    The resource is a set of notebooks in a directory.
+
+
+    xxxx://types/vanilla-binder-1.0
+    The resource type is defined by document xxx.
+    The resource is a binder project, with repository layout and environment files defined by document xxx.
+
+
+    xxxx://types/escape-binder-1.0
+    The resource type is defined by ESAP document xxx.
+    The resource is a binder project, with repository layout and environment files defined by the ESAP document.
+    The project expects access to the ESCAPE DataLake is provided by the host binder service.
+
+
+    xxxx://types/vanilla-oci-container-1.0
+    The resource type is defined by document xxx.
+    The resource is a single vanilla OCI container.
+    The the vanilla-oci.deployment param contains a URL that points to a YAML file that defines the additional runtime settings.
+    This includes details of the registry to get the container from, along with runtime options like external ports.
+
+
+    xxxx://types/vanilla-k8s-helm-1.0
+    The resource type is defined by document xxx.
+    The resource is a set of OCI containers that can be run in a K8s cluster.
+    The the vanilla-k8s-helm.chart param contains a URL that points to a Helm chart that defines the deployment.
+
+
+    xxxx://types/vanilla-ansible-deploy-1.0
+    The resource type is defined by document xxx.
+    The resource is a set of Ansible playbooks, structured according to document xxx.
+
+
+
+
+
+
+

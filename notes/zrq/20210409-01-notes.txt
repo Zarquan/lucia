@@ -1,0 +1,179 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    CanIDoThis ?
+
+        who: # user identity (normally supplied by OIDC token)
+            domain: ...
+            uuid: ..
+
+        task: # description of the task
+            name: "Human readable name"
+            type: <anyURI>
+            params:
+              - name:  "param name"     # depends on the type
+                value: "param value"    # depends on the type
+              - name:  "param name"
+                value: "param value"
+
+        data: # description of the data
+            - name: "Human readable name"
+              type: <anyURI>
+              params:
+                - name:  "param name"     # depends on the type
+                  value: "param value"    # depends on the type
+                - name:  "param name"
+                  value: "param value"
+
+
+
+    Example - binder run
+
+        who:
+            domain: ...
+            uid: ..
+
+        task:
+            name: "Run binder project"
+            type: "http://example.org/binder/run"
+            params:
+              - name:  "...."
+                value: "..."
+
+
+    Example - JP notebook run
+
+        who:
+            domain: ...
+            uid: ..
+
+        task:
+            name: "Run JP notebook"
+            type: "http://example.org/jupyter/run"
+            params:
+              - name:  "...."
+                value: "..."
+
+
+    Example - SKA JP notebook run
+
+        who:
+            domain: ...
+            uid: ..
+
+        task:
+            name: "Run SKA JP notebook"
+            type: "http://example.org/ska/jupyter/run"
+            params:
+              - name:  "...."
+                value: "..."
+
+
+
+
+
+
+    Example - docker run
+
+        who:
+            domain: ...
+            uid: ..
+
+        task:
+            name: "Run Docker image"
+            type: "http://example.org/docker/run"
+            params:
+              - name:  "org.example.docker.image"
+                value: "name:tag"
+              - name:  "org.example.docker.registry"
+                value: "http://docker-reg.example.org/"
+              - name:  "org.example.docker.command"
+                value: "entrypoint.py"
+
+        data:
+            - name: "test data"
+              type: "http://example.org/rucio/get"
+              params:
+                - name:  "org.example.rucio.server"
+                  value: "rucio.example.org:9090"
+                - name:  "org.example.rucio.domain"
+                  value: "example.org"
+                - name:  "org.example.rucio.filename"
+                  value: "my-test-data"
+                - name:  "org.example.rucio.qos"
+                  value: "POSIX"
+                - name:  "org.example.rucio.mode"
+                  value: "ro"
+                - name:  "org.example.docker.volume.mount"
+                  value: "/mnt/test-data"
+
+
+
+
+    Example - K8s run
+
+        who:
+            domain: ...
+            uid: ..
+
+        task:
+            name: "Install and run Helm chart"
+            type: "http://example.org/helm/install-run"
+            params:
+              - name:  "org.example.helm.chart"
+                value: "name:tag"
+              - name:  "org.example.helm.repo"
+                value: "http://www.example.org/heml"
+              - name:  "org.example.helm.vars"
+                value: "http://www.example.org/tests/test-vars.yml"
+
+        data: # description of the data
+            - name: "test data"
+              type: "http://example.org/rucio/get"
+              params:
+                - name:  "org.example.rucio.server"
+                  value: "rucio.example.org:9090"
+                - name:  "org.example.rucio.domain"
+                  value: "example.org"
+                - name:  "org.example.rucio.filename"
+                  value: "my-test-data"
+                - name:  "org.example.rucio.qos"
+                  value: "POSIX"
+                - name:  "org.example.rucio.mode"
+                  value: "ro"
+                - name:  "org.example.k8s.pv.name"
+                  value: "test-data"
+
+
+
+
+
+
+
+

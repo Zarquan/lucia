@@ -1,0 +1,261 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Combine multiple levels of things:
+
+        Interactive Data Analysis Component of ESAP
+
+            The initial idea was to have some way of allowing providers to register their service with ESAP,
+            and then we have a local DB were we store metadata on these resources.
+
+            Planning to provide a prebuilt environment on DockerHub for ESAP-compliant JupyterHub
+            instances to use.
+
+            This environment can contain the Rucio client for data staging as well as a number of common
+            data science kernels (perhaps built on the ‘Jupyter data science notebook’).
+            This can be launched by the ESAP back end, (via this method) and scripts/notebooks to download
+            the data uploaded (e.g. via this method) so that when the user is redirected to the running
+            kernel they can easily retrieve their data and get started with analysis.
+            For JupyterHub instances that don’t have this common environment, it may still be possible to
+            upload notebooks to e.g. download data using Rucio, though the user will have to be redirected
+            to the JupyterHub UI to choose a server and launch the environment, start a kernel etc.
+
+            This makes a distinction between :
+
+                * A vanilla JupyterHub service
+                * An ESAP-compliant JupyterHub service
+
+                * A vanilla Jupyter notebook environment
+                * An ESAP-compliant Jupyter notebook environment
+
+            Which implies :
+
+                * A vanilla notebook (requires default Jupyter environment)
+                * An ESAP notebook (requires ESAP-compliant environment)
+
+
+
+
+
+        Software metadata from WP3/5 collaboration.
+        https://indico.in2p3.fr/event/23696/
+
+            Using CodeMeta metadata to describe things
+            https://codemeta.github.io/
+            https://codemeta.github.io/codemeta-generator/
+
+            Template project for software contributors.
+            https://gitlab.in2p3.fr/escape2020/wp3/template_project_escape
+
+            ESCAPE metadata template
+            https://gitlab.in2p3.fr/escape2020/wp3/escape_metadata_template
+
+            Zenodo integration
+            GitLab integration
+            GitLab CI pipeline
+
+            WP3 Mid-term technology report
+            https://cloud.escape2020.de/index.php/apps/onlyoffice/3893?filePath=%2FDeliverables%2FD3.6_Mid-term_Technology_Report_v1.0_final.pdf
+
+            Metadata terms are high level descriptive.
+            All good stuff, but probably not enough to run the software without human interaction.
+            Free form text entries :
+
+                Run-time environment
+                Programming Language
+                Runtime Platform
+                Operating System
+                Other software requirements
+
+
+            Target use case:
+            https://github.com/AMIGA-IAA/hcg-16
+
+                Project uses Conda to setup Python environment based on environment.yml file.
+                https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file
+
+                Project provides an automatic build in mybinder
+                https://mybinder.org/v2/gh/AMIGA-IAA/hcg-16/master
+
+                    Builds the Jupyter environment and creates a Docker image
+                    Launches the Docker image on a (Google?) cloud compute platform.
+
+            Conda package manager
+            https://en.wikipedia.org/wiki/Conda_(package_manager)
+
+                "A popular package manager for Python and R"
+
+            Binder
+            Turn a Git repo into a collection of interactive notebooks
+            https://mybinder.org/
+
+
+
+        CADC science platform
+        https://github.com/opencadc/skaha/
+
+        Talked to Brian Major at CADC about the idea.
+
+            Dave Morris  7:06 PM
+            One of which is a CanIDoThis query. (edited)
+            Brian Major  7:07 PM
+            And it responds with either no or yes and this is how ?
+            Dave Morris  7:07 PM
+            Yep - If we have some metadata that describes a task, send a reference to that metadata to each service and simply ask, would this work on your platform ?
+            7:08
+            Using the same trick that we used for VOSpace properties, avoiding a set vocabulary for the task metadata and using an open vocabulary of anyURI for things like task type etc.
+            Brian Major  7:10 PM
+            Okay, so a set of standard annotations on the platform that could be extended..
+            Dave Morris  7:10 PM
+            Yep
+            7:11
+            If someone wants to run a Slurm job, they create metadata with task type = https://slurm.schedmd.com/
+            7:11
+            If your platform has no idea how to run a Slurm job, it replies no because it doesn't recognise the URI.
+            7:12
+            If someone wants to run a JupyterNoteBook, they create metadata with task type = https://jupyter.org/ (edited)
+            7:13
+            Only platforms that can run this type would answer yes. (edited)
+            Brian Major  7:14 PM
+            It sounds similar to the IVOA SSO approach--recognizing then handing off work to community standards/technologies.
+            It would be an interesting excercise to get a prototype working, little details…
+            Dave Morris  7:15 PM
+            I'm wondering is it the right time to propose this in the IVOA.
+            7:15
+            Enough members have experimented with science platforms to be able to start to look for common things we can agree on.
+            Brian Major  7:16 PM
+            Hard to say… an interoperable use case that gives a science project some value would help.
+            7:20
+            Value can come from the offering of certain data sets (don’t want to move the data) and compute resources.
+            Anyhow, I like the idea and I don’t think it would hurt to propose such a thing.
+            7:20
+            I think I could convince people here that it’s worth exploring.
+            Dave Morris  7:21 PM
+            Depends on how it goes at the tech forum next week I might present something at the May interop meeting.
+            Brian Major  7:22 PM
+            Okay, thanks for sharing Dave.  I’ll send you some information on our platform later today.
+            Dave Morris  7:22 PM
+            Cheers, thanks.
+
+
+
+    Need to know more about the plans for HPC integration. (WP)
+
+        DIRAC interware
+        http://diracgrid.org/
+        https://dirac.readthedocs.io/
+
+    https://wiki.escape2020.de/index.php/CTA-KM3NeT_Combined_Analysis_Use_Case
+
+        ....
+        The data can now be analysed either in interactive or batch sessions:
+            Interactive (best for binned data):
+                Search for Jupyter hub with appropriate modules/software
+                Runlist or links to runlist are also available
+                Search for and upload appropriate notebook
+            Batch (best for unbinned data):
+                Search for software/container appropriate for the data
+                Calculate resources needed to analyse the data
+                Find resources (eg via DIRAC)
+                Submit to runlist to compute resources (eg via DIRAC)
+                Monitor job, via GUI or other tool
+                When job is finished a report should be sent to the user.
+                Output data, metadata, logs etc ... transferred to chosen location
+
+    agnpy onboarding
+    https://cloud.escape2020.de/index.php/apps/onlyoffice/3719?filePath=%2FOnboarding%2FESCAPE_OSSR_agnpy_onboarding.docx
+
+        The source code is provided and already included in the ESCAPE OSSR.
+        The code can be installed via pip or using anaconda ..
+        Given the availability on conda, we do not provide any container.
+
+
+    Focus group 1 call - Software collection
+    11 Dec 2020
+    https://indico.in2p3.fr/event/22709/
+
+        OSSR Onboarding: SKAO
+        https://indico.in2p3.fr/event/22709/contributions/89152/attachments/61505/83894/Alex%20Clarke%20-%20SKAO%20OSSR%20-%2011_12_20.pdf
+
+
+            The software is provided in a container, so can be deployed on any platform that has Docker or Singularity.
+
+    SKA - Science Data Challenge 1 Solution Workflow
+    https://gitlab.com/ska-telescope/sdc/sdc1-solution/-/tree/master/
+
+        python pipeline code
+            Dockerfile
+            requirements.txt
+
+        Jupyter notebook
+            Dockerfile
+            requirements.txt
+
+
+
+
+
+    https://gitlab.in2p3.fr/escape2020
+    https://gitlab.in2p3.fr/escape2020/wp3/
+    https://gitlab.in2p3.fr/escape2020/wp3/zenodoci
+    https://gitlab.in2p3.fr/escape2020/wp3/codemeta2zenodo
+    https://gitlab.in2p3.fr/escape2020/wp3/template_project_escape
+    https://escape2020.pages.in2p3.fr/wp3/wossl/
+    https://escape2020.pages.in2p3.fr/wp3/onboarding/
+
+
+
+
+    OpenAPI - Swagger
+    https://swagger.io/
+    https://swagger.io/docs/specification/about/
+    https://www.ovh.com/blog/openapi-with-python-a-state-of-the-art-and-our-latest-contribution/
+
+
+    ESCAPE Experiments and partners
+    https://wiki.escape2020.de/index.php/Experiment_and_partners
+
+
+    ESCAPE storage endpoints
+    https://wiki.escape2020.de/index.php/DCache_Storage_Endpoints
+        SURFsara Endpoints
+        https://dolphin12.grid.surfsara.nl:20443/
+            Login using EASE identity
+
+
+    OIDC-Agent
+    https://github.com/indigo-dc/oidc-agent
+
+    rclone
+    https://rclone.org/
+        Rclone syncs your files to cloud storage
+
+
+
+
