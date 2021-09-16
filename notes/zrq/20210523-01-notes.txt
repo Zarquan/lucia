@@ -306,52 +306,48 @@ oidc-token google
 
         oidc-gen
 
---START--
-Enter short name for the account to configure: keltic
-[1] https://accounts.google.com/
-[2] https://iam-test.indigo-datacloud.eu/
-[3] https://iam.deep-hybrid-datacloud.eu/
-[4] https://iam.extreme-datacloud.eu/
-[5] https://iam-demo.cloud.cnaf.infn.it/
-[6] https://b2access.eudat.eu/oauth2/
-[7] https://b2access-integration.fz-juelich.de/oauth2
-[8] https://unity.eudat-aai.fz-juelich.de/oauth2/
-[9] https://login-dev.helmholtz.de/oauth2/
-[10] https://login.helmholtz.de/oauth2/
-[11] https://services.humanbrainproject.eu/oidc/
-[12] https://aai.egi.eu/oidc/
-[13] https://aai-demo.egi.eu/oidc/
-[14] https://aai-dev.egi.eu/oidc
-[15] https://login.elixir-czech.org/oidc/
-[16] https://oidc.scc.kit.edu/auth/realms/kit/
-[17] https://wlcg.cloud.cnaf.infn.it/
-Issuer [https://accounts.google.com/]: 1
-The following scopes are supported: openid email profile
-Scopes or 'max' (space separated) [openid profile]:
-Registering Client ...
-Dynamic client registration not supported by this issuer.
-Try using a public client ...
-Generating account configuration ...
-accepted
-To continue and approve the registered client visit the following URL in a Browser of your choice:
-https://accounts.google.com/o/oauth2/v2/auth....
-sh: 1: xdg-open: not found
-oidc-gen[7093]: Cannot open url
-Polling oidc-agent to get the generated account configuration .......................
-Polling is boring. Already tried 20 times. I stop now.
-Please press Enter to try it again.
---END--
+    >   Enter short name for the account to configure: keltic
+    >   [1] https://accounts.google.com/
+    >   [2] https://iam-test.indigo-datacloud.eu/
+    >   [3] https://iam.deep-hybrid-datacloud.eu/
+    >   [4] https://iam.extreme-datacloud.eu/
+    >   [5] https://iam-demo.cloud.cnaf.infn.it/
+    >   [6] https://b2access.eudat.eu/oauth2/
+    >   [7] https://b2access-integration.fz-juelich.de/oauth2
+    >   [8] https://unity.eudat-aai.fz-juelich.de/oauth2/
+    >   [9] https://login-dev.helmholtz.de/oauth2/
+    >   [10] https://login.helmholtz.de/oauth2/
+    >   [11] https://services.humanbrainproject.eu/oidc/
+    >   [12] https://aai.egi.eu/oidc/
+    >   [13] https://aai-demo.egi.eu/oidc/
+    >   [14] https://aai-dev.egi.eu/oidc
+    >   [15] https://login.elixir-czech.org/oidc/
+    >   [16] https://oidc.scc.kit.edu/auth/realms/kit/
+    >   [17] https://wlcg.cloud.cnaf.infn.it/
+    >   Issuer [https://accounts.google.com/]: 1
+    >   The following scopes are supported: openid email profile
+    >   Scopes or 'max' (space separated) [openid profile]:
+    >   Registering Client ...
+    >   Dynamic client registration not supported by this issuer.
+    >   Try using a public client ...
+    >   Generating account configuration ...
+    >   accepted
+    >   To continue and approve the registered client visit the following URL in a Browser of your choice:
+    >   https://accounts.google.com/o/oauth2/v2/auth....
+    >   sh: 1: xdg-open: not found
+    >   oidc-gen[7093]: Cannot open url
+    >   Polling oidc-agent to get the generated account configuration .......................
+    >   Polling is boring. Already tried 20 times. I stop now.
+    >   Please press Enter to try it again.
 
 
         oidc-gen --state='0:....'
 
---START--
-success
-The generated account config was successfully added to oidc-agent. You don't have to run oidc-add.
-Enter encryption password for account configuration 'keltic':
-Confirm encryption Password:
-....
---END--
+    >   success
+    >   The generated account config was successfully added to oidc-agent. You don't have to run oidc-add.
+    >   Enter encryption password for account configuration 'keltic':
+    >   Confirm encryption Password:
+    >   ....
 
 
         curl \
@@ -364,10 +360,8 @@ Confirm encryption Password:
         | jq '.'
 
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
 
         token=....
 
@@ -379,10 +373,8 @@ Confirm encryption Password:
             --data 'tasktype=http://purl.example.org/qwerty-task' \
             'https://methionine.metagrid.co.uk:8443/check'
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
 
 
 
