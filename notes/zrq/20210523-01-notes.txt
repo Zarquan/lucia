@@ -1,0 +1,394 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    #
+    # Notes on developing the initial Java implementation.
+    #
+
+    Relying heavily on the SpringBoot documentation and examples.
+
+    https://spring.io/guides/gs/spring-boot/
+    https://spring.io/guides/gs/actuator-service/
+    https://docs.spring.io/spring-boot/docs/2.4.4/reference/htmlsingle/#using-boot-starter
+
+    https://www.baeldung.com/spring-boot-https-self-signed-certificate
+
+    https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup
+
+    Initial service up and running :-)
+    Handles both GET and POST requests.
+
+        curl -s -S \
+            'http://localhost:8080/check?tasktype=http://purl.example.org/qwerty-task' \
+        | jq '.'
+
+            >   {
+            >     "reponsecode": "YES",
+            >     "servicetype": "http://purl.example.org/qwerty-service",
+            >     "serviceinfo": {
+            >       "qwerty_endpoint": "http://qwerty.example.org/service"
+            >     }
+            >   }
+
+
+
+        curl -s -S \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | jq '.'
+
+            >   {
+            >     "reponsecode": "YES",
+            >     "servicetype": "http://purl.example.org/qwerty-service",
+            >     "serviceinfo": {
+            >       "qwerty_endpoint": "http://qwerty.example.org/service"
+            >     }
+            >   }
+
+
+        #
+        # Produces both JSON and XML.
+        # https://stackoverflow.com/questions/27790998/spring-boot-return-json-and-xml-from-controllers
+        #
+
+
+        curl -s -S \
+            --header "Accept: application/json" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | jq '.'
+
+            >   {
+            >     "reponsecode": "YES",
+            >     "servicetype": "http://purl.example.org/qwerty-service",
+            >     "serviceinfo": {
+            >       "qwerty_endpoint": "http://qwerty.example.org/service"
+            >     }
+            >   }
+
+
+        curl -s -S \
+            --header "Accept: application/xml" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | xmlstarlet fo
+
+
+            >   <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+            >   <EPI-response>
+            >     <reponsecode>YES</reponsecode>
+            >     <details>
+            >       <entry>
+            >         <key>qwerty_endpoint</key>
+            >         <value>http://qwerty.example.org/service</value>
+            >       </entry>
+            >     </details>
+            >     <servicetype>http://purl.example.org/qwerty-service</servicetype>
+            >   </EPI-response>
+
+
+    # SSL keystore from Baeldung example
+    # https://www.baeldung.com/spring-boot-https-self-signed-certificate
+
+        keytool \
+            -genkeypair \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 3650 \
+            -storetype PKCS12 \
+            -alias    lucia-epi \
+            -keystore lucia-keystore.p12
+
+
+            keystore-password
+            first last
+            myunit
+            myorg
+            mycity
+            mystate
+            UM
+
+        mkdir src/main/resources/keystore
+
+        mv lucia-keystore.p12 \
+            src/main/resources/keystore
+
+
+
+        curl -s -S \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check'
+
+            >   Bad Request
+            >   This combination of host and port requires TLS.
+
+
+        curl -s -S \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://localhost:8080/check'
+
+            >   curl: (60) SSL certificate problem: self signed certificate
+            >   More details here: https://curl.haxx.se/docs/sslcerts.html
+            >
+            >   curl failed to verify the legitimacy of the server and therefore could not
+            >   establish a secure connection to it. To learn more about this situation and
+            >   how to fix it, please visit the web page mentioned above.
+
+
+        curl -s -S \
+            --insecure \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://localhost:8080/check' \
+        | jq '.'
+
+            >   {
+            >     "reponsecode": "YES",
+            >     "servicetype": "http://purl.example.org/qwerty-service",
+            >     "serviceinfo": {
+            >       "qwerty_endpoint": "http://qwerty.example.org/service"
+            >     }
+            >   }
+
+        #
+        # Yay, works, we have HTTPS with self-signed cert.
+        #
+
+        #
+        # Using the full hostname works in Firefox
+        firefox 'https://methionine.metagrid.co.uk:8080/check?tasktype=http://purl.example.org/qwerty-task' &
+        firefox 'https://methionine.metagrid.co.uk:8080/check?tasktype=http%3A%2F%2Fpurl.example.org%2Fqwerty-task' &
+
+        #
+        # Try adding OIDC next ..
+        # https://www.baeldung.com/spring-security-openid-connect
+        #
+
+
+        Google OAuth client
+
+        https://methionine.metagrid.co.uk:8080/check
+
+        ....-.....apps.googleusercontent.com
+        ....
+
+
+        firefox -new-window 'https://methionine.metagrid.co.uk:8080/check?tasktype=http://purl.example.org/qwerty-task' &
+
+        # Kind of woirks, but the redirects keep getting sent to port 8443 rather than port 8080.
+        # Seems this is a known issue caused by a fix for a bug in IE.
+        # https://stackoverflow.com/questions/60726583/spring-boot-oauth-endpoint-redirects-to-8443
+        # https://github.com/spring-projects/spring-security/issues/8140
+        # https://github.com/spring-projects/spring-boot/issues/6140#issuecomment-227768583
+
+        # There is a complicated stuff we can add to our code ...
+        # Or just default to port 8443 ..
+
+
+        firefox -new-window 'https://methionine.metagrid.co.uk:8443/check?tasktype=http://purl.example.org/qwerty-task' &
+
+        #
+        # Yay, works in Firefox (defaults to XML output though)
+        #
+
+        #
+        # Try using the oidc-agent
+        # https://indigo-dc.gitbook.io/oidc-agent/installation/install
+
+        mkdir /tmp/toad
+        mv google-oidc.json /tmp/toad
+
+        podman pod \
+            create \
+            --name albert \
+            --publish '5800:5800'
+
+        mkdir /tmp/frog
+
+        podman run \
+            --detach \
+            --pod albert \
+            --name firefox \
+            --volume /tmp/frog:/config:rw,z \
+            --env "SSH_AUTH_SOCK=/mnt/ssh_auth_sock" \
+            --volume "${SSH_AUTH_SOCK}:/mnt/ssh_auth_sock:rw,z" \
+            jlesage/firefox
+
+
+        podman run \
+            --rm \
+            --tty \
+            --pod albert \
+            --interactive \
+            --volume "/tmp/toad:/oidc-data:Z" \
+            debian \
+                bash
+
+apt-get update
+
+apt-get -y install \
+    gnupg \
+    software-properties-common
+
+add-apt-repository "deb http://repo.data.kit.edu/debian/buster ./"
+
+apt-key adv --keyserver hkp://pgp.surfnet.nl --recv-keys  ....
+
+apt-get update
+
+apt-get -y install oidc-agent
+
+eval `oidc-keychain`
+
+oidc-gen google
+
+To continue and approve the registered client visit the following URL in a Browser of your choice:
+https://accounts.google.com/o/oauth2/v2/auth....
+
+    firefox --new-window 'http://localhost:5800/' &
+
+
+oidc-gen --state='.......'
+
+success
+The generated account config was successfully added to oidc-agent. You don't have to run oidc-add.
+oidc-gen[6994]: No such file or directory
+
+Enter encryption password for account configuration 'google':
+Confirm encryption Password:
+
+
+oidc-token google
+#################
+
+
+
+
+        curl \
+            --verbose \
+            --insecure \
+            --location \
+            --header "Authorization: Bearer $(oidc-token google)" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://methionine.metagrid.co.uk:8443/check' \
+        | jq '.'
+
+
+    #
+    # Nope - fails.
+    # Refresh token is broken, so can't generate a new access token.
+    # .............
+
+
+        oidc-gen
+
+--START--
+Enter short name for the account to configure: keltic
+[1] https://accounts.google.com/
+[2] https://iam-test.indigo-datacloud.eu/
+[3] https://iam.deep-hybrid-datacloud.eu/
+[4] https://iam.extreme-datacloud.eu/
+[5] https://iam-demo.cloud.cnaf.infn.it/
+[6] https://b2access.eudat.eu/oauth2/
+[7] https://b2access-integration.fz-juelich.de/oauth2
+[8] https://unity.eudat-aai.fz-juelich.de/oauth2/
+[9] https://login-dev.helmholtz.de/oauth2/
+[10] https://login.helmholtz.de/oauth2/
+[11] https://services.humanbrainproject.eu/oidc/
+[12] https://aai.egi.eu/oidc/
+[13] https://aai-demo.egi.eu/oidc/
+[14] https://aai-dev.egi.eu/oidc
+[15] https://login.elixir-czech.org/oidc/
+[16] https://oidc.scc.kit.edu/auth/realms/kit/
+[17] https://wlcg.cloud.cnaf.infn.it/
+Issuer [https://accounts.google.com/]: 1
+The following scopes are supported: openid email profile
+Scopes or 'max' (space separated) [openid profile]:
+Registering Client ...
+Dynamic client registration not supported by this issuer.
+Try using a public client ...
+Generating account configuration ...
+accepted
+To continue and approve the registered client visit the following URL in a Browser of your choice:
+https://accounts.google.com/o/oauth2/v2/auth....
+sh: 1: xdg-open: not found
+oidc-gen[7093]: Cannot open url
+Polling oidc-agent to get the generated account configuration .......................
+Polling is boring. Already tried 20 times. I stop now.
+Please press Enter to try it again.
+--END--
+
+
+        oidc-gen --state='0:....'
+
+--START--
+success
+The generated account config was successfully added to oidc-agent. You don't have to run oidc-add.
+Enter encryption password for account configuration 'keltic':
+Confirm encryption Password:
+....
+--END--
+
+
+        curl \
+            --verbose \
+            --insecure \
+            --location \
+            --header "Authorization: Bearer $(oidc-token --force-new keltic)" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://methionine.metagrid.co.uk:8443/check' \
+        | jq '.'
+
+
+--START--
+....
+....
+--END--
+
+        token=....
+
+        curl \
+            --verbose \
+            --insecure \
+            --location \
+            --header "Authorization: Bearer ${token}" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://methionine.metagrid.co.uk:8443/check'
+
+--START--
+....
+....
+--END--
+
+
+
+    #
+    # next ...
+
+    https://www.keycloak.org/getting-started/getting-started-podman
+    https://wkrzywiec.medium.com/implementing-oauth-2-0-access-token-validation-with-spring-security-64c797b42b36
+

@@ -1,0 +1,234 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    IVOA ExecutionPlanningInterface (EPI)
+    conceptual form
+
+        CanIDoThis
+        Submit <this>
+        Response
+            yes|no|maybe
+            How - technical details of how to execute
+                service type
+                endpoint
+            Why - human description of why not (no) or changes required (maybe)
+
+        Simple example
+
+            tasktype: ...vanilla-jupyter
+                notebook: URL to JSON notebook file
+                requirements: URL to requirements.txt
+                ....
+
+            tasktype: ...vanilla-binder
+                notebook: URL to JSON file
+                requirements: URL to requirements.txt
+                ....
+
+        Simple yes response
+
+            yes
+            servicetype: ...vanilla-jupyter-UWS
+            endpoint: ....
+
+        ...vanilla-jupyter-UWS
+            defines UWS service
+                notebook: URL to JSON notebook file
+                requirements: URL to Python requirements.txt
+                mode:
+                    batch - UWS runs the notebook end to end and returns stdout|stderr
+                    interactive - UWS returns URL pointing to Jupyter UI with notebook deployed
+
+
+
+
+    UWS based implementation
+
+        Registry of UWS services
+        UWS type vanilla-jupyter-UWS
+
+            CanIDoThis maps to the UWS quote mechanism
+
+            A Quote object predicts when the job is likely to complete. The intention is that a client creates the
+            same job on several services, compares the quotes and then accepts the best quote. From the
+            server perspective it is possible to indicate that a job will not be run by specifying a Quote that is
+            greater than the Destruction time.
+
+            User creates vanilla-jupyter-UWS jobs by POSTing a job with details of the JupyterNotebook.
+            Service responds by setting the quote to indicate the yes|no|maybe part of the response.
+
+            re-uses an existing specification
+            ExecutionPlanningInterface (EPI) becomes a specialisation of UWS for each type of job
+
+                vanilla-jupyter-UWS
+                vanilla-binder-UWS
+                vanilla-docker-UWS
+                escape-jupyter-UWS
+                escape-binder-UWS
+                escape-docker-UWS
+
+            All registered separatley using different service types.
+            Find all the vanilla-jupyter-UWS services
+            POST our notebook to each and check the quote for yes|no|maybe
+
+            Specialisation:
+            The quote is not for the task to run, it is time for the serivce to be ready to run the task.
+            Time taken by the infrastructure aspects of the job
+                time to transfer the data
+                time to start (or build) the service container
+                jupyter - aleady running
+                binder - time to build the image
+                K8s cluster - time to create the cluster
+
+
+    New service API - generic for all job types
+    Separate the planning and executing part
+
+        ExecutionPlanningInterface (EPI) is lightweight query|response interface
+        There is no persistent state.
+
+        Planning API
+        POST the canidothis question, get a quote response
+        Quote response contains
+            yes|no|maybe
+            quote for infrastructure time
+            quote for execution time
+            service type
+            service endpoint
+                type specific name:value map
+
+        That is it.
+        The job response isn't persistent.
+
+            service type and endpoint MAY point to another service
+            the implementation MAY be a specialisation of UWS
+            the implementation MAY be the public REST API for the 3rd party service
+                JuterHub
+                Zeppelin
+                Binder
+                etc
+
+    Could build the same logic into both interfaces
+    Stateless EPI
+    Stateful UWS application
+
+        EPI result points to UWS application to perform the task.
+        An extension on top of Gregory's UWS that also provides the EPI interface.
+
+
+
+    CEA style JobDescription implementations
+    Possible - but not now.
+        Define the JDL for a Jupyter CEA application and use that to generate user interface in ESAP.
+
+
+    Conceptually - a TAP service could have a EPI interface.
+    Submit the ADQL query and check the status and quote to see if it is accepted.
+
+
+    Yes, there are many ways of doing this in terms of web service interface.
+    but we haven't
+    is there enough momentum behind science platforms to have another try
+
+    Jupyter - notebook
+    Binder  - notebook + requirements
+    Docker  - container
+    Kubernetes - Helm chart of containers
+
+    ESCAPE shopping cart
+        Job description plus data references
+        How do we refer to data in Rucio ?
+        In IVOA, would this be VOSpace ?
+
+    ESCAPE versions of Jupyter and Binder include API for DataLake access.
+
+    IVOA versions of Jupyter, Binder, Docker and Kubernetes all refer to data in VOSpace.
+    Do they need explicit DataAccess components - there aren't any in IVOA.
+    So they are generic and we let VOSpace figure out how to provide the data.
+    Notebooks and containers include the VOSpace client themselves.
+    but that misses the possibility of loading local data, not via the public internets
+
+    Create a new project to extend Gregory's UWS webapp.
+    Pyvo doesn't have a generic UWS client, just a TAP client.
+    but it does have tools for parsing UWS job components
+
+    Learn pyvo and build our UWS at the same time ..
+    Target is a simple notebook runner
+        cayodo - match type (and validate JSON)
+        UWS submits notebook (URL) returns notebook loaded in hub (URL)
+
+
+
+
+    ---------------------
+
+    We can do *some* of the use cases using UWS.
+    Particularly the ones involving UWS.
+
+    A UWS service for handling JP notebooks by POSTING a ref to the notebook as a UWS param.
+    Can use the UWS quote stage to check if this action is possible.
+
+    A UWS service for handling Docker containers by POSTING a ref to the container as a UWS param.
+    Can use the UWS quote stage to check if this action is possible.
+
+
+    A UWS service for handling JP notebooks by exposing the JPHub web service API.
+    Needs something other than UWS to check if this action is possible.
+    We could use the UWS quote .. and then not run the job ?
+    Or the UWS job sets up the
+
+
+
+
+
+    ---------------------
+
+    Concepts
+
+        user
+        task
+        data
+
+    Implementation
+
+        EPI - GET/POST=>response, no state
+        UWS - stateful REST
+
+        Drop Gergory's war into a Tomcat Docker image
+
+
+
+
+
+
+
+
+
+
+

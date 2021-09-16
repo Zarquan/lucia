@@ -86,6 +86,108 @@
     The resource is a set of Ansible playbooks, structured according to document xxx.
 
 
+    Define the metadata values, not the representation.
+    A URI/URL that defines the type.
+    Q Do we include the version in the type ?
+    A Yes if we want to be able to do this with JUTS the type URI only.
+    A If we have additional params, then the version goes in a param.
+
+    WP3/5 have fixed on Zenodo so the properties that can be stored are fixed by the Zenodo API.
+    If we can have one property, then can we have more than one ?
+
+    task-type-uri - URI/URL for the type
+    task-type-version - semver value for the type (https://semver.org/)
+    task-deployment - optional URL to type specific deployment instructions
+    (*) the task-deploy-url MAY point to a file within the resource
+
+    Having the version separately make it complicated.
+    Consider each major version of a type as a new type -> therfore a new URL.
+
+    task-type - URI/URL for the type
+    task-deployment - optional URL to type specific deployment instructions
+    (*) the task-deployment MAY use a relative URL to point to a file within the resource
+
+    What about the data ?
+    ESCAPE has the data basket idea
+    Defined by WP2 as a JSON file with references to data in the DataLake.
+    A single task MAY have multiple data inputs.
+    Some opf which may be values and some of which may be URLs.
+    Similar to UWS/CEA?
+    Read up on the UWS specification ...
+
+    If we add the data, then the task description isn't just something static from the OSSR.
+    It is a document that combines a refernce to (part of) something in the OSSR and a list of data ?
+    Is that how we solve the multiple things in a repository ?
+
+    ESAP enables user to select the part of the thing in the OSSR object.
+    e.g. the pipline or one of the notebooks in the HCG-16 example
+
+    ESAP builds the CanIDoThis document from the contents of the shopping cart
+    That makes CanIDoThis separate from the rest of ESAP, which may be good longer term, but doesn't get us off the ground now.
+
+-------------------
+
+    From ESCAPE RocketChat
+
+
+    haavee 8:44 AM
+
+        As you can see in (one of the) links that svoutsin has posted (https://escape2020.pages.in2p3.fr/wp3/ossr-pages/page/contribute/publish_in_repository/) the actual metadata file is a codemeta.json which is based on an extensible schema (based on https://schema.org/) and gets translated into a Zenodo-compatible file (WP3 has written codemeta2zenodo - https://gitlab.in2p3.fr/escape2020/wp3/codemeta2zenodo) and there is talk of writing a script/code/library which, based on the Zenodo DOI mine the Zenodo metadata and possibly from there find the codemeta.json.
+        The decision to go with codemeta.json was taken deliberately since it allows an extensible schema - i.e. by adding appropriate key/values to that file should allow ESAP to make informed decisions.
+
+    dave 1:50 PM
+
+        The codemeta.json and schema.org metadata are a good starting place.
+        The task type value I'm suggesting could easily be represented as a field in an ESCAPE extension to the codemeta schema. If we added [escapeTaskType URL] to the codemeta schema then we would have an easy way of filtering tasks and platforms based on the type of executable.
+        If we define an initial set of basic types that ESAP knows how to handle, then that helps us get off the ground really quickly.
+        Something like simple-Jupyter-notebook (no external dependencies), ESCAPE-Jupyter-notebook (with DataLake access), simple-Binder-notebook (no external dependencies) and ESCAPE-Binder-notebook (with DataLake access).
+        If Zenodo allows a search based on the codemeta fields, then ESAP could search for [escapeTaskType=http://purl.escape.eu/task-types/escape-binder-1.0] to find all the Binder compatible ESCAPE notebooks.
+        By using our own term, [escapeTaskType] we can define what [http://purl.escape.eu/task-types/escape-binder-1.0] means. So ESAP can launch the program in one step because it already knows how to handle that type of task.
+
+    dave 2:01 PM
+
+        It also helps our platform evolve in the future.
+        If Binder release a new version we can add a new type for that [escapeTaskType=http://purl.escape.eu/task-types/escape-binder-2.0]
+        When someone invents the next new thing that replaces Binder as the platform of choice, we can add a new type for that [escapeTaskType=http://purl.escape.eu/task-types/escape-nextnew-1.0].
+        But old style Binder applications can still co-exist with NextNewThing applications because we can distinguish between them.
+
+
+    unsaid
+
+        Without a pre-defined set of task types we would need to find a way of encoding all of the technical details on how to run the task(s)
+        from the HCG-15 README document [https://github.com/AMIGA-IAA/hcg-16/blob/master/README.md] into schema.org fields.
+
+
+    Codemeta terms
+    https://codemeta.github.io/terms/
+
+    Schema.org docs
+    https://schema.org/docs/documents.html
+
+    Schema.org terms
+    https://schema.org/SoftwareSourceCode
+        Lots of free text fields
+
+    https://schema.org/SoftwareApplication
+        Lots of free text fields
+
+    https://schema.org/softwareRequirements
+        "Examples: DirectX, Java or .NET runtime"
+
+    https://schema.org/runtimePlatform
+        "Example - Java v1, Python2.3, .Net Framework 3.0"
+
+
+    How to publish content in the ESCAPE repository
+    https://escape2020.pages.in2p3.fr/wp3/ossr-pages/page/contribute/publish_in_repository/
+
+        GitLab or GitHub to Zenodo entry
+        Docker containers and Singularity images
+
+    HCG-16 README file
+    https://github.com/AMIGA-IAA/hcg-16/blob/master/README.md
+
+
 
 
 

@@ -1,0 +1,44 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+
+#[user@desktop]
+
+    mvn spring-boot:run
+    mvn test
+
+
+    Unit Testing Controllers of an OIDC Client
+    https://github.com/spring-projects/spring-security/issues/5120
+
+
+    https://stackoverflow.com/questions/48540152/how-to-get-webmvctest-work-with-oauth
+    https://stackoverflow.com/questions/29510759/how-to-test-spring-security-oauth2-resource-server-security/43676742#43676742
+
+
