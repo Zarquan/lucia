@@ -1,0 +1,19 @@
+
+    {
+    "tasktype": "http://purl.example.org/docker-runner",
+    "taskmode": "batch",
+
+    "resources": {
+        "cpu":     2,
+        "disc":   "1024G",
+        "memory": "8G",
+        "time":   "HH:MM:SS",
+        },
+
+    "params": {
+    
+        "image": "docker.io/ivoa/ivoatex:latest"
+
+        }
+    }
+    

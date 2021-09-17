@@ -1,0 +1,244 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+    
+        Run through the examples we have and see where we are.
+        
+    Result:
+        
+        Work in progress ..
+
+
+# -----------------------------------------------------
+# Start the service.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_CODE:?}"
+        pushd ivoa-epi-webapp
+
+            mvn spring-boot:run
+
+--START--
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.5.0)
+....
+....
+2021-09-17 05:59:36.825  INFO 1323568 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+--END--
+
+
+# -----------------------------------------------------
+# Anonymous HTTP GET request.
+#[user@desktop]
+
+        curl -s -S \
+            'http://localhost:8080/check?tasktype=http://purl.example.org/qwerty-task' \
+        | jq '.'
+
+--START--
+{
+  "reponsecode": "YES",
+  "servicetype": "http://purl.example.org/qwerty-service",
+  "serviceinfo": {
+    "qwerty.endpoint": "http://qwerty.example.org/service"
+  }
+}
+--END--
+
+
+# -----------------------------------------------------
+# Anonymous HTTP POST request.
+#[user@desktop]
+
+        curl -s -S \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | jq '.'
+
+--START--
+{
+  "reponsecode": "YES",
+  "servicetype": "http://purl.example.org/qwerty-service",
+  "serviceinfo": {
+    "qwerty.endpoint": "http://qwerty.example.org/service"
+  }
+}
+--END--
+
+
+# -----------------------------------------------------
+# Anonymous HTTP JSON POST request.
+#[user@desktop]
+
+        curl -s -S \
+            --header "Accept: application/json" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | jq '.'
+
+--START--
+{
+  "reponsecode": "YES",
+  "servicetype": "http://purl.example.org/qwerty-service",
+  "serviceinfo": {
+    "qwerty.endpoint": "http://qwerty.example.org/service"
+  }
+}
+--END--
+
+
+# -----------------------------------------------------
+# Anonymous HTTP XML POST request.
+#[user@desktop]
+
+        curl -s -S \
+            --header "Accept: application/xml" \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | xmlstarlet fo
+
+--START--
+-:1.1: Document is empty
+--END--
+
+    # Needs fixing ..
+
+--START--
+....
+2021-09-17 06:10:22.293  WARN 1323568 --- [nio-8080-exec-8] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpMediaTypeNotAcceptableException: Could not find acceptable representation]
+....
+--END--
+
+
+# -----------------------------------------------------
+# Anonymous HTTPS POST request.
+#[user@desktop]
+
+        curl -s -S \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://localhost:8080/check'
+
+--START--
+curl: (35) error:1408F10B:SSL routines:ssl3_get_record:wrong version number
+--END--
+
+--START--
+....
+java.lang.IllegalArgumentException: Invalid character found in method name [0x160x030x010x020x000x010x000x010xfc0x030x0300xa50xa8<0xd2<~0xd1K0x05Lq0x130xb30xd80xed]0xd920x030x9b0xcd0xb70x9f80xca0xc40xf20x940x0c0xb0m ]. HTTP method names must be tokens
+....
+--END--
+
+    #
+    # Tomcat .. HTTP method names must be tokens
+    # https://stackoverflow.com/questions/42218237/tomcat-java-lang-illegalargumentexception-invalid-character-found-in-method-na
+    # Sending encrypted HTTPS request to a plain text HTTP service.
+    # Tomcat doesn't understand the encrypted HTTP method verb.
+    # 
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Enable HTTPS.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_CODE:?}"
+        pushd ivoa-epi-webapp
+
+            gedit src/main/resources/application.properties
+
+                    # The path to the keystore containing the certificate
+                -   #server.ssl.key-store=classpath:keystore/lucia-keystore.p12
+                +   server.ssl.key-store=classpath:keystore/lucia-keystore.p12
+                 
+                    # The password used to generate the certificate
+                -   #server.ssl.key-store-password=keystore-password
+                +   server.ssl.key-store-password=keystore-password
+                 
+                    # The alias mapped to the certificate
+                -   #server.ssl.key-alias=lucia-epi
+                +   server.ssl.key-alias=lucia-epi
+
+
+            mvn spring-boot:run
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Anonymous HTTPS POST request.
+#[user@desktop]
+
+        curl -s -S \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://localhost:8080/check'
+
+--START--
+curl: (60) SSL certificate problem: self signed certificate
+More details here: https://curl.haxx.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+--END--
+
+
+        curl -s -S \
+            --insecure \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'https://localhost:8080/check' \
+        | jq '.'
+
+--START--
+{
+  "reponsecode": "YES",
+  "servicetype": "http://purl.example.org/qwerty-service",
+  "serviceinfo": {
+    "qwerty.endpoint": "http://qwerty.example.org/service"
+  }
+}
+--END--
+
+
+    #
+    # At the moment, we only have one connector, either HTTP or HTTPS.
+    # Need to customize to support both.
+    # https://www.javadevjournal.com/spring-boot/how-to-enable-http-https-in-spring-boot/
+    # https://stackoverflow.com/questions/26655875/spring-boot-redirect-http-to-https
+    # https://www.javadevjournal.com/spring-boot/how-to-enable-http-https-in-spring-boot/
+    #
+
+
+
+

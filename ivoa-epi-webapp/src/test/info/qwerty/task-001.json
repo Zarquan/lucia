@@ -1,0 +1,26 @@
+
+    {
+    "tasktype": "http://purl.example.org/qwerty-task",
+    "taskmode": "[interactive|batch]",
+
+    "param": [
+
+        {
+        "name":  "xxx",
+        "value": "xxx",
+        },
+        {
+        "name":  "xxx",
+        "value": "xxx",
+        },
+        {
+        "name":  "xxx",
+        "value": "xxx",
+        },
+        {
+        "name":  "xxx",
+        "value": "xxx",
+        },
+        
+        ]
+    }
