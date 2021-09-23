@@ -1,0 +1,194 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Build the Volt UWS library.
+    
+    Result:
+
+        Successfully built Volt UWS version 4.4 and installed it in our local Maven cache.
+
+    References:
+
+        GitHub repo
+        https://github.com/gmantele/vollt
+
+        UWS Library v4.4
+        http://cdsportal.u-strasbg.fr/uwstuto/
+
+        Examples
+        http://cdsportal.u-strasbg.fr/uwstuto/download?file=examples
+
+
+# -----------------------------------------------------
+# Check the local settings.
+#[user@desktop]
+
+    cat "${HOME:?}/lucia.env"
+
+--START--
+source "${HOME:?}/projects.env"
+LUCIA_REPO='git@github.com:Zarquan/lucia.git'
+LUCIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/lucia"
+LUCIA_CODE="${LUCIA_HOME:?}/github-zrq"
+--END--
+
+
+# -----------------------------------------------------
+# Download the UWS lib project.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external
+            if [ -e 'volt' ]
+            then
+                git clone 'git@github.com:gmantele/vollt.git' 'volt'
+            else
+                pushd 'volt'
+                    git pull
+                popd
+            fi
+        popd
+    popd
+
+# -----------------------------------------------------
+# Run the Ant build.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/volt
+
+            ant -file buildUWS.xml 
+
+        popd
+    popd
+
+    >   BUILD FAILED
+    >   /var/local/projects/ESCAPE/lucia/external/vollt/buildUWS.xml:40: The property SERVLET-API must be set! It provides the path toward a directory or a JAR which contains all classes inside javax.servlet.
+
+
+# -----------------------------------------------------
+# Download the latest servlet API.
+#[user@desktop]
+    
+    mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get \
+        -Dartifact=javax.servlet:javax.servlet-api:4.0.1    
+
+
+# -----------------------------------------------------
+# Configure the Ant build.
+#[user@desktop]
+
+    gedit buildUWS.xml 
+
+    	<property name="SERVLET-API" value="/var/local/cache/maven/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar" />
+    
+
+# -----------------------------------------------------
+# Run the Ant build.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/volt
+
+            ant -file buildUWS.xml 
+
+        popd
+    popd
+
+    Failed to compile the tests.
+    Missing dependencies for JUnit.
+
+
+# -----------------------------------------------------
+# Disable the JUnit goals.
+#[user@desktop]
+
+    gedit buildUWS.xml 
+
+    	<target name="junitValidation" depends="" description="Executes all JUnit tests before building the library and stop ANT at any error."/>
+    	<!--target name="junitValidation" ...
+    	    ....
+    	    ....
+    	</target-->
+
+
+# -----------------------------------------------------
+# Run the Ant build.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/volt
+
+            ant -file buildUWS.xml 
+
+        popd
+    popd
+
+    >   ....
+    >   ....
+    >   buildLib:
+    >        [echo] Generate the library:
+    >         [jar] Building jar: /var/local/projects/ESCAPE/lucia/external/vollt/uws_4.4.jar
+    >      [delete] Deleting directory /var/local/projects/ESCAPE/lucia/external/vollt/antBuild
+    >   
+    >   BUILD SUCCESSFUL
+
+
+# -----------------------------------------------------
+# Install the jar in our Maven cache.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/volt
+
+            mvn install:install-file \
+                -Dfile=uws_4.4.jar \
+                -DgroupId=net.ivoa \
+                -DartifactId=volt-uws \
+                -Dversion=4.4 \
+                -Dpackaging=jar
+
+        popd
+    popd
+
+    >   ....
+    >   [INFO] --- maven-install-plugin:2.4:install-file (default-cli) @ standalone-pom ---
+    >   [INFO] Installing /var/local/projects/ESCAPE/lucia/external/vollt/uws_4.4.jar to /var/local/cache/maven/net/ivoa/volt-uws/4.4/volt-uws-4.4.jar
+    >   [INFO] Installing /tmp/mvninstall4160591766311085393.pom to /var/local/cache/maven/net/ivoa/volt-uws/4.4/volt-uws-4.4.pom
+    >   ....
+
+
+
+
