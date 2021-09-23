@@ -1,0 +1,195 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+    
+        Create a Spring-boot based deployment of the UWS example from Volt.
+
+    Result:
+    
+        Work in progress ...
+
+    References:
+    
+        Building an Application with Spring Boot
+        https://spring.io/guides/gs/spring-boot/
+        
+        Servlets - Annotations
+        https://www.tutorialspoint.com/servlets/servlets-annotations.htm
+    
+        Using Servlet components: @WebServlet, @WebFilter and @WebListener in Spring boot application
+        https://www.logicbig.com/tutorials/spring-framework/spring-boot/boot-with-servlet-components.html
+    
+        The @ServletComponentScan Annotation in Spring Boot
+        https://www.baeldung.com/spring-servletcomponentscan
+    
+        Package org.springframework.boot.web.servlet
+        https://docs.spring.io/spring-boot/docs/current/api/index.html?org/springframework/boot/web/servlet/package-summary.html
+    
+        How can I register a servlet with Spring Boot?
+        https://stackoverflow.com/questions/55978959/how-can-i-register-a-servlet-with-spring-boot
+
+
+# -----------------------------------------------------
+# Run the webapp.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_CODE:?}"
+        pushd 'ivoa-uws-podman'
+
+             mvn spring-boot:run
+
+        popd
+    popd
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Test the webapp.
+#[user@desktop]
+
+    curl 'http://localhost:8080/uwspod'
+
+    >   <html><head><title>UWS4 example (using UWSServlet)</title></head><body>
+    >   <h1>UWS v4 Example (using UWSServlet)</h1
+    >   <p>Hello, this is an example of a use of the library UWS v4.4 !</p>
+    >   <p>Below is the list of all available jobs lists:</p>
+    >   <ul>
+    >   <li>timers - 0 jobs - <a href="http://localhost:8080/uwspod/timers">http://localhost:8080/uwspod/timers</a></li>
+    >   </ul>
+
+
+    curl 'http://localhost:8080/uwspod/timers'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs version="1.1" xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+
+
+    curl --silent \
+        'http://localhost:8080/uwspod/timers' \
+    | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+    >   </jobs>
+
+
+    curl --silent \
+        --request POST \
+        --data 'time=57' \
+        'http://localhost:8080/uwspod/timers'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/timers' \
+    | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+    >     <jobref id="1632378295828A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/timers/1632378295828A">
+    >       <phase>PENDING</phase>
+    >       <creationTime>2021-09-23T06:24:55Z</creationTime>
+    >     </jobref>
+    >   </jobs>
+
+
+    curl --silent \
+        --request GET \
+        'http://localhost:8080/uwspod/timers/1632378295828A'
+    
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job version="1.1" xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+    >   	<jobId>1632378295828A</jobId>
+    >   	<ownerId xsi:nil="true" />
+    >   	<phase>PENDING</phase>
+    >   	<quote xsi:nil="true" />
+    >   	<creationTime>2021-09-23T06:24:55Z</creationTime>
+    >   	<startTime xsi:nil="true" />
+    >   	<endTime xsi:nil="true" />
+    >   	<executionDuration>0</executionDuration>
+    >   	<destruction xsi:nil="true" />
+    >   	<parameters>
+    >   		<parameter id="time">57</parameter>
+    >   	</parameters>
+    >   	<results>
+    >   	</results>
+    >   </job>
+
+
+    curl --silent \
+        --request POST \
+        --data 'PHASE=RUN' \
+        'http://localhost:8080/uwspod/timers/1632378295828A'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/timers/1632378295828A' \
+    | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+    >     <jobId>1632378295828A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote>2021-09-23T06:28:50Z</quote>
+    >     <creationTime>2021-09-23T06:24:55Z</creationTime>
+    >     <startTime>2021-09-23T06:27:53Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+    ....
+    ....
+
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+    >     <jobId>1632378295828A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>COMPLETED</phase>
+    >     <quote>2021-09-23T06:28:50Z</quote>
+    >     <creationTime>2021-09-23T06:24:55Z</creationTime>
+    >     <startTime>2021-09-23T06:27:53Z</startTime>
+    >     <endTime>2021-09-23T06:28:50Z</endTime>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="Report" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/timers/1632378295828A/results/Report" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+
