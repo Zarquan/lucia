@@ -48,3 +48,93 @@
       }
     }
 
+# -----------------------------------------------------
+# -----------------------------------------------------
+
+    data model
+    
+        version: "1.0",
+        tasktype: "anyURI"
+        taskmode: [interactive|batch] <- is this real ?
+        taskinfo: URL
+
+        resources {
+
+            mincores:   int
+            maxcores:   int
+            minmemory:  int
+            maxmemory:  int
+            minstorage: int
+            maxstorage: int
+
+            publicipv4:  [yes|NO]
+            publicipv6:  [yes|NO]
+
+            gpu: {
+                required: [yes|NO|nice]
+                type: "string"
+                }
+
+            cluster {
+                minnodes:   int
+                maxnodes:   int
+                mincores:   int
+                maxcores:   int
+                minmemory:  int
+                maxmemory:  int
+                minstorage: int
+                maxstorage: int
+                }            
+            }
+
+    yes - we could try to predict all of these ....
+    but like VOSpace, better to have the minimun needed to get it to work
+    and put the rest in name|value properties
+
+    data model
+
+        {    
+        version: "1.0",
+        tasktype: "anyURI",
+        taskmode: "[interactive|batch]",
+        taskinfo: "URL",
+
+        properties: {
+
+            {
+            key: "http://purl.lucia.io/resources/mincores",
+            value: 1000
+            },
+            {
+            key: "http://purl.lucia.io/resources/maxcores",
+            value: 1000
+            },
+            {
+            key: "http://purl.lucia.io/resources/minmemory",
+            value: 1000
+            },
+            {
+            key: "http://purl.lucia.io/resources/maxmemory",
+            value: 1000
+            },
+
+            ....
+            ....
+
+            }
+        }
+    
+    OK, this works, but it will wind up JSON kiddies no end
+    
+    How does K8s solve it ?
+    
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+        name: nginx-deployment
+    labels:
+        app: nginx
+    spec:
+        ...
+    
+    
