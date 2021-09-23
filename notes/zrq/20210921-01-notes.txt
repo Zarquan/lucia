@@ -1,0 +1,246 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    The primary use case
+    
+    We have software in GitHub, GitLab, DockerHub, Zenodo and OSSR.
+    We have data in VOSpace, Rucio, Zendo, websites etc.
+    We have compute resources in Openstack, GoogleCloud, DigitalOcean ...
+     
+    User wants to bring them together.
+    
+    Two approaches to solving the problem, depending on who and where the decision is made.
+    
+    Conceptually the simplest is to put everything in one place.
+    In this case, ESAP.
+    Metadata about the software, the data and the compute facilities, all processed by one central entity.
+    Need to describe everything in enough detail to make an informed descision.
+
+    Central decider needs to know about everything.
+        All of the task types.
+        All of the data types.
+        All of the platforms.
+        All of the groups. 
+        All of the permissions. 
+    
+    Alternative is to delegate everything to the platforms.
+    
+    Simple execution planner service API for each compute location. 
+
+        CanIDoThis
+
+            tasktype : anyURI
+            taskinfo : anyURL
+        
+            // task info includes the data needed
+            
+    Simplest implementation just checks the task type URI.
+    
+    Simplest example is the ESCAPE interactive analysis platform.
+
+        tasktype: 'http://purl.escape.eu/esap-jupyter-notebook'
+        "We know what a Jupyter notebook is"
+
+        Compute platform accepts reference to an ESAP Jupyter notebook.
+        Returns an endpoint URL to redirect the user to.  
+
+        if (tasktype == 'typeurl')
+            return YES, 'endpoint'
+        else
+            return NO, 'unknown type'
+
+        
+    Docker container service.
+    
+        UWS based docker service
+        
+        Task type
+            'http://purl.example.com/uws-simple-docker'
+            Info points to a simple node description.
+            Info points to a container image in hub.
+            Info points to a Dockerfile to build.
+            
+        Task type
+            'http://purl.example.com/uws-docker-compose'
+            Info points to a cluster description.
+            Info points to a docker-compose file.
+                Compose points to images in hub.
+
+        Task type
+            'http://purl.example.com/uws-docker-compound'
+            Info points to a cluster description.
+            Info points to a docker-compose file.
+                Compose points to images in hub.
+                Compose points to Dockerfiles to build.
+    
+        Task type
+            'http://purl.example.com/uws-k8-scluster'
+            Info points to a cluster description.
+    
+
+    GitHub provides initial implementation of Java and Python web services
+    plus a Python client.
+
+    version 1.0
+        
+        Simplest to implement is JSON response.
+        Naff, but ...
+
+        Plugin decision making steps.
+        
+            type-equals
+            type-in (list)
+
+            user-equals
+            user-in (static-list)
+            user-in (IAM-group)
+            user-in (GMS-group)
+
+    version 1.1
+    
+        Add resources request and response.
+
+        resources: {
+
+            maxcores:
+            mincores:
+            
+            maxmemory:
+            minmemory:
+
+            maxdisc:
+            mindisc:
+
+            }
+        
+        Typically client sets the min values that it needs.
+        Server responds with the max values thatit allows. 
+
+    version 1.2
+
+        Add lease length and startup times.
+
+        lease: {
+
+            maxlength:
+            minlength:
+
+            maxstartup:
+            minstartup:
+
+            }
+
+        Reverse for startup time.
+        How long to get everything into place
+        Client sets the max, server offers the min.
+
+
+    version 1.3
+    
+        Add cluster details.
+        Relevant for K8s and Spark
+
+        resources: {
+
+            cluster: {
+
+                maxsize:
+                minsize:
+                
+                maxcores:
+                mincores:
+                
+                maxmemory:
+                minmemory:
+
+                maxdisc:
+                mindisc:
+
+                nodes: {
+                    - name:
+                      cores:
+                      memory:
+                      disc:
+
+                    - name:
+                      cores:
+                      memory:
+                      disc:
+                      
+                    }
+                }
+            }
+
+    version 1.4
+
+        credentials: {
+        
+            sshkeypair: {
+                public:  '........'
+                private: '........'
+                }
+
+            openstack: {
+                apitoken: ''
+                }
+
+            kubectl: {
+                apitoken: ''
+                }
+            }
+
+    Most of this is about the compute resources used, not about the software to run.
+    Community groups will form around each type of task.
+
+        ESAP-Jupyter-notebook
+            whatever ESAP define it to be
+                    
+        ivoa-simple-docker
+            creates a node with the requested resources
+            deploys the container on the node
+
+        ivoa-docker-compose
+            creates a node with the requested resources
+            deploys the compose set on the node
+            
+        ivoa-kubernetes-deploy
+            creates the project with the requested resource quotas
+            up to you what you put inside it
+            response includes apitoken and kubectl endpoint
+
+        ivoa-openstack-project
+            creates the project with the requested resource quotas
+            up to you what you put inside it
+            response includes apitoken and GUI endpoint
+
+
+    
+    
+    
+    
