@@ -1,0 +1,820 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+    
+        Run Podman as a service.
+
+    Result:
+    
+        Work in progress ...
+
+    References:
+    
+        Docker service API
+        https://docs.docker.com/engine/api/v1.40/#tag/Container
+
+        Java Docker client
+        https://github.com/docker-java/docker-java
+        https://github.com/docker-java/docker-java/blob/master/docs/getting_started.md
+
+        Podman service
+        https://docs.podman.io/en/latest/markdown/podman-system-service.1.html
+
+        Podman service API
+        https://docs.podman.io/en/latest/_static/api.html#operation/PlayKubeLibpod
+
+        How to use Podman inside of a container
+        https://www.redhat.com/sysadmin/podman-inside-container
+
+        How to use Podman inside of Kubernetes
+        https://www.redhat.com/sysadmin/podman-inside-kubernetes
+
+
+# -----------------------------------------------------
+# Run the service.
+#[user@desktop]
+
+    podman \
+        system service \
+            --log-level debug \
+            --time 0 \
+            tcp:127.0.0.1:1213
+
+    >   ....
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9][0-9.]*}/auth 
+    >   DEBU[0000] Methods:  <N/A> Path: /auth                  
+    >   DEBU[0000] Methods: GET, PUT, HEAD Path: /v{version:[0-9][0-9.]*}/containers/{name}/archive 
+    >   DEBU[0000] Methods: GET, PUT, HEAD Path: /containers/{name}/archive 
+    >   DEBU[0000] Methods: GET, POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/copy 
+    >   DEBU[0000] Methods: GET, POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/archive 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/create 
+    >   DEBU[0000] Methods:   POST Path: /containers/create     
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/json 
+    >   DEBU[0000] Methods:    GET Path: /containers/json       
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/prune 
+    >   DEBU[0000] Methods:   POST Path: /containers/prune      
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/containers/{name} 
+    >   DEBU[0000] Methods: DELETE Path: /containers/{name}     
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/{name}/json 
+    >   DEBU[0000] Methods:    GET Path: /containers/{name}/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/kill 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/kill 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/{name}/logs 
+    >   DEBU[0000] Methods:    GET Path: /containers/{name}/logs 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/pause 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/pause 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/rename 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/rename 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/restart 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/restart 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/start 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/start 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/{name}/stats 
+    >   DEBU[0000] Methods:    GET Path: /containers/{name}/stats 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/stop 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/stop 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/{name}/top 
+    >   DEBU[0000] Methods:    GET Path: /containers/{name}/top 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/unpause 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/unpause 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/wait 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/wait 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/attach 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/attach 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/resize 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/resize 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/{name}/export 
+    >   DEBU[0000] Methods:    GET Path: /containers/{name}/export 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/create 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/prune 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/showmounted 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name} 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/kill 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/mount 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/unmount 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/logs 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/pause 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/restart 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/start 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/stats 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/stats 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/top 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/unpause 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/wait 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/exists 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/stop 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/attach 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/resize 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/export 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/checkpoint 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/restore 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/containers/{name}/changes 
+    >   DEBU[0000] Methods:    GET Path: /containers/{name}/changes 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/changes 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/init 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9][0-9.]*}/distribution/{name}/json 
+    >   DEBU[0000] Methods:  <N/A> Path: /distribution/{name}/json 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/events 
+    >   DEBU[0000] Methods:    GET Path: /events                
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/events 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/containers/{name}/exec 
+    >   DEBU[0000] Methods:   POST Path: /containers/{name}/exec 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/exec/{id}/start 
+    >   DEBU[0000] Methods:   POST Path: /exec/{id}/start       
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/exec/{id}/resize 
+    >   DEBU[0000] Methods:   POST Path: /exec/{id}/resize      
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/exec/{id}/json 
+    >   DEBU[0000] Methods:    GET Path: /exec/{id}/json        
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name}/exec 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/exec/{id}/start 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/exec/{id}/resize 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/exec/{id}/json 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/generate/{name:.*}/systemd 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/generate/{name:.*}/kube 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/containers/{name:.*}/healthcheck 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/images/create 
+    >   DEBU[0000] Methods:   POST Path: /images/create         
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/images/create 
+    >   DEBU[0000] Methods:   POST Path: /images/create         
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/images/json 
+    >   DEBU[0000] Methods:    GET Path: /images/json           
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/images/load 
+    >   DEBU[0000] Methods:   POST Path: /images/load           
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/images/prune 
+    >   DEBU[0000] Methods:   POST Path: /images/prune          
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/images/search 
+    >   DEBU[0000] Methods:    GET Path: /images/search         
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/images/{name:.*} 
+    >   DEBU[0000] Methods: DELETE Path: /images/{name:.*}      
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/images/{name:.*}/push 
+    >   DEBU[0000] Methods:   POST Path: /images/{name:.*}/push 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/images/{name:.*}/get 
+    >   DEBU[0000] Methods:    GET Path: /images/{name:.*}/get  
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/images/get 
+    >   DEBU[0000] Methods:    GET Path: /images/get            
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/images/{name:.*}/history 
+    >   DEBU[0000] Methods:    GET Path: /images/{name:.*}/history 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/images/{name:.*}/json 
+    >   DEBU[0000] Methods:    GET Path: /images/{name:.*}/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/images/{name:.*}/tag 
+    >   DEBU[0000] Methods:   POST Path: /images/{name:.*}/tag  
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/commit 
+    >   DEBU[0000] Methods:   POST Path: /commit                
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/build 
+    >   DEBU[0000] Methods:   POST Path: /build                 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/push 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/exists 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/tree 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/history 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/load 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/import 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/images/remove 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*} 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/pull 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/prune 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/search 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/get 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/export 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/tag 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/commit 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/images/{name:.*}/untag 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/images/{name}/changes 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/build 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/info 
+    >   DEBU[0000] Methods:    GET Path: /info                  
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/info 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/manifests/create 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/manifests/{name:.*}/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/manifests/{name:.*}/add 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/manifests/{name:.*} 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/manifests/{name}/push 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9][0-9.]*}/monitor 
+    >   DEBU[0000] Methods:  <N/A> Path: /monitor               
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/networks/{name} 
+    >   DEBU[0000] Methods: DELETE Path: /networks/{name}       
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/networks/{name} 
+    >   DEBU[0000] Methods:    GET Path: /networks/{name}       
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/networks 
+    >   DEBU[0000] Methods:    GET Path: /networks              
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/networks/create 
+    >   DEBU[0000] Methods:   POST Path: /networks/create       
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/networks/{name}/connect 
+    >   DEBU[0000] Methods:   POST Path: /networks/{name}/connect 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/networks/{name}/disconnect 
+    >   DEBU[0000] Methods:   POST Path: /networks/{name}/disconnect 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/networks/{name} 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/networks/{name}/json 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/networks/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/networks/create 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/networks/{name}/connect 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/networks/{name}/disconnect 
+    >   DEBU[0000] Methods: GET, HEAD Path: /_ping              
+    >   DEBU[0000] Methods: GET, HEAD Path: /v{version:[0-9][0-9.]*}/_ping 
+    >   DEBU[0000] Methods: GET, HEAD Path: /libpod/_ping       
+    >   DEBU[0000] Methods: GET, HEAD Path: /v{version:[0-9][0-9.]*}/libpod/_ping 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/play/kube 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9][0-9.]*}/plugins 
+    >   DEBU[0000] Methods:  <N/A> Path: /plugins               
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/pods/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/create 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/prune 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name} 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/json 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/exists 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/kill 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/pause 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/restart 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/start 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/stop 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/unpause 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/pods/{name}/top 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/pods/stats 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/swagger 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9.]+}/configs/ 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9.]+}/nodes/ 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9.]+}/secrets/ 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9.]+}/services/ 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9.]+}/swarm/ 
+    >   DEBU[0000] Methods:  <N/A> Path: /v{version:[0-9.]+}/tasks/ 
+    >   DEBU[0000] Methods:  <N/A> Path: /configs/              
+    >   DEBU[0000] Methods:  <N/A> Path: /nodes/                
+    >   DEBU[0000] Methods:  <N/A> Path: /secrets/              
+    >   DEBU[0000] Methods:  <N/A> Path: /services/             
+    >   DEBU[0000] Methods:  <N/A> Path: /swarm/                
+    >   DEBU[0000] Methods:  <N/A> Path: /tasks/                
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/system/df 
+    >   DEBU[0000] Methods:    GET Path: /system/df             
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/system/prune 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/system/df 
+    >   DEBU[0000] Methods:    GET Path: /version               
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/version 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/version 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/volumes/create 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/volumes/json 
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/libpod/volumes/prune 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/libpod/volumes/{name}/json 
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/libpod/volumes/{name} 
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/volumes 
+    >   DEBU[0000] Methods:    GET Path: /volumes               
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/volumes/create 
+    >   DEBU[0000] Methods:   POST Path: /volumes/create        
+    >   DEBU[0000] Methods:    GET Path: /v{version:[0-9][0-9.]*}/volumes/{name} 
+    >   DEBU[0000] Methods:    GET Path: /volumes/{name}        
+    >   DEBU[0000] Methods: DELETE Path: /v{version:[0-9][0-9.]*}/volumes/{name} 
+    >   DEBU[0000] Methods: DELETE Path: /volumes/{name}        
+    >   DEBU[0000] Methods:   POST Path: /v{version:[0-9][0-9.]*}/volumes/prune 
+    >   DEBU[0000] Methods:   POST Path: /volumes/prune         
+    >   ....
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Test the service.
+#[user@desktop]
+
+    curl \
+        --silent \
+        --request GET \
+        'http://localhost:1213/info' \
+    | jq '.'
+
+    >   {
+    >     "ID": "39f7275a-7032-41f2-8a8f-ba584a4ea558",
+    >     "Containers": 3,
+    >     "ContainersRunning": 0,
+    >     "ContainersPaused": 0,
+    >     "ContainersStopped": 1,
+    >     "Images": 72,
+    >     "Driver": "overlay",
+    >     "DriverStatus": [
+    >       [
+    >         "Backing Filesystem",
+    >         "btrfs"
+    >       ],
+    >       [
+    >         "Supports d_type",
+    >         "true"
+    >       ],
+    >       [
+    >         "Native Overlay Diff",
+    >         "false"
+    >       ],
+    >       [
+    >         "Using metacopy",
+    >         "false"
+    >       ]
+    >     ],
+    >     "Plugins": {
+    >       "Volume": null,
+    >       "Network": null,
+    >       "Authorization": null,
+    >       "Log": null
+    >     },
+    >     "MemoryLimit": true,
+    >     "SwapLimit": false,
+    >     "KernelMemory": false,
+    >     "KernelMemoryTCP": false,
+    >     "CpuCfsPeriod": false,
+    >     "CpuCfsQuota": false,
+    >     "CPUShares": false,
+    >     "CPUSet": false,
+    >     "PidsLimit": true,
+    >     "IPv4Forwarding": true,
+    >     "BridgeNfIptables": true,
+    >     "BridgeNfIp6tables": true,
+    >     "Debug": true,
+    >     "NFd": 13,
+    >     "OomKillDisable": false,
+    >     "NGoroutines": 10,
+    >     "SystemTime": "2021-09-23T08:21:45.588398161+01:00",
+    >     "LoggingDriver": "",
+    >     "CgroupDriver": "systemd",
+    >     "NEventsListener": 0,
+    >     "KernelVersion": "5.11.22-100.fc32.x86_64",
+    >     "OperatingSystem": "fedora",
+    >     "OSVersion": "32",
+    >     "OSType": "linux",
+    >     "Architecture": "amd64",
+    >     "IndexServerAddress": "",
+    >     "RegistryConfig": {
+    >       "AllowNondistributableArtifactsCIDRs": null,
+    >       "AllowNondistributableArtifactsHostnames": null,
+    >       "InsecureRegistryCIDRs": null,
+    >       "IndexConfigs": null,
+    >       "Mirrors": null
+    >     },
+    >     "NCPU": 4,
+    >     "MemTotal": 16267595776,
+    >     "GenericResources": null,
+    >     "DockerRootDir": "/home/Zarquan/.local/share/containers/storage",
+    >     "HttpProxy": "",
+    >     "HttpsProxy": "",
+    >     "NoProxy": "",
+    >     "Name": "methionine",
+    >     "Labels": null,
+    >     "ExperimentalBuild": true,
+    >     "ServerVersion": "2.2.1",
+    >     "Runtimes": {
+    >       "crun": {
+    >         "path": "/usr/bin/crun"
+    >       },
+    >       "kata": {
+    >         "path": "/usr/bin/kata-runtime"
+    >       },
+    >       "runc": {
+    >         "path": "/usr/bin/runc"
+    >       }
+    >     },
+    >     "DefaultRuntime": "crun",
+    >     "Swarm": {
+    >       "NodeID": "",
+    >       "NodeAddr": "",
+    >       "LocalNodeState": "inactive",
+    >       "ControlAvailable": false,
+    >       "Error": "",
+    >       "RemoteManagers": null
+    >     },
+    >     "LiveRestoreEnabled": false,
+    >     "Isolation": "",
+    >     "InitBinary": "",
+    >     "ContainerdCommit": {
+    >       "ID": "",
+    >       "Expected": ""
+    >     },
+    >     "RuncCommit": {
+    >       "ID": "",
+    >       "Expected": ""
+    >     },
+    >     "InitCommit": {
+    >       "ID": "",
+    >       "Expected": ""
+    >     },
+    >     "SecurityOptions": [
+    >       "name=seccomp,profile=default"
+    >     ],
+    >     "ProductLicense": "Apache-2.0",
+    >     "Warnings": [],
+    >     "BuildahVersion": "1.18.0",
+    >     "CPURealtimePeriod": false,
+    >     "CPURealtimeRuntime": false,
+    >     "CgroupVersion": "2",
+    >     "Rootless": true,
+    >     "SwapFree": 17179865088,
+    >     "SwapTotal": 17179865088,
+    >     "Uptime": "15h 26m 18.33s (Approximately 0.62 days)"
+    >   }
+
+
+# -----------------------------------------------------
+# List containers.
+#[user@desktop]
+
+    curl \
+        --silent \
+        --request GET \
+        'http://localhost:1213/containers/json' \
+    | jq '.'
+
+
+    >   []
+
+
+# -----------------------------------------------------
+# Create a container.
+#[user@desktop]
+
+    jsondata=$(mktemp)
+    cat > "${jsondata:?}" <<- EOF
+        {
+          "Image": "docker.io/library/fedora:34",
+          "Cmd": [
+            "date"
+            ]
+        }
+EOF
+
+    curl \
+        --silent \
+        --request POST \
+        --header "Content-Type: application/json" \
+        --data "@${jsondata:?}" \
+        'http://localhost:1213/containers/create' \
+    | jq '.'
+
+    >   {
+    >     "Id": "be3cbe3720d772686a5a73493b5fa0fb6f138bc7316b945c4f4ee64086432472",
+    >     "Warnings": []
+    >   }
+
+
+    containerid=be3cbe3720d772686a5a73493b5fa0fb6f138bc7316b945c4f4ee64086432472
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.'
+
+    >   {
+    >     "Id": "be3cbe3720d772686a5a73493b5fa0fb6f138bc7316b945c4f4ee64086432472",
+    >     "Created": "2021-09-23T09:12:34.938397124+01:00",
+    >     "Path": "date",
+    >     "Args": [
+    >       "date"
+    >     ],
+    >     "State": {
+    >       "Status": "configured",
+    >       "Running": false,
+    >       "Paused": false,
+    >       "Restarting": false,
+    >       "OOMKilled": false,
+    >       "Dead": false,
+    >       "Pid": 0,
+    >       "ExitCode": 0,
+    >       "Error": "",
+    >       "StartedAt": "0001-01-01T00:00:00Z",
+    >       "FinishedAt": "0001-01-01T00:00:00Z"
+    >     },
+    >   ....
+    >   ....
+
+
+    curl \
+        --silent \
+        --request POST \
+        "http://localhost:1213/containers/${containerid:?}/start" \
+    | jq '.'
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.'
+
+    >   {
+    >     "Id": "be3cbe3720d772686a5a73493b5fa0fb6f138bc7316b945c4f4ee64086432472",
+    >     "Created": "2021-09-23T09:12:34.938397124+01:00",
+    >     "Path": "date",
+    >     "Args": [
+    >       "date"
+    >     ],
+    >     "State": {
+    >       "Status": "exited",
+    >       "Running": false,
+    >       "Paused": false,
+    >       "Restarting": false,
+    >       "OOMKilled": false,
+    >       "Dead": false,
+    >       "Pid": 0,
+    >       "ExitCode": 0,
+    >       "Error": "",
+    >       "StartedAt": "2021-09-23T09:19:42.881199761+01:00",
+    >       "FinishedAt": "2021-09-23T09:19:42.914319728+01:00"
+    >     },
+    >   ....
+    >   ....
+
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/logs?stdout=true&stderr=true"
+
+    >   -
+
+    #
+    # Need to set the LoggingDriver top get anything outof it ..
+    #
+
+
+# -----------------------------------------------------
+# Create a container.
+#[user@desktop]
+
+    jsonrequest=$(mktemp)
+    jsonresponse=$(mktemp)
+
+    cat > "${jsonrequest:?}" <<- EOF
+        {
+          "Image": "docker.io/library/fedora:34",
+          "Cmd": [
+            "date"
+            ],
+          "LoggingDriver": "json-file"
+        }
+EOF
+
+    curl \
+        --silent \
+        --request POST \
+        --header "Content-Type: application/json" \
+        --data "@${jsonrequest:?}" \
+        'http://localhost:1213/containers/create' \
+    | tee "${jsonresponse:?}" | jq '.'
+    
+    containerid=$(
+        jq -r '.Id' "${jsonresponse:?}"
+        )
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.State'
+
+    >   {
+    >     "Status": "configured",
+    >     "Running": false,
+    >     "Paused": false,
+    >     "Restarting": false,
+    >     "OOMKilled": false,
+    >     "Dead": false,
+    >     "Pid": 0,
+    >     "ExitCode": 0,
+    >     "Error": "",
+    >     "StartedAt": "0001-01-01T00:00:00Z",
+    >     "FinishedAt": "0001-01-01T00:00:00Z"
+    >   }
+
+
+    curl \
+        --silent \
+        --request POST \
+        "http://localhost:1213/containers/${containerid:?}/start"
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.State'
+
+    >   {
+    >     "Status": "exited",
+    >     "Running": false,
+    >     "Paused": false,
+    >     "Restarting": false,
+    >     "OOMKilled": false,
+    >     "Dead": false,
+    >     "Pid": 0,
+    >     "ExitCode": 0,
+    >     "Error": "",
+    >     "StartedAt": "2021-09-23T09:34:51.804303257+01:00",
+    >     "FinishedAt": "2021-09-23T09:34:51.824993703+01:00"
+    >   }
+
+
+    curl \
+        --request GET \
+        --output - \
+        "http://localhost:1213/containers/${containerid:?}/logs?stdout=true&stderr=true"
+
+    >   Thu Sep 23 08:34:51 UTC 2021
+
+
+
+# -----------------------------------------------------
+# Create a webtop container.
+#[user@desktop]
+
+    homedir=$(mktemp)
+
+    jsonrequest=$(mktemp)
+    jsonresponse=$(mktemp)
+
+    cat > "${jsonrequest:?}" <<- EOF
+    {
+    "Image": "ghcr.io/linuxserver/webtop:ubuntu-mate",
+    "HostConfig": {
+        "Binds": [
+            "${homedir:?}:/guacamole:rw,z"
+            ],
+        "PortBindings": {
+            "3000/tcp": [
+                    {
+                    "HostIp":   "127.0.0.1",
+                    "HostPort": "3000"
+                    }
+                ]
+            },
+        "LogConfig": {
+            "Type": "json-file",
+            "Config": {}
+            }
+        }
+    }
+EOF
+
+    cat "${jsonrequest:?}" | jq '.'
+
+    curl \
+        --silent \
+        --request POST \
+        --header "Content-Type: application/json" \
+        --data "@${jsonrequest:?}" \
+        'http://localhost:1213/containers/create' \
+    | tee "${jsonresponse:?}" | jq '.'
+    
+    containerid=$(
+        jq -r '.Id' "${jsonresponse:?}"
+        )
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.State'
+
+    >   {
+    >     "Status": "configured",
+    >     "Running": false,
+    >     "Paused": false,
+    >     "Restarting": false,
+    >     "OOMKilled": false,
+    >     "Dead": false,
+    >     "Pid": 0,
+    >     "ExitCode": 0,
+    >     "Error": "",
+    >     "StartedAt": "0001-01-01T00:00:00Z",
+    >     "FinishedAt": "0001-01-01T00:00:00Z"
+    >   }
+
+
+    curl \
+        --silent \
+        --request POST \
+        "http://localhost:1213/containers/${containerid:?}/start"
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.State'
+
+    >   {
+    >     "Status": "running",
+    >     "Running": true,
+    >     "Paused": false,
+    >     "Restarting": false,
+    >     "OOMKilled": false,
+    >     "Dead": false,
+    >     "Pid": 1702115,
+    >     "ExitCode": 0,
+    >     "Error": "",
+    >     "StartedAt": "2021-09-23T10:18:31.437414216+01:00",
+    >     "FinishedAt": "0001-01-01T00:00:00Z"
+    >   }
+
+
+    curl \
+        --request GET \
+        --output - \
+        "http://localhost:1213/containers/${containerid:?}/logs?stdout=true&stderr=true"
+
+    >   ....
+    >   ....
+    >   Gguacd[387]: INFO:	Guacamole proxy daemon (guacd) version 1.1.0 started
+    >   7guacd[387]: INFO:	Listening on host 0.0.0.0, port 4822
+    >   )Starting guacamole-lite websocket server
+    >   listening on *:3000
+
+
+# -----------------------------------------------------
+# Check the webtop desktop.
+#[user@desktop]
+
+    firefox --new-window 'http://localhost:3000/'
+
+    #
+    # Works :-)
+    #
+
+    
+# -----------------------------------------------------
+# Check the container status.
+#[user@desktop]
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.State'
+
+    >   {
+    >     "Status": "running",
+    >     "Running": true,
+    >     "Paused": false,
+    >     "Restarting": false,
+    >     "OOMKilled": false,
+    >     "Dead": false,
+    >     "Pid": 1702115,
+    >     "ExitCode": 0,
+    >     "Error": "",
+    >     "StartedAt": "2021-09-23T10:18:31.437414216+01:00",
+    >     "FinishedAt": "0001-01-01T00:00:00Z"
+    >   }
+
+
+# -----------------------------------------------------
+# Stop the container.
+#[user@desktop]
+
+    curl \
+        --silent \
+        --request POST \
+        "http://localhost:1213/containers/${containerid:?}/stop"
+
+    curl \
+        --silent \
+        --request GET \
+        "http://localhost:1213/containers/${containerid:?}/json" \
+    | jq '.State'
+
+    >   {
+    >     "Status": "exited",
+    >     "Running": false,
+    >     "Paused": false,
+    >     "Restarting": false,
+    >     "OOMKilled": false,
+    >     "Dead": false,
+    >     "Pid": 0,
+    >     "ExitCode": 137,
+    >     "Error": "",
+    >     "StartedAt": "2021-09-23T10:18:31.437414216+01:00",
+    >     "FinishedAt": "2021-09-23T10:29:43.148422674+01:00"
+    >   }
+
+    #
+    # Looking good ...
+    #
+
+
+
