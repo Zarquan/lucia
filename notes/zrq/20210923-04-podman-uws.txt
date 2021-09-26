@@ -1,0 +1,128 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+    
+        Bring the parts together to a UWS-Podman service.
+        
+    Result:
+
+        Work in progress
+
+# -----------------------------------------------------
+
+    Sync or Acsync ?
+    
+    Really simple sync model
+
+        UWS job matches the lifetime of the container.
+        (*) needs something to kill it if it over runs ..
+        
+        Running a job creates and runs a container
+        UWS job polls the Podman API to detect changes to the container
+        UWS job completes when the container finishes
+
+        Service API doesn't expose anything about Podman
+        
+        UWS service is connected to a single Podman service instance.
+        Communication is via UWS job results
+
+        Simple set of UWS params
+        
+            image
+            ports
+            volumes
+                
+        Allow peeking at the results before the job completes.
+        UWS Job results contain published IP address and ports.
+        Enough for non-interactive container execution.
+        Enough to get the Guacamole webtop containers to work.        
+
+
+    Podman remote
+        
+        Use exsiting Podman remote-client to connect via ssh.
+        Podman and ssh service in containers
+        Launched as a Pod
+        User gets ssh key connection to public IP address
+
+        
+        https://github.com/linuxserver/docker-openssh-server
+
+        
+    Complex async proxied API model             
+
+        UWS job creates a Podman instance
+        Actually a VM with Podman service installed
+        
+        UWS job response contains URL to Podman service endpoint
+        (*) actually a proxy service parsing and processing the Podman service API calls
+        This allows our Java code to intercept, filter and annotate the Podman service API calls
+        
+        * Java service adds OIDC auth to controll access
+        * Restrict the allowed actions based on identity
+        * Detect and process external volume sources
+        * Download and stage data before mounting as volumes
+
+        Spring @Controller for each of Podman service API call
+        Parse the JSON POST data into Java Beans, based on the Podman service API
+        Process the Java Beans to apply our rules ...
+        Convert the Java Beans back into JSON and POST it on to the Podman API.
+
+        Once we have the first one done, becomes a Boiler plate process for the rest.
+        Similar to Gregory's ADQL parser and translator ..
+        
+
+# -----------------------------------------------------
+
+
+
+
+# -----------------------------------------------------
+        
+            
+    MicroK8s
+    https://microk8s.io/            
+            
+        Kubernetes in a container ...
+        Just saying
+            
+    Portainer
+    https://github.com/portainer/portainer/blob/develop/README.md
+            
+        Portainer CE is a lightweight ‘universal’ management GUI that can be used
+        to easily manage Docker, Swarm, Kubernetes and ACI environments.            
+        
+        Commercial product (open source)        
+
+    podman-remote
+    https://github.com/containers/podman/blob/main/docs/tutorials/remote_client.md
+
+        Podman remote connection via ssh
+
+

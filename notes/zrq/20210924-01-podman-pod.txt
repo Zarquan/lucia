@@ -1,0 +1,102 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+    
+        Experiment with Podman in a Pod
+        
+    Result:
+
+        Work in progress
+
+# -----------------------------------------------------
+
+    Simple sync version - UWS job lasts as long as the container.
+    Intended for running single container instances.
+    
+        UWS job matches the lifetime of the container.
+        (*) needs something to kill it if it over runs ..
+        
+        Running a job creates and runs a container
+        UWS job polls the Podman API to detect changes to the container
+        UWS job completes when the container finishes
+
+        Service API doesn't expose anything about Podman
+        
+        UWS service is connected to a single Podman service instance.
+        Communication is via UWS job results
+
+        Simple set of UWS params
+        
+            image
+            ports
+            volumes <-- DataLake ?
+                
+        Allow peeking at the results before the job completes.
+        UWS Job results contain published IP address and ports.
+        Enough for non-interactive container execution.
+        Enough to get the Guacamole webtop containers to work.        
+
+# -----------------------------------------------------
+
+    Java client to link to the Podman service.
+
+    https://www.testcontainers.org/quickstart/junit_4_quickstart/
+    https://www.testcontainers.org/features/creating_container/
+        
+    <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers</artifactId>
+        <version>1.16.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java</artifactId>
+        <version>3.2.12</version>
+    </dependency>
+
+# -----------------------------------------------------
+
+    JUnit test that can start/stop a webtop container.
+
+    Enough parts to build a UWS that launches a container.
+    UWS Job lasts for the lifetime of the container.
+
+    Nginx proxy provides HTTPS and OIDC authentication.
+    Integration with ESCAPE IAM service.
+
+    Initially all we need is the Docker image.
+    Launch on the same host as the UWS service.
+    Container ports mapped to random ports on the host.
+    
+    UWS response includes a list of the port mappings.
+    
+
+
+

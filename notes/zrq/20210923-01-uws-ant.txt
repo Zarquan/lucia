@@ -52,12 +52,10 @@
 
     cat "${HOME:?}/lucia.env"
 
---START--
-source "${HOME:?}/projects.env"
-LUCIA_REPO='git@github.com:Zarquan/lucia.git'
-LUCIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/lucia"
-LUCIA_CODE="${LUCIA_HOME:?}/github-zrq"
---END--
+    >   source "${HOME:?}/projects.env"
+    >   LUCIA_REPO='git@github.com:Zarquan/lucia.git'
+    >   LUCIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/lucia"
+    >   LUCIA_CODE="${LUCIA_HOME:?}/github-zrq"
 
 
 # -----------------------------------------------------

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--+
+    |
+    | Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+    | All rights reserved.
+    |
+    | This program is free software: you can redistribute it and/or modify
+    | it under the terms of the GNU General Public License as published by
+    | the Free Software Foundation, either version 3 of the License, or
+    | (at your option) any later version.
+    |
+    | This program is distributed in the hope that it will be useful,
+    | but WITHOUT ANY WARRANTY; without even the implied warranty of
+    | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    | GNU General Public License for more details.
+    |
+    | You should have received a copy of the GNU General Public License
+    | along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    |
+    +-->
+<configuration scan="true">
+
+    <!--+
+        | Rolling log for INFO and above.
+        | Rollover daily, max file size is 250MB (before compression), 4 days history, total size limit of 1GB.
+        +-->
+    <appender name="info-log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/uws-podman-info.log</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] [%logger{0}] %message %n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Rollover daily -->
+            <fileNamePattern>logs/uws-podman-info-%d{yyyyMMdd, UTC}-%i.log.gz</fileNamePattern>
+            <!-- Each file should be at most 250MB -->
+            <maxFileSize>250MB</maxFileSize>    
+            <!-- Keep 4 days of history -->
+            <maxHistory>4</maxHistory>
+            <!-- Maximum 1GB of disc space -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--+
+        | Rolling log for ERROR messages.
+        | Rollover daily, max file size is 250MB (before compression), 4 days history, total size limit of 1GB.
+        +-->
+    <appender name="error-log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/uws-podman-error.log</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] [%logger{0}] %message %n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Rollover daily -->
+            <fileNamePattern>logs/uws-podman-error-%d{yyyyMMdd, UTC}-%i.log.gz</fileNamePattern>
+            <!-- Each file should be at most 250MB -->
+            <maxFileSize>250MB</maxFileSize>    
+            <!-- Keep 4 days of history -->
+            <maxHistory>4</maxHistory>
+            <!-- Maximum 1GB of disc space -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--+
+        | Rolling log for DEBUG and above.
+        | Rollover hourly, max file size is 1GB (before compression), 4 hours history, total size limit of 4GB.
+        +-->
+    <appender name="debug-log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/uws-podman-debug.log</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] [%logger{0}] %message %n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Rollover hourly -->
+            <fileNamePattern>logs/uws-podman-debug-%d{yyyyMMddHH, UTC}-%i.log.gz</fileNamePattern>
+            <!-- Each file should be at most 1GB -->
+            <maxFileSize>1GB</maxFileSize>    
+            <!-- Keep 4 hours of history -->
+            <maxHistory>4</maxHistory>
+            <!-- Maximum 4GB of disc space -->
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--+
+        | Rolling log for TRACE and above.
+        | Rollover hourly, max file size is 1GB (before compression), 4 hours history, total size limit of 4GB.
+        +-->
+    <appender name="trace-log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/uws-podman-trace.log</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>TRACE</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] [%logger{0}] %message %n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Rollover hourly -->
+            <fileNamePattern>logs/uws-podman-trace-%d{yyyyMMddHH, UTC}-%i.log.gz</fileNamePattern>
+            <!-- Each file should be at most 1GB -->
+            <maxFileSize>1GB</maxFileSize>    
+            <!-- Keep 4 hours of history -->
+            <maxHistory>4</maxHistory>
+            <!-- Maximum 8GB of disc space -->
+            <totalSizeCap>8GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--+
+        | Different appenders with different levels.
+        | https://stackoverflow.com/a/23894254
+        | https://stackoverflow.com/a/13284960
+        +-->
+    <root level="ALL">
+        <appender-ref ref="info-log" />
+        <appender-ref ref="error-log" />
+        <appender-ref ref="debug-log" />
+        <appender-ref ref="trace-log" />
+    </root>
+    
+    <!--+
+        | Spring loggers.
+        +-->
+    <logger name="org.springframework">
+        <level value="DEBUG" />
+    </logger>
+    <logger name="org.springframework.core">
+        <level value="DEBUG" />
+    </logger>
+    <logger name="org.springframework.beans">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.springframework.context">
+        <level value="INFO" />
+    </logger>
+
+</configuration>
+
