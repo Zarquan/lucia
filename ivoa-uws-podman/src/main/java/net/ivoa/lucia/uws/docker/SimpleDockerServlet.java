@@ -58,7 +58,7 @@ public class SimpleDockerServlet
 				@Override
 				public Object getDefault()
 					{
-					return "docker.io/library/fedora:34";
+					return SimpleDockerWorker.DEFAULT_IMAGE_NAME ;
 					}
 	
 				@Override
@@ -75,6 +75,59 @@ public class SimpleDockerServlet
 					}
 				}
 			);
+
+		addExpectedAdditionalParameter("command");
+		setInputParamController(
+			"command",
+			new InputParamController()
+				{
+				@Override
+				public Object getDefault()
+					{
+					return null;
+					}
+	
+				@Override
+				public Object check(Object object)
+				throws UWSException
+					{
+					return object ;
+					}
+	
+				@Override
+				public boolean allowModification()
+					{
+					return true;
+					}
+				}
+			);
+
+		addExpectedAdditionalParameter("lifetime");
+		setInputParamController(
+			"lifetime",
+			new InputParamController()
+				{
+				@Override
+				public Object getDefault()
+					{
+					return "PT1M";
+					}
+	
+				@Override
+				public Object check(Object object)
+				throws UWSException
+					{
+					return object ;
+					}
+	
+				@Override
+				public boolean allowModification()
+					{
+					return true;
+					}
+				}
+			);
+		
 		}
 
 	/**

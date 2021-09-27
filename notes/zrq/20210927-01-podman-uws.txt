@@ -1,0 +1,431 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+# -----------------------------------------------------
+# Run the webapp.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_CODE:?}"
+        pushd 'ivoa-uws-podman'
+
+             mvn spring-boot:run
+
+        popd
+    popd
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Test the webapp.
+#[user@desktop]
+
+    curl --silent http://localhost:8080/uwspod/docker-workers | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs
+    >       xmlns="http://www.ivoa.net/xml/UWS/v1.0"
+    >       xmlns:xlink="http://www.w3.org/1999/xlink"
+    >       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    >       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    >       version="1.1"
+    >       xsi:schemaLocation="
+    >           http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0
+    >           http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd
+    >           http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
+    >       >
+    >   </jobs>
+
+
+# -----------------------------------------------------
+# POST a job.
+#[user@desktop]
+
+    curl --silent \
+        --request POST \
+        --data 'time=57' \
+        'http://localhost:8080/uwspod/docker-workers'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers' \
+    | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobref id="1632716867528A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632716867528A">
+    >       <phase>PENDING</phase>
+    >       <creationTime>2021-09-27T04:27:47Z</creationTime>
+    >     </jobref>
+    >   </jobs>
+
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers/1632716867528A' \
+    | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobId>1632716867528A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>PENDING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T04:27:47Z</creationTime>
+    >     <startTime xsi:nil="true"/>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    curl --silent \
+        --request POST \
+        --data 'PHASE=RUN' \
+        'http://localhost:8080/uwspod/docker-workers/1632716867528A' \
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers/1632716867528A' \
+    | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobId>1632716867528A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T04:27:47Z</creationTime>
+    >     <startTime>2021-09-27T04:32:38Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+    ....
+    ....
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobId>1632716867528A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>COMPLETED</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T04:27:47Z</creationTime>
+    >     <startTime>2021-09-27T04:32:38Z</startTime>
+    >     <endTime>2021-09-27T04:33:49Z</endTime>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="stdout" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632716867528A/results/stdout" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Test the webapp.
+#[user@desktop]
+
+    curl --silent http://localhost:8080/uwspod/docker-workers | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >   </jobs>
+
+
+# -----------------------------------------------------
+# POST a job.
+#[user@desktop]
+
+    curl --silent \
+        --request POST \
+        --data 'time=57' \
+        'http://localhost:8080/uwspod/docker-workers'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers' \
+    | xmlstarlet fo
+
+    >   <jobs xmlns="....">
+    >     <jobref id="1632719058404A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632719058404A">
+    >       <phase>PENDING</phase>
+    >       <creationTime>2021-09-27T05:04:18Z</creationTime>
+    >     </jobref>
+    >   </jobs>
+
+
+    jobid=1632719058404A
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632719058404A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>PENDING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T05:04:18Z</creationTime>
+    >     <startTime xsi:nil="true"/>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    curl --silent \
+        --request POST \
+        --data 'PHASE=RUN' \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="http://www.ivoa.net/xml/UWS/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://www.ivoa.net/xml/UWS/v1.0 http://www.ivoa.net/xml/UWS/v1.0 http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+    >     <jobId>1632719058404A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T05:04:18Z</creationTime>
+    >     <startTime>2021-09-27T05:07:32Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                                    COMMAND   CREATED          STATUS          PORTS                                                   NAMES
+    >   3e0814301329   ghcr.io/linuxserver/webtop:ubuntu-mate   "/init"   41 seconds ago   Up 40 seconds   3389/tcp, 0.0.0.0:49156->3000/tcp, :::49156->3000/tcp   festive_stonebraker
+    >   7f6640e4e468   testcontainers/ryuk:0.3.1                "/app"    42 seconds ago   Up 41 seconds   0.0.0.0:49155->8080/tcp, :::49155->8080/tcp             testcontainers-ryuk-59f6a832-d178-40c3-bd42-44aa005b900e
+
+    
+    tomcat logs ..
+
+    >   ....
+    >   2021-09-27 06:07:37,623 INFO  [1632719058404A] [io/linuxserver/webtop:ubuntu-mate]] Container ghcr.io/linuxserver/webtop:ubuntu-mate started in PT3.136572089S 
+    >   2021-09-27 06:07:37,623 DEBUG [1632719058404A] [SimpleDockerWorker] started 
+    >   2021-09-27 06:07:37,623 DEBUG [1632719058404A] [SimpleDockerWorker] ident [3e081430132977fa45acac7a861b3e006ce39994fcc8e299c6c8a0619f64b0a4] 
+    >   2021-09-27 06:07:37,623 DEBUG [1632719058404A] [SimpleDockerWorker] port  [49156] 
+    >   2021-09-27 06:07:37,624 DEBUG [1632719058404A] [SimpleDockerWorker] checking 
+    >   2021-09-27 06:07:37,624 DEBUG [1632719058404A] [SimpleDockerWorker] running [true] 
+    >   ....
+
+
+    check webtop
+    firefox --new-window 'http://localhost:49156/'
+
+        #
+        # Webtop desktop works ..
+        #
+
+
+    >   ....
+    >   2021-09-27 06:12:34,186 DEBUG [1632719058404A] [PoolingHttpClientConnectionManager] ex-0000001A: acquired ep-00000019 
+    >   2021-09-27 06:12:34,186 DEBUG [1632719058404A] [InternalHttpClient] ex-0000001A: acquired endpoint ep-00000019 
+    >   2021-09-27 06:12:34,186 DEBUG [1632719058404A] [MainClientExec] ex-0000001A: executing DELETE /v1.32/containers/3e081430132977fa45acac7a861b3e006ce39994fcc8e299c6c8a0619f64b0a4?v=true&force=true HTTP/1.1 
+    >   2021-09-27 06:12:34,186 DEBUG [1632719058404A] [InternalHttpClient] ep-00000019: start execution ex-0000001A 
+    >   2021-09-27 06:12:34,186 DEBUG [1632719058404A] [PoolingHttpClientConnectionManager] ep-00000019: executing exchange ex-0000001A over http-outgoing-5 
+    >   2021-09-27 06:12:34,186 DEBUG [1632719058404A] [headers] http-outgoing-5 >> DELETE /v1.32/containers/3e081430132977fa45acac7a861b3e006ce39994fcc8e299c6c8a0619f64b0a4?v=true&force=true HTTP/1.1 
+    >   ....
+
+
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632719058404A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>COMPLETED</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T05:04:18Z</creationTime>
+    >     <startTime>2021-09-27T05:07:32Z</startTime>
+    >     <endTime>2021-09-27T05:12:40Z</endTime>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="stdout" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632719058404A/results/stdout" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/stdout"
+
+    >   -
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                       COMMAND   CREATED         STATUS         PORTS                                         NAMES
+    >   7f6640e4e468   testcontainers/ryuk:0.3.1   "/app"    9 minutes ago   Up 9 minutes   0.0.0.0:49155->8080/tcp, :::49155->8080/tcp   testcontainers-ryuk-59f6a832-d178-40c3-bd42-44aa005b900e
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# POST a job.
+#[user@desktop]
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                       COMMAND   CREATED          STATUS          PORTS                                         NAMES
+    >   7f6640e4e468   testcontainers/ryuk:0.3.1   "/app"    18 minutes ago   Up 18 minutes   0.0.0.0:49155->8080/tcp, :::49155->8080/tcp   testcontainers-ryuk-59f6a832-d178-40c3-bd42-44aa005b900e
+
+
+    curl --silent \
+        --request POST \
+        --data 'time=57' \
+        'http://localhost:8080/uwspod/docker-workers'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers' \
+    | xmlstarlet fo
+
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobref id="1632719058404A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632719058404A">
+    >       <phase>COMPLETED</phase>
+    >       <creationTime>2021-09-27T05:04:18Z</creationTime>
+    >     </jobref>
+    >     <jobref id="1632720440563A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632720440563A">
+    >       <phase>PENDING</phase>
+    >       <creationTime>2021-09-27T05:27:20Z</creationTime>
+    >     </jobref>
+    >   </jobs>
+
+    jobid=1632720440563A
+
+    curl --silent \
+        --request POST \
+        --data 'PHASE=RUN' \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632720440563A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T05:27:20Z</creationTime>
+    >     <startTime>2021-09-27T05:28:38Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                                    COMMAND   CREATED                  STATUS          PORTS                                         NAMES
+    >   0805a3870230   ghcr.io/linuxserver/webtop:ubuntu-mate   "/init"   Less than a second ago   Created                                                       friendly_mcclintock
+    >   7f6640e4e468   testcontainers/ryuk:0.3.1                "/app"    21 minutes ago           Up 21 minutes   0.0.0.0:49155->8080/tcp, :::49155->8080/tcp   testcontainers-ryuk-59f6a832-d178-40c3-bd42-44aa005b900e
+
+
+    firefox --new-window 'http://localhost:49157/'
+
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632720440563A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>COMPLETED</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T05:27:20Z</creationTime>
+    >     <startTime>2021-09-27T05:28:38Z</startTime>
+    >     <endTime>2021-09-27T05:33:45Z</endTime>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="stdout" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632720440563A/results/stdout" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+  docker ps -a
+
+    >   CONTAINER ID   IMAGE                       COMMAND   CREATED          STATUS          PORTS                                         NAMES
+    >   7f6640e4e468   testcontainers/ryuk:0.3.1   "/app"    40 minutes ago   Up 40 minutes   0.0.0.0:49155->8080/tcp, :::49155->8080/tcp   testcontainers-ryuk-59f6a832-d178-40c3-bd42-44aa005b900e
+
+
+

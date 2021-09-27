@@ -1,0 +1,379 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+# -----------------------------------------------------
+# List the containers deployed in Docker.
+#[user@desktop]
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+# -----------------------------------------------------
+# Start the webapp ..
+#[user@desktop]
+
+    mvn spring-boot:run
+
+    >   ....
+    >   ....
+    >   2021-09-27 09:27:45,840 INFO  [main] [ApplicationAvailabilityBean] Application availability state LivenessState changed to CORRECT 
+    >   2021-09-27 09:27:45,842 INFO  [main] [ApplicationAvailabilityBean] Application availability state ReadinessState changed to ACCEPTING_TRAFFIC 
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+# -----------------------------------------------------
+# POST a job.
+#[user@desktop]
+
+    docker ps -a
+
+
+
+    curl --silent \
+        --request POST \
+        --data 'time=57' \
+        'http://localhost:8080/uwspod/docker-workers'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers' \
+    | tee /tmp/joblist.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobref id="1632737898056A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632737898056A">
+    >       <phase>PENDING</phase>
+    >       <creationTime>2021-09-27T10:18:18Z</creationTime>
+    >     </jobref>
+    >   </jobs>
+
+
+    cat /tmp/joblist.xml \
+    | xmlstarlet \
+        select \
+            --template \
+                --match '/_:jobs/_:jobref' \
+                --value-of '@id' \
+                --nl 
+
+    >   1632737898056A
+
+
+    jobid=1632737898056A
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632737898056A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>PENDING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T10:18:18Z</creationTime>
+    >     <startTime xsi:nil="true"/>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+# -----------------------------------------------------
+# Start the job.
+#[user@desktop]
+
+    curl --silent \
+        --request POST \
+        --data 'PHASE=RUN' \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632737898056A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T10:18:18Z</creationTime>
+    >     <startTime>2021-09-27T10:19:02Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632737898056A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T10:18:18Z</creationTime>
+    >     <startTime>2021-09-27T10:19:02Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="image">docker.io/library/fedora:34</parameter>
+    >       <parameter id="time">57</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="state" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632737898056A/results/state" mime-type="text/plain"/>
+    >       <result id="ports" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632737898056A/results/ports" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/ports" \
+    | jq '.'
+
+    >   {
+    >     "ports": [
+    >       {
+    >         "internal": 3000,
+    >         "external": 49167
+    >       }
+    >     ]
+    >   }
+
+    webport=$(
+        curl --silent \
+            "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/ports" \
+        | jq -r '.ports[] | select(.internal == 3000) | .external'
+        )
+
+    firefox --new-window "http://"localhost:${webport:?}/
+
+
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# List the containers deployed in Docker.
+#[user@desktop]
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+# -----------------------------------------------------
+# Start the webapp ..
+#[user@desktop]
+
+    mvn spring-boot:run
+
+    >   ....
+    >   ....
+    >   2021-09-27 12:06:09,470 INFO  [main] [ApplicationAvailabilityBean] Application availability state LivenessState changed to CORRECT 
+    >   2021-09-27 12:06:09,472 INFO  [main] [ApplicationAvailabilityBean] Application availability state ReadinessState changed to ACCEPTING_TRAFFIC 
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+# -----------------------------------------------------
+# POST a job.
+#[user@desktop]
+
+    curl --silent \
+        --request POST \
+        --data 'lifetime=PT10M' \
+        --data 'image=ghcr.io/linuxserver/webtop:ubuntu-mate' \
+        'http://localhost:8080/uwspod/docker-workers'
+
+    curl --silent \
+        'http://localhost:8080/uwspod/docker-workers' \
+    | tee /tmp/joblist.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <jobs xmlns="....">
+    >     <jobref id="1632750409359A" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632750409359A">
+    >       <phase>PENDING</phase>
+    >       <creationTime>2021-09-27T13:46:49Z</creationTime>
+    >     </jobref>
+    >   </jobs>
+
+
+    cat /tmp/joblist.xml \
+    | xmlstarlet \
+        select \
+            --template \
+                --match '/_:jobs/_:jobref' \
+                --value-of '@id' \
+                --nl 
+
+    >   1632750409359A
+
+
+    jobid=1632750409359A
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632750409359A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>PENDING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T13:46:49Z</creationTime>
+    >     <startTime xsi:nil="true"/>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT10M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >     </results>
+    >   </job>
+
+
+# -----------------------------------------------------
+# Start the job.
+#[user@desktop]
+
+    curl --silent \
+        --request POST \
+        --data 'PHASE=RUN' \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632750409359A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T13:46:49Z</creationTime>
+    >     <startTime>2021-09-27T13:47:37Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT10M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >     </results>
+    >   </job>
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                                    COMMAND   CREATED              STATUS              PORTS                                                   NAMES
+    >   eee492151558   ghcr.io/linuxserver/webtop:ubuntu-mate   "/init"   About a minute ago   Up About a minute   3389/tcp, 0.0.0.0:49175->3000/tcp, :::49175->3000/tcp   laughing_benz
+    >   a9fc13b9d45a   testcontainers/ryuk:0.3.1                "/app"    About a minute ago   Up About a minute   0.0.0.0:49174->8080/tcp, :::49174->8080/tcp             testcontainers-ryuk-ac58bbb2-1433-4508-b82b-ad8fcbb1d489
+
+
+# -----------------------------------------------------
+# Get the mapped ports from the UWS job.
+#[user@desktop]
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1632750409359A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-09-27T13:46:49Z</creationTime>
+    >     <startTime>2021-09-27T13:47:37Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT10M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="state" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632750409359A/results/state" mime-type="text/plain"/>
+    >       <result id="ports" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1632750409359A/results/ports" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+    curl --silent \
+        "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/ports" \
+    | jq '.'
+
+    >   {
+    >     "ports": [
+    >       {
+    >         "internal": 3000,
+    >         "external": 49175
+    >       }
+    >     ]
+    >   }
+
+    webport=$(
+        curl --silent \
+            "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/ports" \
+        | jq -r '.ports[] | select(.internal == 3000) | .external'
+        )
+
+    firefox --new-window "http://"localhost:${webport:?}/
+

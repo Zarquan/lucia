@@ -20,20 +20,14 @@
  */
 package net.ivoa.lucia.uws;
 
-import net.ivoa.volt.uws.example.MyUWSServlet;
+import javax.servlet.annotation.WebServlet;
 
-import java.io.IOException; 
-import java.io.PrintWriter; 
-
-import javax.servlet.ServletException; 
-import javax.servlet.annotation.WebServlet; 
-import javax.servlet.http.HttpServlet; 
-import javax.servlet.http.HttpServletRequest; 
-import javax.servlet.http.HttpServletResponse; 
+import net.ivoa.lucia.uws.docker.SimpleDockerServlet; 
 
 @WebServlet(urlPatterns = "/uwspod/*", loadOnStartup = 1)
-public class UWSPodServlet extends MyUWSServlet
+public class UWSPodServlet extends SimpleDockerServlet
     {
+	private static final long serialVersionUID = -2262089947109463062L;
 /*    
     private static final long serialVersionUID = 1L;
     public void doPost(HttpServletRequest request, HttpServletResponse response)

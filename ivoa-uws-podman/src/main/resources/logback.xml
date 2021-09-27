@@ -20,6 +20,24 @@
     +-->
 <configuration scan="true">
 
+	<!--+
+	    | Default console appender (e.g. tomcat/logs/catalina.out).
+	    | http://logback.qos.ch/manual/configuration.html
+	    | http://logback.qos.ch/manual/appenders.html
+	    | http://logback.qos.ch/manual/layouts.html
+	    +-->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.out</target>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] [%logger{0}] %message %n</pattern>
+            <!-- %exception{short} -->
+            <!-- %caller{2} -->
+        </encoder>
+	</appender>
+
     <!--+
         | Rolling log for INFO and above.
         | Rollover daily, max file size is 250MB (before compression), 4 days history, total size limit of 1GB.
@@ -126,11 +144,26 @@
         | https://stackoverflow.com/a/13284960
         +-->
     <root level="ALL">
+        <appender-ref ref="console" />
         <appender-ref ref="info-log" />
         <appender-ref ref="error-log" />
         <appender-ref ref="debug-log" />
         <appender-ref ref="trace-log" />
     </root>
+
+    <!--+
+        | Tomcat loggers.
+        | https://stackoverflow.com/a/43602723
+        +-->
+    <logger name="org.apache.tomcat">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.apache.coyote">
+        <level value="WARN" />
+    </logger>
+    <logger name="org.apache.tomcat.util.net">
+        <level value="WARN" />
+    </logger>
     
     <!--+
         | Spring loggers.
