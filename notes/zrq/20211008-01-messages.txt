@@ -1,0 +1,219 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Simplest canIDoThis request, just the task type.
+
+        request:
+            tasktype: 'anyURI'
+
+    Simplest canIDoThis response, just the response code.
+    
+        response:
+            responsecode: [YES|NO]
+
+
+    Simplish canIDoThis response with service endpoint,
+    details of the endpoint depend on servicetype.
+    
+        response:
+            responsecode: [YES|NO]
+            servicetype: 'anyURI'
+            serviceinfo:
+                endpoint: 'URL'
+
+    Complex canIDoThis response with additional service
+    info and params, details depend on servicetype.
+    
+        response:
+            responsecode: [YES|NO]
+            servicetype: 'anyURI'
+            serviceinfo:
+                endpoint: 'URL'
+                colour: 'blue'
+            serviceparam:
+                size: 207
+                date: '2010/05/23'
+
+    --------------------------------
+    
+    Minimal canIDoThis request, just the task type.
+    Can I run a Docker container ?
+
+        request:
+            tasktype: 'http://purl.escape.eu/ivoa-epi/docker-run'
+
+    Minimal response, just the [YES|NO] code.
+
+        response:
+            responsecode: [YES|NO]
+
+    Client is responsible for figuring out how to format the job
+    request and where to send it to.
+
+    --------------------------------
+    
+    Simple canIDoThis request, just the task type.
+    Can I run a Docker container ?
+
+        request:
+            tasktype: 'http://purl.escape.eu/ivoa-epi/docker-run'
+
+    Service response, including the service type and endpoint URL.
+
+        response:
+            responsecode: [YES|NO]
+            servicetype: 'http://purl.escape.eu/ivoa-epi/docker-uws'
+            serviceinfo:
+                endpoint: 'http://docker-uws.example.org/uws-async'
+
+
+    --------------------------------
+    
+    Simple canIDoThis request, task type and link to the dockerfile.
+
+        request:
+            tasktype: 'http://purl.escape.eu/ivoa-epi/docker-run'
+            taskinfo:
+                dockerfile: 'https://raw.githubusercontent.com/ivoa/ivoatex-docker/master/docker/Dockerfile'
+                
+
+    Simple canIDoThis request, task type and a fully qualified image name (FQIN).
+    hostname[:port]/username/reponame[:tag]
+    
+        request:
+            tasktype: 'http://purl.escape.eu/ivoa-epi/docker-run'
+            taskinfo:
+                imageref: 'docker.io/ivoa/ivoatex:latest'
+
+
+    Service response, including the 'docker-uws' service type and an endpoint URL.
+
+        response:
+            responsecode: [YES|NO]
+            servicetype: 'http://purl.escape.eu/ivoa-epi/docker-uws'
+            serviceinfo:
+                endpoint: 'http://docker-uws.example.org/uws-async'
+
+
+    Service MAY choose to download the Dockerfile and/or docker images and apply
+    local rules.
+    
+        * Maximum image size
+        * White-list of images
+        * White-list of base images
+        * ....
+
+    --------------------------------
+
+    Complex canIDoThis request, task type, link to the dockerfile or image name
+    and target resource requirements.
+
+        request:
+            tasktype: 'http://purl.escape.eu/ivoa-epi/docker-run'
+            taskinfo:
+                dockerfile: 'https://raw.githubusercontent.com/ivoa/ivoatex-docker/master/docker/Dockerfile'
+                imageref:   'docker.io/ivoa/ivoatex:latest'
+
+                resources:
+
+                    mintemp:  8     // minimum to needed run
+                    maxtemp: 10     // maximum task will use
+
+                    mincores:  8    // minimum to needed run
+                    maxcores: 10    // maximum task will use
+
+                    minmemory:  8G  // minimum to needed run
+                    maxmemory: 10G  // maximum task will use
+
+                    minstartup:  0s // ?? 
+                    maxstartup: 60s // maximum acceptable startup time
+
+                    minduration:  5m // expected to take at least this much
+                    maxduration: 10m // maximum time needed
+
+
+    Service response, including the 'docker-uws' service type, endpoint URL and
+    updated resource requirements.
+
+        response:
+            responsecode: [YES|NO]
+            servicetype: 'http://purl.escape.eu/ivoa-epi/docker-uws'
+            serviceinfo:
+                endpoint: 'http://docker-uws.example.org/uws-async'
+
+                resources:
+
+                    mintemp:  8     // minimum to needed run
+                    maxtemp: 12     // maximum you can use
+
+                    mincores: 8     // minimum to needed run
+                    maxcores: 12    // maximum you will get
+
+                    minmemory:  8G  // minimum to needed run
+                    maxmemory: 16G  // maximum you can use
+
+                    minstartup: 10s // expected to take at least this long
+                    maxstartup: 60s // guaranteed to take less than this
+
+                    minduration:  5m // expected to take at least this long
+                    maxduration: 20m // maximum allowed, killed at this point
+
+
+    --------------------------------
+
+        // Fast access to the Gaia data set
+        inputs: [
+                {
+                name: 'GAIA-EDR3'
+                source: rucio::/escape.eu/aglais/gaia-edr3
+                quality:  lightning
+                protocol: POSIX
+                minspace:  512G
+                maxspace: 1024G
+                }
+            ]
+
+        // Fast access to a storage location for results
+        outputs: [
+                {
+                name: 'results'
+                target: rucio://escape.eu/my-domain/my-results
+                quality: lightning
+                protocol: [POSIX,NFS,HDFS,S3]
+                minspace:  512G
+                maxspace: 1024G
+                },
+                {....},
+                {....}
+            ]            
+
+
+
+
+                        
