@@ -1,0 +1,90 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Looks like we need a user interface for users to monitor their containers.
+
+    IAM integration
+    Local state for user mounted into the container.
+    
+    Mapping of container ports
+    Interactivce access to stdin/stdout ?
+    https://xtermjs.org/
+    
+    Portainer on Pi
+    https://www.youtube.com/watch?v=cO2-gQ09Jj0
+    
+    https://community.portainer.io/
+    
+    
+    
+    Basic services:
+    
+        uws-docker
+        uws-compose
+
+        rosetta-web
+        rosetta-rest
+
+    Complex services:
+    
+        portainer-docker
+        portainer-kubernetes
+        ....    
+    
+
+    Add a basic UI to our UWS service.
+    Refactor as Spring controllers at the same time.
+    Dropping the uwslib bean classes.
+    .. because we are familiar with Spring controllers and views    
+    
+    really simple webapp, every 'page' has a REST/JSON view and a HTML/form view
+    
+    users
+    jobs
+
+        owner    
+        status
+        startdate
+        enddate
+
+        image
+        dockefile
+        resources
+
+        stdout - url
+        stderr - url
+
+        port mappings [
+            {internal:external},                
+            {internal:external} 
+            ]               
+
+            
+
+    
