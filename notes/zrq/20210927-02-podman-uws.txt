@@ -375,5 +375,5 @@
         | jq -r '.ports[] | select(.internal == 3000) | .external'
         )
 
-    firefox --new-window "http://"localhost:${webport:?}/
+    firefox --new-window "http://localhost:${webport:?}/"
 

@@ -113,6 +113,7 @@
         Just saying
             
     Portainer
+    https://github.com/portainer/portainer
     https://github.com/portainer/portainer/blob/develop/README.md
             
         Portainer CE is a lightweight ‘universal’ management GUI that can be used
