@@ -58,7 +58,7 @@ public class SimpleDockerServlet
 				@Override
 				public Object getDefault()
 					{
-					return SimpleDockerWorker.DEFAULT_IMAGE_NAME ;
+					return SimpleDockerWorker.DEFAULT_IMAGE_NAME.toString() ;
 					}
 	
 				@Override
