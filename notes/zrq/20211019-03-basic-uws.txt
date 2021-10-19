@@ -1,0 +1,273 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#
+
+    Target:
+    
+        Simple demo of the Docker CcontainerExec service.
+
+    Result:
+
+    
+
+
+# -----------------------------------------------------
+# Check the local settings.
+#[user@desktop]
+
+    cat "${HOME:?}/lucia.env"
+
+    >   source "${HOME:?}/projects.env"
+    >   LUCIA_REPO='git@github.com:Zarquan/lucia.git'
+    >   LUCIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/lucia"
+    >   LUCIA_CODE="${LUCIA_HOME:?}/github-zrq"
+
+
+# -----------------------------------------------------
+# Build and run the ExecPlanner service.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_CODE:?}"
+        pushd ivoa-uws-podman
+
+            mvn clean
+            mvn spring-boot:run
+
+    >   ....
+    >     .   ____          _            __ _ _
+    >    /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+    >   ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+    >    \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+    >     '  |____| .__|_| |_|_| |_\__, | / / / /
+    >    =========|_|==============|___/=/_/_/_/
+    >    :: Spring Boot ::                (v2.5.0)
+    >   ....
+    >   2021-10-19 19:18:04,542 INFO  [main] [ApplicationAvailabilityBean] Application availability state LivenessState changed to CORRECT 
+    >   2021-10-19 19:18:04,544 INFO  [main] [ApplicationAvailabilityBean] Application availability state ReadinessState changed to ACCEPTING_TRAFFIC 
+    >   ....
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# List the containers deployed in Docker.
+#[user@desktop]
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+# -----------------------------------------------------
+# POST a job.
+#[user@desktop]
+
+    curl --silent \
+         --location \
+         --data 'lifetime=PT2M' \
+         --data 'image=ghcr.io/linuxserver/webtop:ubuntu-mate' \
+         'http://localhost:8080/uwspod/docker-workers' \
+    | tee /tmp/newjob.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1634667829829A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>PENDING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-10-19T18:23:49Z</creationTime>
+    >     <startTime xsi:nil="true"/>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT2M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    jobid=$(
+        xmlstarlet \
+            select \
+                --template \
+                    --value-of '//_:jobId' \
+                    --nl \
+            /tmp/newjob.xml
+        )
+
+    echo "Job ID [${jobid}]"
+
+    >   Job ID [1634667829829A]
+
+
+    curl --silent \
+         "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1634667829829A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>PENDING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-10-19T18:23:49Z</creationTime>
+    >     <startTime xsi:nil="true"/>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT2M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+# -----------------------------------------------------
+# Start the job.
+#[user@desktop]
+
+    curl --silent \
+         --location \
+         --data 'PHASE=RUN' \
+         "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1634667829829A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>EXECUTING</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-10-19T18:23:49Z</creationTime>
+    >     <startTime>2021-10-19T18:25:03Z</startTime>
+    >     <endTime xsi:nil="true"/>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT2M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >   	</results>
+    >   </job>
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                                    COMMAND   CREATED          STATUS          PORTS                                                   NAMES
+    >   1f21a2c8b9c0   ghcr.io/linuxserver/webtop:ubuntu-mate   "/init"   16 seconds ago   Up 14 seconds   3389/tcp, 0.0.0.0:49159->3000/tcp, :::49159->3000/tcp   great_booth
+    >   0dd64b8ddc29   testcontainers/ryuk:0.3.1                "/app"    16 seconds ago   Up 14 seconds   0.0.0.0:49157->8080/tcp, :::49157->8080/tcp             testcontainers-ryuk-98757b45-ef55-4bab-a606-71558fd82a92
+
+
+# -----------------------------------------------------
+# Get the container port mapping.
+#[user@desktop]
+
+    curl --silent \
+         "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/ports" \
+    | jq '.'
+
+    >   {
+    >     "ports": [
+    >       {
+    >         "internal": 3000,
+    >         "external": 49159
+    >       }
+    >     ]
+    >   }
+
+
+    webport=$(
+        curl --silent \
+             "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/ports" \
+        | jq -r '.ports[] | select(.internal == 3000) | .external'
+        )
+
+echo "Port [${webport}]"
+
+    >   Port [49159]
+
+
+# -----------------------------------------------------
+# Connect to the container web port socket.
+#[user@desktop]
+
+    firefox --new-window "http://"localhost:${webport:?}/ &
+
+
+
+# -----------------------------------------------------
+# Wait for the execution limit to pass.
+#[user@desktop]
+
+    ....
+    ....
+
+
+    curl --silent \
+         "http://localhost:8080/uwspod/docker-workers/${jobid:?}" \
+    | tee /tmp/${jobid:?}.xml | xmlstarlet fo | sed 's|xmlns=".*">|xmlns="....">|'
+
+    >   <?xml version="1.0" encoding="UTF-8"?>
+    >   <job xmlns="....">
+    >     <jobId>1634667829829A</jobId>
+    >     <ownerId xsi:nil="true"/>
+    >     <phase>COMPLETED</phase>
+    >     <quote xsi:nil="true"/>
+    >     <creationTime>2021-10-19T18:23:49Z</creationTime>
+    >     <startTime>2021-10-19T18:25:03Z</startTime>
+    >     <endTime>2021-10-19T18:27:11Z</endTime>
+    >     <executionDuration>0</executionDuration>
+    >     <destruction xsi:nil="true"/>
+    >     <parameters>
+    >       <parameter id="lifetime">PT2M</parameter>
+    >       <parameter id="image">ghcr.io/linuxserver/webtop:ubuntu-mate</parameter>
+    >     </parameters>
+    >     <results>
+    >       <result id="stdout" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1634667829829A/results/stdout" mime-type="text/plain"/>
+    >       <result id="state" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1634667829829A/results/state" mime-type="text/plain"/>
+    >       <result id="ports" xlink:type="simple" xlink:href="http://localhost:8080/uwspod/docker-workers/1634667829829A/results/ports" mime-type="text/plain"/>
+    >     </results>
+    >   </job>
+
+
+    docker ps -a
+
+    >   CONTAINER ID   IMAGE                       COMMAND   CREATED         STATUS         PORTS                                         NAMES
+    >   0dd64b8ddc29   testcontainers/ryuk:0.3.1   "/app"    7 minutes ago   Up 7 minutes   0.0.0.0:49157->8080/tcp, :::49157->8080/tcp   testcontainers-ryuk-98757b45-ef55-4bab-a606-71558fd82a92
+
+
+    curl --silent \
+         "http://localhost:8080/uwspod/docker-workers/${jobid:?}/results/state"
+
+    >   InspectContainerResponse.ContainerState(status=running, running=true, paused=false, restarting=false, oomKilled=false, dead=false, pid=237417, exitCode=0, error=, startedAt=2021-10-19T18:25:04.402703332Z, finishedAt=0001-01-01T00:00:00Z, health=null)
+
+

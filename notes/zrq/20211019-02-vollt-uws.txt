@@ -1,0 +1,192 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#
+
+
+    Target:
+    
+        Build the Vollt UWS library.
+
+    Result:
+    
+        Success, Vollt UWS library installed in local Maven cache.
+
+
+# -----------------------------------------------------
+# Check the local settings.
+#[user@desktop]
+
+    cat "${HOME:?}/lucia.env"
+
+    >   source "${HOME:?}/projects.env"
+    >   LUCIA_REPO='git@github.com:Zarquan/lucia.git'
+    >   LUCIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/lucia"
+    >   LUCIA_CODE="${LUCIA_HOME:?}/github-zrq"
+
+
+# -----------------------------------------------------
+# Download the UWS lib project.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external
+            if [ ! -e 'vollt' ]
+            then
+                git clone 'git@github.com:gmantele/vollt.git' 'vollt'
+            else
+                pushd 'vollt'
+                    git pull
+                popd
+            fi
+        popd
+    popd
+
+
+
+# -----------------------------------------------------
+# Download the latest servlet API.
+#[user@desktop]
+    
+    mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get \
+        -Dartifact=javax.servlet:javax.servlet-api:4.0.1    
+
+
+    >   ....
+    >   [INFO] ------------------------------------------------------------------------
+    >   [INFO] BUILD SUCCESS
+    >   [INFO] ------------------------------------------------------------------------
+    >   [INFO] Total time:  1.379 s
+    >   [INFO] Finished at: 2021-10-19T15:12:22+01:00
+    >   [INFO] ------------------------------------------------------------------------
+
+
+# -----------------------------------------------------
+# Configure SERVLET-API location.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/vollt
+
+            vi buildUWS.xml 
+
+    	        <property name="SERVLET-API" value="/var/local/cache/maven/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar" />
+
+
+        popd
+    popd
+
+
+# -----------------------------------------------------
+# Disable the JUnit goals (I couldn't get these to work).
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/vollt
+
+            vi buildUWS.xml 
+
+            +   <!--+
+            +       | Commented out to just build the libraries
+                <target name="junitValidation" depends="cleanJUnitReports,compileJUnit" description="Executes all JUnit tests before building the library and stop ANT at any error.">
+            	        ....
+            	        ....
+        	    </target>
+        	+       |
+        	+       +-->
+
+            +   <!--+
+            +       | Empty task just to get the build to work ..
+        	+       +-->
+        	+   <target name="junitValidation" depends=""/>
+
+
+        popd
+    popd
+
+
+# -----------------------------------------------------
+# Run the Ant build.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/vollt
+
+            ant -file buildUWS.xml 
+
+        popd
+    popd
+
+
+    >   Buildfile: /var/local/projects/ESCAPE/lucia/external/vollt/buildUWS.xml
+    >        [echo] UWS LIBRARY VERSION = 4.4
+    >   
+    >   clean:
+    >      [delete] Deleting directory /var/local/projects/ESCAPE/lucia/external/vollt/antBuild
+    >   
+    >   compileLib:
+    >       [mkdir] Created dir: /var/local/projects/ESCAPE/lucia/external/vollt/antBuild
+    >       [javac] Compiling 90 source files to /var/local/projects/ESCAPE/lucia/external/vollt/antBuild
+    >       [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.7
+    >       [javac] 1 warning
+    >   
+    >   junitValidation:
+    >   
+    >   buildLib:
+    >        [echo] Generate the library:
+    >         [jar] Building jar: /var/local/projects/ESCAPE/lucia/external/vollt/uws_4.4.jar
+    >      [delete] Deleting directory /var/local/projects/ESCAPE/lucia/external/vollt/antBuild
+    >   
+    >   BUILD SUCCESSFUL
+    >   Total time: 7 seconds
+
+
+# -----------------------------------------------------
+# Install the Vollt jar in our Maven cache.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_HOME:?}"
+        pushd external/vollt
+
+            mvn install:install-file \
+                -Dfile=uws_4.4.jar \
+                -DgroupId=net.ivoa \
+                -DartifactId=volt-uws \
+                -Dversion=4.4 \
+                -Dpackaging=jar
+
+        popd
+    popd
+
+    >   ....
+    >   [INFO] ------------------------------------------------------------------------
+    >   [INFO] BUILD SUCCESS
+    >   [INFO] ------------------------------------------------------------------------
+    >   [INFO] Total time:  0.575 s
+    >   [INFO] Finished at: 2021-10-19T15:33:20+01:00
+    >   [INFO] ------------------------------------------------------------------------
+
+
+

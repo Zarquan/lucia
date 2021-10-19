@@ -1,0 +1,126 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#
+
+    Target:
+    
+        Simple demo of the ExecPlanner service.
+
+    Result:
+    
+        Success, basic demo request works from the command line.
+
+
+# -----------------------------------------------------
+# Check the local settings.
+#[user@desktop]
+
+    cat "${HOME:?}/lucia.env"
+
+    >   source "${HOME:?}/projects.env"
+    >   LUCIA_REPO='git@github.com:Zarquan/lucia.git'
+    >   LUCIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/lucia"
+    >   LUCIA_CODE="${LUCIA_HOME:?}/github-zrq"
+
+
+# -----------------------------------------------------
+# Build and run the ExecPlanner service.
+#[user@desktop]
+
+    source "${HOME:?}/lucia.env"
+    pushd "${LUCIA_CODE:?}"
+        pushd ivoa-epi-webapp
+
+            mvn clean
+            mvn spring-boot:run
+
+
+    >   ....
+    >   [INFO] --- spring-boot-maven-plugin:2.5.0:run (default-cli) @ ivoa-epi-webapp ---
+    >   [INFO] Attaching agents: []
+    >   
+    >     .   ____          _            __ _ _
+    >    /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+    >   ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+    >    \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+    >     '  |____| .__|_| |_|_| |_\__, | / / / /
+    >    =========|_|==============|___/=/_/_/_/
+    >    :: Spring Boot ::                (v2.5.0)
+    >   
+    >   2021-10-19 14:58:07.309  INFO 4039215 --- [           main] net.ivoa.lucia.epi.EPIWebappApplication  : Starting EPIWebappApplication using Java 16.0.1 on methionine with PID 4039215 (/var/local/projects/ESCAPE/lucia/github-zrq/ivoa-epi-webapp/target/classes started by Zarquan in /var/local/projects/ESCAPE/lucia/github-zrq/ivoa-epi-webapp)
+    >   2021-10-19 14:58:07.311  INFO 4039215 --- [           main] net.ivoa.lucia.epi.EPIWebappApplication  : No active profile set, falling back to default profiles: default
+    >   2021-10-19 14:58:08.459  INFO 4039215 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+    >   2021-10-19 14:58:08.480  INFO 4039215 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+    >   2021-10-19 14:58:08.481  INFO 4039215 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]
+    >   2021-10-19 14:58:08.559  INFO 4039215 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+    >   2021-10-19 14:58:08.560  INFO 4039215 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1187 ms
+    >   2021-10-19 14:58:09.100  INFO 4039215 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+    >   2021-10-19 14:58:09.145  INFO 4039215 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+    >   2021-10-19 14:58:09.165  INFO 4039215 --- [           main] net.ivoa.lucia.epi.EPIWebappApplication  : Started EPIWebappApplication in 2.326 seconds (JVM running for 2.753)
+    >   2021-10-19 14:58:09.214  INFO 4039215 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+    >   2021-10-19 14:58:09.216  INFO 4039215 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+    >   2021-10-19 14:58:38.243  INFO 4039215 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+    >   2021-10-19 14:58:38.243  INFO 4039215 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+    >   2021-10-19 14:58:38.245  INFO 4039215 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+    >   ....
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Anonymous HTTP GET request.
+#[user@desktop]
+
+        curl -s -S \
+            --request GET \
+            'http://localhost:8080/check?tasktype=http://purl.example.org/qwerty-task' \
+        | jq '.'
+
+    >   {
+    >     "reponsecode": "YES",
+    >     "servicetype": "http://purl.example.org/qwerty-service",
+    >     "serviceinfo": {
+    >       "qwerty.endpoint": "http://qwerty.example.org/service"
+    >     }
+    >   }
+
+
+# -----------------------------------------------------
+# Anonymous HTTP POST request.
+#[user@desktop]
+
+        curl -s -S \
+            --request POST \
+            --data 'tasktype=http://purl.example.org/qwerty-task' \
+            'http://localhost:8080/check' \
+        | jq '.'
+
+
+    >   {
+    >     "reponsecode": "YES",
+    >     "servicetype": "http://purl.example.org/qwerty-service",
+    >     "serviceinfo": {
+    >       "qwerty.endpoint": "http://qwerty.example.org/service"
+    >     }
+    >   }
+
+
+
+
