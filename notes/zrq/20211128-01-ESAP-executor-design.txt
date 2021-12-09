@@ -1,0 +1,201 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    #
+    # Background preparing for writing the wiki page.
+    # https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/Executing-Software-part2
+    #
+
+The following points are based on our work developing the specification for the IVOA ExecutionPlanner interface.
+<link>
+
+Note, we are not requiring ESAP to use the IVOA ExecutionPlanner interface.
+It would be nice, but at this stage it isn't required.
+
+To start with we can acheive at least part of this using Python plugins components within ESAP.
+
+What we are suggesting is that ESAP should use a similar design pattern to model
+the relationships between executable tasks and execution platforms.
+
+----
+
+OSSR
+
+If we want to implement what the ESCAPE project proposal refers to as a market place for software,
+it may be useful to look at how a commercial cloud provider such as DigitalOcean
+implements a market place for software components.
+<link>
+
+In order to develop a similar market place offering single click application, or appliance, deployments,
+then OSSR needs to distinguish between three :
+
+    * The software (e.g. a Python library)
+    * A deployable thing (e.g. pip installable library with requirements.txt)
+    * An excutable thing (e.g. an OCI container with the library installed)
+
+Currently the metadata curated by the OSSR in the codemeta files describes the software,
+not the executable component.
+For example, the metadata for the OSSR Python library describes the source code and requirements
+for the library, but does not describe the executable things that are created from it.
+In this case, the Jupyter notebooks and the Docker container.
+
+A common pattern for software development projects, in ESAP and 3rd party,
+is to include the software source code, the Jupyter notebooks and Docker containers
+all in the same git repository.
+
+So we need to find a way to identify and describe to the executable components within a git repository,
+or we need to find a way of splitting a repository into separate components.
+
+We can see two ways of doing this:
+
+1) A separate database outside Zenodo that contains references the executable things.
+   Each database record would contain pointers into the git repository to identify and describe an executable component.
+   For example, there would be two records for the OSSR software library, one identifying the example notebooks and one identifying the Docker container.
+
+   This would mean some significant changes to the OSSR design, including developing and maintaining an external database platform
+   that was not part of the original design.
+
+2) Alternativley, we can acheive a similar result by introducing small wrapper components that
+live in their own git repositories.
+
+So, for example, we could create two new git repositories for the OSSR software library.
+One would contain metadata to describe the example notebooks and one for identifying and desacribing the Docker container.
+
+* OSSR-Python library-notebook-examples
+
+* OSSR-Python-library-docker-image
+
+These git repositories can be registered and tagged as executable components in Zenodo.
+
+This builds on the existing OSSR infrastructure to provide a searchable database of executable things,
+separate and distinct from the software that they are built from.
+
+This also addresses a couple of other problems.
+
+1) It is not always possible to register 3rd party software in the exiting OSSR structure because
+we do not control the software reopository.
+Requiring 3rd party developers outside ESCAPE to add specific metadata files to their
+source code to make their sowfwtare compatible with
+the OSSR requirements is not practical.
+
+We can use these new wrapper projects to register 3rd party software
+by creating and registering the metadata in our wrapper project,
+that describes an executable thing derrived, or containing, the 3rd party software.
+
+    example ..
+
+2) There are many cases where the researcher would want to use a combination
+of different software components as part of their work.
+An example of this are the turorals developed by Hendrik
+that demonstrate how to use the IVOA desktop tools.
+
+We can use a wrapper project to create a Docker container
+that combines the tools in a remote desktop environment
+and register that as an executable component
+in Zenodo.
+
+    example ..
+
+
+
+
+    Separate git wrappers for the executable things
+    Means lots of small single action git repositories,
+    but no changes to the OSSR structure, just more precises labelling.
+
+    Wrappers contain no code, just a combination of symlinks and submodules ?
+    https://stackoverflow.com/questions/4170930/single-file-as-git-submodule
+
+    Wrappers can bring 3rd party code into ESCAPE domain for registration.
+    Solves the issues with 3rd party repositories.
+
+    Wrappers can combine multiple applications into a single container.
+    e.g. IVOA desktop (TODO)
+
+
+
+    Reccomend containers as the best method, but we should not mandate them.
+    There may be other more appropriate methods for specific tasks.
+    ESAP might not implement other methods this time, but we should not explicitly exclude them.
+
+    ESAP should accept any type of container.
+    We should not place constraints on the internal structure of a container.
+    We can define specific types of container, which MAY come with specific requirements,
+    but the primary goal should be to support generic containers.
+
+    ESAP should be able to handle different container execution platforms.
+    We should adopt a plug-in connector model similar to the way that ESAP handles data sources.
+
+
+
+    Example use case, a user selects the software they want to use based on _'science criteria'_. In our example, they want to query the OSSR catalog, so they select the OSSR Python library by querying the OSSR Zenodo collection things tagged as 'software' components with the word _'OSSR'_ in their description.
+
+    Once the user selects the software they want to use, ESAP makes a further set of queries in the background.
+
+    The first step is to select all the executable things associated with the selected software. This would find two distinct executable items, the example notebooks, packaged as executable Jupyter notebooks, and a Docker container image containing the deployed library.
+
+    Depending on whether the users selects the Jupyter notebooks or the Docker container, ESAP makes a further query to identify execution platforms that are capable of executing that type of task.
+
+    Note that the link between types of task and types of execution platform is not a 1:1 mapping.
+
+    We already know of two different types of execution platform capable of running Jupyter notebooks. Firstly the generic JupyterHub deployment, but also the BinderHub deployment.
+
+    These need to be treated as distinct types of execution platform because both the user interface and the notebook execution entrypoint are different for the two platforms.
+
+
+    * OSSR-Python library-notebook-examples
+    * OSSR-Python-library-docker-image
+
+
+    As to what platform to choose.
+    Current best option is probably Portainer.
+    Opensource community project backed by a commercial product.
+    Active community of 212 developers, 87 releases, 2,800 commits
+
+    Supports a wide range of different container configurations.
+    * Simple command line containers
+    * Remote desktop graphical interface containers
+    * Docker compose sets of containers
+    * Podman and K8s pods
+
+    Again, we don't have to mandate, we can design the execution interfaces to be flexible enough to support multiple platforms.
+    IF a provider wants to support containers, then Podman is probably the best bet.
+    IF a provider already has a container platform, we can include that too.
+    IF a provider already has a notebook platform, we can include that too.
+
+    We don't have to mandate anything.
+    We can allow space for other platforms without requiring a lot of work for ESAP.
+    Similar to the REST interface based design of the data query components.
+
+    We are working on getting Portainer deployed locally.
+    Hope to have a working demo next week.
+
+
+    ESAP should define Jupyter, Zeppelin and RStudio notebooks as distinct types of executable thing that can be associated with their corresponding types of execution platform.
+
+

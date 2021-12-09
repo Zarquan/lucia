@@ -1,0 +1,94 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Why do we have the IVOA prefix on our GitHub projects ?
+    Looks naff once we transfer them to the IVOA organization.
+
+    CodeOfConduct
+
+        Rename IVOA-CodeOfConduct to CodeOfConduct (done)
+        Transfer to IVOA organization
+
+    ContainerExecutionService
+
+        Create UWSContainerExecutionService in IVOA organization
+        Install latex source from Overleaf
+        Install GitHub actions from ExecutionPlannerNote
+
+    ExecutionPlanner
+
+        Rename IVOA-ExecutionPlannerNote to ExecutionPlannerNote
+        Check with Sara before we do this
+
+        Experiment with Java and JSON/YAML parsers.
+        Need to choose between JSON and YAML POST messages.
+        If we follow Kubernetes, post YAML, read JSON.
+
+        Reasons:
+
+            YAML has comments
+            YAML has multi-line text
+            Both good for user edited content
+
+            Ansible is YAML
+            Kubernetes is YAML
+
+            Can the YAML parser cope with unknown elements ?
+
+        Do we introduce multiple nodes in this version ?
+
+            min and max memory apply to the whole job
+            current specification creates a single node and runs the container/composition in that
+            later versons will support multi node deployments
+
+            Look at the Kubernetes system specification again.
+            Can't find it ... need more GoogleFoo
+
+            How does min/max work for a cluster config ?
+            Do we adopt the "node-[00-07]" syntax from Ansible ?
+            Leave it for later, too many questions for now.
+
+        Identity and group membership
+
+            We need a local IAM and GMS to check group membership.
+            .. or a Mock GMS ?
+
+        Java interfaces
+
+            Create a RuleChecker interface.
+
+                boolean check(TaskRequest request, TaskResponse response)
+                    {
+                    }
+
+
+
+
+
+

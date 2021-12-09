@@ -1,0 +1,420 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    #
+    # Slack discussion with Sara about the IVOA ExecPlanner design.
+    #
+
+
+Dave Morris Today at 6:45 AM
+If there is only one service type, then we need to get both Christine and Stefano to agree on one way to execute Docker
+113 replies
+
+Sara Bertocco  6 hours ago
+But as commented Carlo, the protocol does not say how to execute, but only how to exchange info
+
+Dave Morris  6 hours ago
+The EP offers the available services, it doesn't do the execution.
+
+Dave Morris  6 hours ago
+It is up to the developers of each service-type to define how their service is used
+
+Dave Morris  6 hours ago
+Dave&Sara define how the "simple-docker-uws" works
+
+Dave Morris  6 hours ago
+Stefano defines how the "rosetta-docker-api" works
+
+Dave Morris  6 hours ago
+Christine defines how the "rubin-docker-api" works (edited)
+
+Sara Bertocco  6 hours ago
+yes, but how they interoperate? I'm loosing myself
+
+Dave Morris  6 hours ago
+the three servicetypes don't interoperate
+
+Dave Morris  6 hours ago
+we encourage Stefano and Christine to also implement the "basic-docker-uws" interface
+
+Dave Morris  6 hours ago
+the "basic-docker-uws" is interoperable (edited)
+
+Dave Morris  6 hours ago
+then perhaps Christine creates a really useful interface for Rubin
+
+Dave Morris  6 hours ago
+and Stefano chooses to add the "rubin-docker-api" interface to Rosetta (edited)
+
+Dave Morris  6 hours ago
+other people in ESCAPE choose to add "rosetta-docker-api" to their services
+
+Dave Morris  6 hours ago
+as more people choose to implement more interfaces we gradually get interoperability
+
+Dave Morris  6 hours ago
+the best interfaces will be the most popular ones
+
+Dave Morris  6 hours ago
+(*) this is really useful to discuss between us before we try to talk to Christine and Stefano
+
+Dave Morris  6 hours ago
+helps me to get the ideas clear in my head and how to describe them
+
+Dave Morris  6 hours ago
+and to see where the ideas don't make sense
+
+Sara Bertocco  6 hours ago
+It is difficult because I do not understand the way we are keeping. In my opinion our note was clear and useful. Now I do not know how to map this proliferation of api in the standard we are trying to define.
+Probably it could be better and faster if we open a video conf and try to chat
+
+Sara Bertocco  6 hours ago
+visually
+
+Dave Morris  5 hours ago
+talking with voice we get the first answer, not the best answer
+
+Dave Morris  5 hours ago
+with text we can pause for 20 min to think of the better answer
+
+Dave Morris  5 hours ago
+this is interesting, because it shows the text in the note is not clear
+
+Dave Morris  4 hours ago
+I thought the note did cover the many to many mapping between taskstypes and service types, but I can see now that it is not clear (edited)
+
+Sara Bertocco  4 hours ago
+I think we should not loose the point of our proposal. Our intention was to cover a simple use case: "can I do this?". We decided to not cover complex situations like for example slurm clusters. We need to have a solid base on simple use cases before to tackle complex situations
+
+Dave Morris  4 hours ago
+Ok, not quite what I was thinking.
+
+Dave Morris  4 hours ago
+For me, the idea behind the 'canIdothis' interface is that it is capable of handling really simple cases all the way up to really complicated Kubernetes deployments, because of the way it is designed.
+
+Dave Morris  4 hours ago
+to be accurate, "can I do this?" is not a use case
+
+Dave Morris  4 hours ago
+to be a use case, you need to define what the 'this' is
+
+Dave Morris  4 hours ago
+can I do 'simple docker containers' is more of a use case
+
+Dave Morris  4 hours ago
+can I do 'complicated slurm clusters' is a another use case
+
+Dave Morris  4 hours ago
+the execution planner interface can handle both, because it doesn't look at the details inside
+
+Sara Bertocco  4 hours ago
+Yes, but when a scientist needs to deploy a complicated cluster on kubernates or a slurm cluster to run his analysis?
+I think we are loosing the point. We are not providing administrators with a service to deploy infrastructures. We are trying to find a way to easily exploit already existing infrastructures
+
+Sara Bertocco  3 hours ago
+this is about the Christine comment on helm
+
+Dave Morris  3 hours ago
+you assuming it takes an expert to deploy a cluster - which is not true
+
+Dave Morris  3 hours ago
+the work we have done for the Gaia ML platform automates the whole deployment
+
+Dave Morris  3 hours ago
+so yes, a scientist could take the Kubernetes configuration we have in git hub, and deploy that on a generic Kubernetes cluster by passing one configuration file to deploy the full analysis system
+
+Dave Morris  3 hours ago
+the whole system would live long enough to complete the analysis task, ~9hrs, and then be deleted
+
+Sara Bertocco  3 hours ago
+This is much more complex than what I have in mind
+
+Dave Morris  3 hours ago
+OpenStack has a REST API that can create a Kubernetes cluster from four parameters, the number of nodes and their size
+
+Dave Morris  3 hours ago
+this isn't complicated
+
+Dave Morris  3 hours ago
+it sounds scary - but it isn't
+
+Dave Morris  3 hours ago
+----
+we can run a single hello-world docker container by passing a URL reference for the container image to a service that handles containers
+----
+we can run a full 20 node, 200 core, 400G memory Spark cluster, by passing a URL reference to set of files that contains the cluster configuration
+----
+both cases are evaluated based on the name of the task-type and URLs to their parameters
+----
+execution planner doesn't look inside the box, it just passes simple messages
+
+Dave Morris  3 hours ago
+----
+if someone else (a software developer) has created the task config, a scientist can take it off the shelf and run it
+
+Dave Morris  3 hours ago
+OK, step back a bit, you said "this is much more complex that what I have in mind"
+
+Dave Morris  3 hours ago
+Can you describe to me what you were thinking of ?
+
+Sara Bertocco  3 hours ago
+I was thinking specifically to a LOFAR pipeline requiring a container with a specific software with a set of dependencies installed on it.
+I was not thinking to the need to install an infrastructure "complex", meaning including different nodes with different roles, and runningsome software on it
+
+Dave Morris  3 hours ago
+So your use case would be covered by can I execute 'simple-docker-container' ?
+
+Sara Bertocco  3 hours ago
+yes
+
+Dave Morris  3 hours ago
+Using a 'simple-docker-uws' Service to implement the server side?
+
+Dave Morris  3 hours ago
+request task-type=simple-docker-container
+
+Sara Bertocco  3 hours ago
+probably yes, not sure because, probably Stefano will argue that rosetta does not need a uws to run a container
+
+Dave Morris  3 hours ago
+Does Rosetta have a REST API ?
+
+Sara Bertocco  3 hours ago
+If I remember well, Stefano said "no"
+
+Dave Morris  3 hours ago
+For now, assume Rosetta does have a REST API
+
+Dave Morris  3 hours ago
+Dave implements 'simple-docker-uws' in Edinburgh, and Stefano implements 'rosetta-rest-api' at INAF.
+
+Dave Morris  3 hours ago
+both implementations also have an EP service attached to them
+
+Dave Morris  3 hours ago
+your client asks both EP services can I do 'simple-docker-container'
+
+Dave Morris  3 hours ago
+Daves UWS implementation replies with YES and service-type = 'simple-docker-uws' and Stefano's service replies with YES and service-type = 'rosetta-rest-api'
+
+Dave Morris  3 hours ago
+your client also asks  5 other services the same question, but they only handle Jupyter notebooks so they just reply with NO
+
+Dave Morris  3 hours ago
+now you know there are 2 services that can perform your task, and you know what interfaces they are offering
+
+Dave Morris  3 hours ago
+end of
+
+Dave Morris  3 hours ago
+that is all that the EP service does
+
+Dave Morris  3 hours ago
+it is up to your client to decide which service it wants to use
+
+Dave Morris  3 hours ago
+it may be that your client only understands 'rosetta-rest-api', in which case you ignore the Edinburgh service and use the INAF service (edited)
+
+Dave Morris  3 hours ago
+it may be that the INAF service doesn't provide enough cpu cores or memory, so your client chooses the Edinburgh service instead
+
+Dave Morris  3 hours ago
+to start with, the two services themselves are not interoperable
+
+Dave Morris  3 hours ago
+but it is a start
+
+Dave Morris  3 hours ago
+later in the year, CDS deploys a 'rosetta-rest-api' service
+
+Dave Morris  3 hours ago
+so now there are two instances to choose from
+
+Sara Bertocco  3 hours ago
+And this is the way to work described in our note
+
+Dave Morris  3 hours ago
+a little later, Stefano to adds 'simple-docker-uws' to Rosetta
+
+Dave Morris  3 hours ago
+so now there is more choice
+
+Dave Morris  3 hours ago
+the request and response are the simple JSON examples in the document and presentation
+
+Dave Morris  3 hours ago
+    {
+    "tasktype": "uri://docker-container",
+    "taskinfo": {
+        "image": "docker.io/example:1.0"
+        }
+    }
+
+Dave Morris  3 hours ago
+    {
+    "reponseword": "YES",
+    "servicetype": "uri://docker-uws",
+    "serviceinfo": {
+        "endpoint": "http://example.org/dkuws",
+        }
+    }
+
+Dave Morris  3 hours ago
+keep the same message structure, but change the words
+
+Dave Morris  3 hours ago
+    {
+    "tasktype": "uri://complex-kubernetes-deploy",
+    "taskinfo": {
+        "config": "http:///github.com/Zarquan/complicated-project"
+        }
+    }
+
+Dave Morris  3 hours ago
+    {
+    "reponseword": "YES",
+    "servicetype": "uri://complex-kubernetes-service",
+    "serviceinfo": {
+        "endpoint": "http://cloud.ed.ac.uk/controller",
+        }
+    }
+
+Dave Morris  3 hours ago
+Execution planner can handle both, because it doesn't look inside the message
+
+Dave Morris  3 hours ago
+the target Service needs to be able to understand 'uri://complex-kubernetes-deploy'
+
+Dave Morris  3 hours ago
+but to ExecutionPlanner, is is a string with 31 characters
+
+Dave Morris  3 hours ago
+the client needs to know how to use 'uri://complex-kubernetes-service'
+
+Dave Morris  3 hours ago
+but to EP, it is a string with 32 characters
+
+Dave Morris  3 hours ago
+the content of the task-info and service-info blocks may change
+
+Dave Morris  3 hours ago
+    {
+    "tasktype": "uri://complex-kubernetes-deploy",
+    "taskinfo": {
+        "config": "http:///github.com/Zarquan/complicated-project"
+        "param-one": 270,
+        "param-two": 'curlew'
+        "param-three": 'disabled'
+        }
+    }
+
+Dave Morris  3 hours ago
+but if a service doesn't understand 'uri://complex-kubernetes-deploy'
+
+Dave Morris  3 hours ago
+then it just ignores the whole task-info block anyway
+
+Dave Morris  3 hours ago
+----
+Does that help ?
+
+Sara Bertocco  3 hours ago
+yes
+
+Dave Morris  3 hours ago
+this is what I need to put in the document
+
+Dave Morris  3 hours ago
+thank you
+
+Dave Morris  2 hours ago
+explaining it this way helps me to see that the document is wrong
+
+Dave Morris  2 hours ago
+and the presentation could be better
+
+Sara Bertocco  2 hours ago
+It is clear. But, apologize if I come from grid experience,  such kind of computation distribution poses a problem in fair sharing of resources
+
+Dave Morris  2 hours ago
+no apologiy needed, it is good to have you asking questions and making me explain more
+
+Dave Morris  2 hours ago
+each time I explain I also learn more myself
+
+Dave Morris  2 hours ago
+what problems with resource shareing are you concerned about ?
+
+Sara Bertocco  2 hours ago
+if more than a user at the same time require to deploy and run software on a computing center, the service can respond "yes, I can" but then resources can be not enough for both users. I know, this problem can always be present, but if a users asks to run a procedure requiring 16 cores you have less chance to saturate the service than if a user asks to run 8 nodes with 16 cores. I'm usin explanatory numbers, I know that numbers are relative to the dimension of the data center. So, more "complex" and resource consuming is the computational requirement, higher is the risk of failures for "not enough resources". Writing I understand that this risk is always present. Probably we can figure a specific error in uws-docker
+
+Dave Morris  2 hours ago
+yes, totally agree - that is in version 2 of the EP
+
+Dave Morris  2 hours ago
+when-can-i-run-this ?
+
+Dave Morris  2 hours ago
+Adding a bit more to the message structure and the service can reply with
+'not today, but I can offer 2 hours on Tuesday or 4 hours on Wednesday'
+
+Dave Morris  2 hours ago
+part of EPs evolves into a scheduling/booking service
+
+Dave Morris  2 hours ago
+similar to the resources block, a calendar block in the messages that presents the user with choices about when they can run their task
+
+Dave Morris  2 hours ago
+defaults to 'now', but if the task takes a lot of resources, or the server is very busy, the server can offer calendar booking slots
+
+Dave Morris  2 hours ago
+the client can choose to accept one of the slots offered, and it is registered in the schedule on the server
+
+Dave Morris  2 hours ago
+we have exactly this use case with the Gaia compute platform
+
+Dave Morris  2 hours ago
+some of the analysys tasks are small and only take a small fraction of the available resources, so we can run many of these at the same time
+
+Dave Morris  2 hours ago
+some of them use more than 50% of the available resources for several hours, so they need to be booked into a schedule because we can only run one at  time
+
+Dave Morris  2 hours ago
+between bookings we can delete the current cluster and create a new one with different configurations
+
+Sara Bertocco  1 hour ago
+:+1:
+
+Dave Morris  1 hour ago
+that I was leaving to version 2
+
+Dave Morris  1 hour ago
+I think if we tried to put that in the document now people would object
+
+

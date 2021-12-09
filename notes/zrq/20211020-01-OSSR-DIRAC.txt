@@ -1,0 +1,57 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    #
+    # ESCAPE WP3 wiki
+    # https://wiki.escape2020.de/index.php/WP3_-_OSSR#FG5_CORSIKA
+    
+        This groups coordinates the common development and integration efforts, mostly between CTA and KM3NeT.
+        Two target groups work on
+            1) the setup of containers with a common CORSIKA installation
+        and
+            2) on new developments within CORSIKA. 
+
+
+    #
+    # CORSIKA – an Air Shower Simulation Program
+    # https://www.iap.kit.edu/corsika/            
+    
+    #
+    # Demo containers for CORSIKA
+    # https://gitlab.in2p3.fr/escape-corsika/demo-containers-for-corsika
+
+    
+    #
+    # DIRAC job management API    
+    # https://dirac.readthedocs.io/en/latest/UserGuide/Tutorials/JobManagementAdvanced/index.html#dirac-api
+
+
+
+    
+    

@@ -1,0 +1,301 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    ESAP Technical Discussion
+    Monday 22 Nov 2021, 16:00 → 17:00 Europe/Paris
+    https://indico.in2p3.fr/event/25500/
+
+    https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Executing-Software
+
+        The ESCAPE OSSR library
+        https://escape2020.pages.in2p3.fr/wp3/eossr/README.html
+        https://gitlab.in2p3.fr/escape2020/wp3/eossr
+        https://zenodo.org/record/5524913
+
+            Tools for accessing metadata in OSSR.
+            Packaged as a Pythion library.
+
+            Case in point - this is tagged as a jupyter-notebook, but it isn't.
+            The GitLab repo has some example notebooks that use the library.
+            There are also Docker and Singularity containers to use the library in Python.
+
+        @vuillaut "... ESAP could use repo2docker to create a container from an environment. Then an acceptable analysis could be anything running in this container."
+
+        repo2docker
+        https://github.com/jupyterhub/repo2docker
+        https://repo2docker.readthedocs.io/en/latest/
+
+        Builds containers from GitLab/GitHub/Zenodo repositories.
+        Specific to Jupyter.
+
+            Add option to generate non-Jupyter Dockerfiles #776
+            https://github.com/jupyterhub/repo2docker/issues/776
+            ".. perhaps ... but not yet"
+
+        Source-To-Image (S2I)
+        https://github.com/openshift/source-to-image/
+
+            Builds containers from code.7
+            More languages supported (C/C++, Go, Java etc.)
+            Single language per environment (see below)
+
+        Why repo2docker stopped using source-to-image
+        https://github.com/yuvipanda/words/blob/fd096dd49d87e624acd8bdf6d13c0cecb930bb3f/content/post/why-not-s2i.md
+
+    General direction:
+
+        JupyterNotebooks are fine, and Binder is really cool.
+        ... but for hard lifting, package code in a container.
+
+            Containers can be command line.
+            Containers can have a GUI (VNC etc).
+            ....
+            Containers can be composed ..
+
+        Several ways to build the container.
+        We can document the different options, but I don't think we should require one specific method.
+        If we choose one tool, then we limit future evolution.
+
+        Current model is to choose one tool, and require config/build metadata files in the git repo.
+        This doesn't scale.
+
+            1) External contributions:
+               We are asking external (non-ESCAPE) developers to modify their repo to suite our requirements.
+
+            2) In 2+ years time, a project like SKA or LSST may be members of several consortia, each with different metadata standards.
+               A project would need to maintain several different metadata files, possibly with different requirements.
+
+            3) A single code base may be packaged several different ways.
+               More than one Jupyter notebook, simple, general and advanced.
+               More than one Docker container, simple, general and advanced.
+
+        A single container/notebook works for a single analysis.
+        It doesn't scale for multiple artifacts.
+
+        Solution is tohave a separate 'thing' for each artifact.
+        Easiest is to have a separate Git repo for each artifact.
+
+    Wrapper repositories:
+
+        ESCAPE OSSR library
+
+            Register the Python library as just that - a Python library.
+                tagged as python-library
+
+            Register another repo just for the Jupyter notebook(s).
+                Minimal content, the notebook and a requirements.txt to pip install the library.
+                tagged as jupyter-notebook, repo2docker
+
+            Register another repo just for the Docker container.
+                Minimal content, Dockerfile that starts with a base image and installs the library.
+                tagged as docker-container
+
+        IVOA desktop container
+
+            Contains AstroPy, Aladin and TopCat.
+
+            Register each as separate entries.
+                AstroPy tagged as Python library
+                Aladin and TopCat tagged as Java GUI applications
+
+            Register a separate git repo for the container.
+                Minimal content, Dockerfile that starts with a base image and installs the tools.
+                tagged as docker-container
+
+        Scales because
+            1) ESCAPE/OSSR can wrap external software
+            2) Software and wrappers can evolve independently.
+            3) Software can have many wrappers.
+            4) OSSR can add extra requirements to the wrapper.
+
+
+    Rosetta
+    https://sarusso.github.io/Rosetta_draft.pdf
+
+Rosetta looks like a very fully featured Science Platform,  capable of running some of the types of tasks we have.
+I think ESAP should be able to execute tasks on a number of different platforms, including but not limited to:
+   * Rosetta
+   * SciServer
+   * Portainer
+   * Simple UWS based services
+
+        Equivalent to Portainer ?
+
+            Does Rosetta have a web-service interface ?
+            ESAP selects a container and wants to run it ...
+                Push to Rosetta, and get a URL back
+                    URL to the Rosetta task.
+                    JSON response with details of port mapping
+                    Similar to UWS/Docker ?
+                    Can we make them look the same ?
+
+    Portainer
+    https://www.portainer.io/
+    https://github.com/portainer/portainer
+    https://github.com/portainer/portainer/blob/develop/README.md
+
+        Portainer looks like a very fully featured (complex) solution.
+        Equivalent to Rosetta ?
+
+
+    General points:
+
+        Be flexible, allow multiple solutions not just one.
+        Don't specify one build tool or execution tool.
+        Things will be very different in 5yrs (2yrs?) time.
+
+        We already have multiple implementations
+
+            Rosetta
+            Portainer
+
+            repo2docker
+            source-to-image
+
+            dirac
+            ...
+
+            openstack
+            kubernetes
+            ...
+
+    Package tasks
+
+        OSSR needs to be able to point to individual things to execute them:
+            A notebook
+            A container
+
+        The source code for a software development project is too complex to execute.
+        Separate the software project from an executable task.
+
+        Allow things to evolve independently.
+        Separating software and wrappers gives ESAP/OSSR control over the wrapper without impacting the software.
+
+        A single notebook or analysis can have a single repo
+        For a more complex example with multiple things
+            A URL syntax for referring to individual items within a repo solves part of it.
+            A separate git repo for a wrapper solves more of it (see example).
+
+
+        OSSR is registering software.
+        A task is more than just the software.
+
+            The package format (notebook, container etc)
+            The software requirements (repo2docker, source-to-image)
+            The compute requirements, size and shape of nodes, gpu, asic etc.
+            The storage requirements
+                References to data (URL for Rucio items) rucio://escape.eu/scope/object
+                Access levels - words [slow, medium, fast], or numbers [bandwidth, latency] etc.
+                Space for working data, space and location for results.
+
+        Compute and storage requirements depend on what the user wants to do with the software.
+        Examples from Gaia work.
+        Same software, same data, different analysis
+
+            small
+                5 nodes, 70 cores, 225G memory, < 1 min
+            medium
+                5 nodes, 135 cores, 225G memory, < 10 min
+            large
+                7 nodes, 217 cores, 360 memory, > 9hrs
+
+        We can define several different task types
+
+            gaia-analysis-notebook
+                ready built platform, just add the notebook
+
+            zeppelin-pyspark-notebook
+                zeppelin and spark, add the notebook plus the data
+
+            kubernetes-deployment
+                kubectl endpoint and we can deploy the analysis platform
+
+            openstack-deployment
+                openstack endpoint and we can deploy the analysis platform
+
+            * ESCAPE SKA team have automated deployments based on zero-to-jupyter
+            so they could do the same
+
+        Selection process:
+
+            Select software
+                OSSR wrapper
+
+            Select data
+                DataLake or external
+
+            Input additional requirements
+                compute:
+                storage:
+                time:
+
+        This defines the 'what' of the task.
+        This, plus my identity, defines the 'who' and 'what' of the task.
+        Now you can ask "can <I> do <this>".
+
+            Discovery without these will be just a list of hints.
+
+
+        IVOA working on a two part solution.
+        ESCAPE specific solutions allowed, just document them with a URI.
+
+        Execution planner, "can <I> do <this>".
+        Includes generic definitions for the 'what'.
+            Task type
+            Basic params
+            Resource request
+                compute
+                storage
+                time
+
+
+        Simple UWS implementations of docker-service, compose-service etc.
+        Proof of concept to start with.
+        Other more complex deployments can implement the same interface.
+
+
+
+    TODO:
+        GitHub repo for IVOA desktop container
+
+        Add text for resource negotiation
+            compute
+            storage
+            time
+
+
+        GitHub repo for UWS/Docker service
+        IVOA note for UWS/Docker service
+        Wiki page for UWS/Docker service
+
+
+
+
+
+
+

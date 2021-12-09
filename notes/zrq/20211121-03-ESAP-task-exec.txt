@@ -1,0 +1,101 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+
+What does it mean to “execute” software?
+
+We need to do more than just Jupyter notebooks.
+https://towardsdatascience.com/why-data-scientists-should-use-jupyter-notebooks-with-moderation-808900a69eff
+
+    Lots of different answers in terms of software:
+
+We need to support more than just one type of task.
+I think we can deveop a solution that is flexible enough to handle many different things, some of which haven't been invented yet.
+We can delegate a lot of the detail of the task-type definitions to user groups and communities.
+
+    But it also depends on more than just the software.
+    It depends on a combination of the software, the data and what the user wants to do.
+    In an interactive notebook environment, the user may start out with a basic example notebook, and add manuy layers of complexity as they expand and explore their analysis.
+    In this situation, only the user themselves knows how many resources, libraries and datasets they will need to run their task.
+
+Where is the software stored?
+
+We need an identifiable 'thing' for each task.
+In order to ask "can I do <this>", you need to be able to identify what <this> is.
+Either a  single notebook or container per a git repository, or if we have multiple 'things' in a repository, we need to be able to refer to an identifiable 'thing' within the repo.
+
+    ESCAPE OSSR library
+        * A pip installable Python library
+        * A docker image in the in2p3 registry
+        * Four example notebooks
+
+    HCG-16 example
+    https://github.com/AMIGA-IAA/hcg-16
+        * 3 Dockerfiles
+        * 9 Jupyter notebooks
+        * MyBinder configuration
+
+    IVOA desktop example
+        * A docker image in the DockerHub registry
+
+    Gaia analysis example
+        * Multiple notebooks in a git repository.
+        * Significantly different execution timer and resource requirements.
+
+Git repositories have the advantage of generally being (relatively) small.
+If we suggest a system in which containers are used, can they be practically stored (where), or do we need to generate them on-the-fly?
+
+    We can generate them, we can store them
+    As long as we can refer to them we are OK.
+    Fully qualified docker registry URI
+    docker://....
+
+Can the software be composed?
+
+    Yes.
+    We cam compose multiple applications within one container.
+    We can compose multiple containers working together.
+
+What is the “entrypoint” to the software?
+
+    We need an identifiable 'thing' for each task.
+    If we have multiple 'things' in a git rep, we need to be able to refer to an identifiable 'thing' within the repo.
+
+    We can define/describe how to execute and interact with a container.
+    We just need to document it with a URI.
+
+What services can execute the software?
+
+    We need to support more than just one service type.
+    Can we come up with a solution that is flexible enough to handle many different things, some of which haven't been invented yet ?
+    I think we can, if we avoid defining a fixed vocabulary.
+    We can delegate the service-type definitions to user groups and communities.
+
+
+

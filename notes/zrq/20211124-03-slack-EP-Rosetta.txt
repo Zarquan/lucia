@@ -1,0 +1,872 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Slack chat with Dave Morris, Sara Bertocco and Stefano Alberto Russo
+    24th November 2021
+
+    Rosetta GitLab
+    https://www.ict.inaf.it/gitlab/exact/Rosetta
+
+Stefano Alberto Russo  11:19 AM
+Guys, I was checking out a bit better the SciServer platform
+11:19
+They write this in the paper: "This "containerization", or operating-system-level virtualization, offers an elegant way to createan isolated environment for each user and has become thestandard way by which astronomical science platforms pro-vide compute capabilities to their users."
+
+Sara Bertocco  11:21 AM
+:+1: :slightly_smiling_face:
+
+Dave Morris  11:22 AM
+:+1:
+
+Stefano Alberto Russo  11:22 AM
+Sorry, here the full bullet list:
+They write this in the paper: "This "containerization", or operating-system-level virtualization, offers an elegant way to createan isolated environment for each user and has become thestandard way by which astronomical science platforms provide compute capabilities to their users."
+Check out the first two minutes of the video here: https://heasarc.gsfc.nasa.gov/docs/sciserver/
+Source code is actually available for sciserver it seems, but a bit hard to dive in: https://github.com/orgs/sciserver/repositories
+Scicerver does not support custom containers, only pre-loaded ones, not sure how could be integrated with ESAP
+(edited)
+
+Dave Morris  11:23 AM
+One of the people involved in the project made a presentation at the recent IVOA meeting.
+11:24
+He said they used to allow any container, but they had problems with people running crypto mining tasks.
+11:24
+Hence the white-list of allowed containers
+
+Stefano Alberto Russo  11:26 AM
+:joy:
+
+Dave Morris  11:26 AM
+Actually - my bad, he didn't make a presentation, but I think he raised this in the comments to one of our talks.
+
+Stefano Alberto Russo  11:27 AM
+Who was asking for "where the source code of sciserver is"  yesterday? (edited)
+11:27
+Majorlene or somethings (not sure how to spell it)
+
+Dave Morris  11:27 AM
+I'm in contact with Gerrad about SciServer, and he is interested in adding the ExecutionPlanner interface to SciServer.
+
+Stefano Alberto Russo  11:28 AM
+And also do you remember who was the guy who cited SciServer?
+
+Dave Morris  11:28 AM
+So that would be the entry point for integrating it into ESAP
+
+Stefano Alberto Russo  11:30 AM
+So yesterday you mentioned something about not supporting only containers.. what do you have in mind if not using containers for the execution planner?
+
+Dave Morris  11:30 AM
+Yesterday - you mean Monday ?
+11:30
+The ESAP design meeting ?
+
+Stefano Alberto Russo  11:30 AM
+Yes, sorry, monday
+
+Dave Morris  11:31 AM
+Sorry - yep, I'm also attending another meeting Tuesday, Wednesday and Thursday so the meetings all merge into one
+
+Stefano Alberto Russo  11:32 AM
+Ahaha
+
+Dave Morris  11:32 AM
+one moment, checking notes ...
+
+Stefano Alberto Russo  11:33 AM
+Thanks!
+
+Dave Morris  11:35 AM
+I think the person who mentioned SciServer was Mathieu Servillat, Observatoire de Paris.
+11:35
+regarding containers - I totally agree that containers are reallly really useful
+11:36
+I do all of my work using containers
+11:36
+What I would advise against is we decide ESAP will only handle jobs packaged in containers
+11:37
+The ExecutionPlanner interface is designed to be capable of handling different types of tasks run on different types of services
+11:38
+Notebooks are a good example, both Jupyter and Zeppelin notebooks can be treated as tasks, without wrapping them in containers.
+
+Stefano Alberto Russo  11:39 AM
+It is hard for me to follow you on this point - why would you use something different than software containers for executing software? I mean, if you wrap a Jupyter or Zeppelin notebook in a container the outcome is the same. Is it because of "sociological" reasons?
+
+Dave Morris  11:40 AM
+because people already have JupyterHub and Zeppelin services deployed, and they want to run notebook on them
+11:41
+I am fitting the design to what is already there, you are trying to fundamentally change the way people work
+11:41
+I agree with you - we can deploy JuopyterHub and Zeppelin services as containers
+11:41
+and I am working towards that with the ExecutionPlanner
+11:41
+but that is reaching to far for now
+
+Stefano Alberto Russo  11:42 AM
+Dave, I would totally agree with you if we were in the private sector..
+11:42
+But in the research sector, I do not think that "fitting with what is already here" is a good introduction for any research-related work
+11:42
+but trust me - I totally understand your standpoint
+
+Dave Morris  11:43 AM
+I have been doing this for 18+ years, and if you want to get an international collaboration to agree, you have to take small steps.
+11:44
+The IVOA has taken 18+ years to get where we are, and you won't change peoples direction that quickly
+
+Stefano Alberto Russo  11:44 AM
+Are you "hired" as a software engineer or as a researcher?
+11:44
+If I may ask
+
+Dave Morris  11:44 AM
+Plus, in 5 years time, containers will be so yesterday and out of date
+11:44
+My official title is research software developer.
+11:45
+I worked for 20 years in commercial and now 20 years in academia.
+11:45
+how about you ?
+
+Stefano Alberto Russo  11:46 AM
+I see. I guess that one of the main problems for me is that I am a "research fellow" and my work metric is the published papers. I had to do all sort of things to justify why we used singularity in Rosetta in its paper, but the real answer is that a lot of people just pushes back IT-standards as Docker
+11:46
+(I think I just answered you)
+11:48
+I mean, it's no one fault. If I were hired as research software developer, probably my work metric would be different and I would see much more valuable fitting things with what is already there - which as I say I totally understand as a standpoint. I spent 5 years in startups after all, both as dev and founder :slightly_smiling_face: (edited)
+
+Dave Morris  11:51 AM
+I would like to be able to run complex compose and Kubernetes jobs via something like ESAP.
+11:51
+and I have designed the ExecutionPlanner with that in mind
+11:52
+but it also has to be able to do the simple things like run one notebook or run one container
+
+Stefano Alberto Russo  11:52 AM
+I however respectfully disagree with the statement that "in 5 years time, containers will be so yesterday and out of date".. because of the concept of isolation they bring, not of the tech. There are already container runtimes (i.e. Kata) that run containers in dedicated instances of Qemu virtual machines, which basically turns them in VMs. But the isolation philosophy I think (and I hope) it is going to stay :slightly_smiling_face: (edited)
+11:52
++1 for the execution planner however
+
+Dave Morris  11:53 AM
+Yes, the idea of isolation will stay .. it started since the 1970's so it won't be going away any time soon
+11:53
+The technology we now use will change, so don't pin everything on one technology.
+
+Stefano Alberto Russo  11:53 AM
+Agreed
+
+Dave Morris  11:53 AM
+OCI is a good step towards making it last longer.
+11:54
+but I saw a really good talk from Solaris developers a few years ago complaining that Solaris Zones did all this since 10+ years
+11:55
+and that Docker was a dumpster-fire in comparison
+11:55
+Docker just happened to be the right thing at the right time and it went viral
+
+Stefano Alberto Russo  11:55 AM
+that's because of the "combined effect" of more things at the same time
+11:55
+yes I agree
+
+Dave Morris  11:55 AM
+the security issue in Docker were/are horrible
+
+Stefano Alberto Russo  11:56 AM
+but the work docker made to make it simple is incredible
+
+Dave Morris  11:56 AM
+Podman is much better because it doesn't rely on a service running as root.
+11:56
+I totally, agree, Docker has launched the whole field
+11:57
+but also we need to look to what will replace Docker in a few years time
+11:57
+already Docker containers are old, and OCI containers are better
+11:57
+but everyone is talking about Docker in their presentations
+
+Stefano Alberto Russo  11:57 AM
+Sure, when I talk about docker I always mean OCI actually
+
+Dave Morris  11:58 AM
+Yep, the name has become the term to describe the whole technology
+
+Stefano Alberto Russo  11:58 AM
+In the rosetta paper I clearly staed OCI everywhere and cited Docker only as one of the container runtimes
+:+1:
+1
+
+11:58
+but it is not obvious
+
+Dave Morris  11:59 AM
+back to ExectionPlanner, IVOA and ESAP ... and Rosetta ?
+:white_check_mark:
+1
+
+12:00
+ExecutionPlanner is designed to be able to 'plan' tasks of different kinds
+
+Stefano Alberto Russo  12:00 PM
+My entire point is that we should move from software or notebooks freely floating around to ALWAYS have them carry the entire environment. Then does not matter if we do it with containers or VMs or something else..
+12:00
+This I think is the definitive solution
+12:00
+(I mean, I genuinely believe in this)
+
+Dave Morris  12:00 PM
+OK, good luck with convincing people of that
+
+Stefano Alberto Russo  12:00 PM
+Ahaha
+
+Dave Morris  12:01 PM
+You might be technically right, but politically ... hmmm.
+
+Sara Bertocco  12:01 PM
+politically is not easy
+
+Stefano Alberto Russo  12:02 PM
+I  know.  But I don't want to live in a world where our pandemic models behave differently on different OSes. So I will ALWAYS push for this
+
+Sara Bertocco  12:02 PM
+unfortunately, we have to reach a compromise
+12:02
+closer as possible to our solution
+
+Dave Morris  12:02 PM
+ExecutionPlanner is designed to be the minimum interface that will enable us to handle tasks of different types ... and the maximum I think I can get away and still get people to agree with it
+
+Sara Bertocco  12:03 PM
+pushing is essential to reach the best result in the long term
+
+Dave Morris  12:03 PM
+Long term - I like your ideas.
+12:03
+Short term - we need to get people to agree to the simple one first.
+:heavy_plus_sign:
+1
+
+
+Stefano Alberto Russo  12:04 PM
+Let's see if we can make people converge on the execution planner then.. I see issues in it (i.e. an intrinsic complexity of defining a task which might be hard to achieve) but definitly worh a shot
+
+Dave Morris  12:04 PM
+Long term use case - I want to be able to post the whole configuration for a Kubernetes cluster containing 20+ nodes with multiple containers running in each - as one single task.
+12:05
+Does Rosetta have a webservice API ?
+
+Stefano Alberto Russo  12:06 PM
+Not yet, I am a man alone on Rosetta :joy:
+
+Dave Morris  12:06 PM
+No problem, I have been there myself many times.
+
+Stefano Alberto Russo  12:06 PM
+But it is planned. I mean, it has obviously to be added. as a REST api most likely
+
+Dave Morris  12:07 PM
+So if an ESAP user chooses a container from Zenodo, how would you see the user being passed from ESAP to Rosetta ? (edited)
+12:07
+As a link in the ESAP page 'execute in Rosetta' ?
+
+Stefano Alberto Russo  12:08 PM
+Also Dave I wanted to share some notes I took for myself (3 slides) on the entire what is SW story: https://docs.google.com/presentation/d/1AUcBrDClmOldSesG27vcNXXTPWN4ck_2icc9FyWXxag/edit?usp=sharing (they are very partial but maybe useful as some inputs for the execution planner)
+:+1:
+1
+
+
+
+3 replies
+Last reply today at 12:12 PMView thread
+
+Stefano Alberto Russo  12:08 PM
+This depends on ESAP
+12:10
+If ESAP fixes a few things still up in the air (i.e. authenitcation!) besides of course a way of distingish between git repos and Zenod artifacts and container, then I was thinking of a backend to bakend integration via an API.
+12:11
+At the moment (and it does not seem to get better) the only think I can think of is yes a simople link as they do with Mybinder
+
+Dave Morris  12:11 PM
+OK, start simple and build on that.
+12:11
+The API idea is the way to go in the future.
+
+Stefano Alberto Russo  12:12 PM
+*(sorry for all the typos)
+
+Dave Morris  12:13 PM
+In theory, if someone has a container image already built, and we assume they have a login to Rosetta, then they can just run their container in Rosetta without modification ?
+
+Stefano Alberto Russo  12:14 PM
+Yes, provided the container exposes a TCP/IP based interface on a port (i.e. a Jupyter Hub server on port 8888) (edited)
+
+Dave Morris  12:15 PM
+What about a simple command line container ?
+
+Stefano Alberto Russo  12:15 PM
+No, still need to expose an interface on a TCP/IP port. A SSh server inside the container, or a web based terminal
+
+Dave Morris  12:16 PM
+OK
+12:16
+Do you have a web page that describes Rosetta (I know you have your paper, I'm looking for a web site with a URL) ? (edited)
+
+Stefano Alberto Russo  12:17 PM
+I prepared the road for containers without an interface, in this case maybe we can build in Rosetta a way of getting a shell inside the container (i.e. web based interface to docker exec), but it is not obvious how to do this for non-local workloads
+12:18
+No, no web page yet... just the repo and the paper
+
+Dave Morris  12:18 PM
+Ok, the repo URL will do fine.
+
+Stefano Alberto Russo  12:18 PM
+https://www.ict.inaf.it/gitlab/exact/Rosetta
+
+GitLabGitLab
+ExaCT / Rosetta
+A container-centric Science Platform
+
+Dave Morris  12:18 PM
+could you remind me what it is ?
+
+Stefano Alberto Russo  12:19 PM
+just updated the master (merged in the develop) (edited)
+12:19
+Got to go grab some food now
+12:20
+speak later! :slightly_smiling_face:
+
+Dave Morris  12:24 PM
+OK, to integrate Rosetta into ExecutionPlanner we would need two URLs.
+A URI for the specification that simply says "a Rosetta compatible container must expose a TCP/IP interface"
+https://www.ict.inaf.it/gitlab/exact/Rosetta/-/blob/master/container-spec.md
+A URI that describes the Rosetta web interface
+https://www.ict.inaf.it/gitlab/exact/Rosetta/-/blob/master/web-interface.md
+12:27
+Plus one more URIs defined by the ExecutionPlanner specification
+A URI that represents a generic web site interface
+https://github.com/ivoa-std/IVOA-ExecutionPlanner/service-type/web-interface.md
+12:28
+With just those three URIs we could begin to make things interoperable.
+12:30
+Actually, we would need another URI from the ExecutionPlanner specification
+A URI that describes a generic OCI container
+https://github.com/ivoa-std/IVOA-ExecutionPlanner/task-type/oci-container.md
+
+
+
+
+Stefano Alberto Russo  2:46 PM
+Hm, when you asked for the website you meant the deployment? If that is what you were asking for, here it is: rosetta.oats.inaf.it
+
+Dave Morris  2:48 PM
+Both
+2:48
+The URIs are just to create a unique identifier for the types
+2:49
+A URL to a md file means you can add some description of what the type is.
+
+Stefano Alberto Russo  2:49 PM
+If we make it work, how we integrate with ESCAPE afterwards? Should we push for adopting something like the ExecutionPlanner in ESCAPE?
+
+Dave Morris  2:49 PM
+Yes, that is the plan.
+2:50
+If we can demonstrate that EP works, then ESAP may adopt some of it in their design.
+2:51
+It is a really basic simple process for agreeing on metadata and who defines it.
+2:52
+If we have two URIs that mean "a Rosetta compatible container that exposes a TCP/IP interface" and  "the Rosetta web-interface" (edited)
+2:53
+And we also create the equivalent URIs for a SciServer compatible container (assuming they have specific requirements) and a URI for the SciServer web interface.
+2:54
+then we can deploy two ExecutionPlanner instances
+2:54
+one confgured to act as the interface for a Rosetta service and one for a ScieServer service
+2:55
+We get everyone who wraps their software in a containers to tag their OSSR entries with the container type URIs.
+2:55
+If their software is in an OCI container, then it gets tagged with the generic oci-container URI.
+2:56
+It their container also includes a TCP/IP interface, then it gets tagged as both oci-container and rosetta-container.
+2:56
+A researcher selects the software they want from OSSR, because of "science reasons".
+2:56
+ESAP then polls all the ExecutionPlanner services it knows about, with the tags from OSSR.
+2:57
+The Rosetta ExecutionPlanner service would respond with YES to a rosetta-container task, and NO to the oci-container and sciserver-container tasks.
+2:57
+request:
+    {
+    "tasktype": "uri://oci-container",
+    "taskinfo": {
+        "image": "docker://docker.io/example:1.0"
+        }
+    }
+2:57
+response:
+    {
+    "reponseword": "NO",
+    }
+2:58
+----
+2:58
+request:
+    {
+    "tasktype": "uri://rosetta-container",
+    "taskinfo": {
+        "image": "docker://docker.io/example:1.0"
+        }
+    }
+2:58
+response:
+    {
+    "reponseword": "YES",
+    "interfaces": [
+        {
+        "servicetype": "uri://generic-webinterface",
+        "serviceinfo": {
+            "endpoint": "http://example.org/rosetta",
+            }
+        },
+        {
+        "servicetype": "uri://rosetta-webinterface",
+        "serviceinfo": {
+            "endpoint": "http://example.org/rosetta",
+            }
+        }
+    }
+2:59
+Note that the response offers two different interfaces, the generic-webinterface AND the rosetta-webinterface.
+2:59
+A simple client can just re-direct the user to the generic-webinterface.
+2:59
+Or, if it understands more about how Rosetta works, it may decide to redirect the user to a specific location within the Rosetta interface that accepts a container image name as a parameter.
+2:59
+http://example.org/rosetta/launch?container-image=docker://docker.io/example:1.0
+2:59
+That is it
+
+Stefano Alberto Russo  2:59 PM
+Do you want to jump on a quick call?
+3:00
+Otherwise it will take me forever to write my comments on all this :P
+3:00
+(and questions) (edited)
+
+Dave Morris  3:00 PM
+I'm also writing some code, and monitoring emails and debugging another project.
+3:01
+Slack is good for short comments
+3:01
+Longer discussion is best in the GiutHub repo
+https://github.com/ivoa/IVOA-ExecutionPlannerNote
+3:03
+The interface may seem simple, but my estimation is it will take Sara and I until May next year to get all the collaborators involved to sign up to implementing it.
+3:05
+I have interested responses from CADC in Canada, SciServer in the US, and possibly SKA.
+3:05
+I also plan to implement it on our Gaia SciencePlatform here too.
+
+Stefano Alberto Russo  3:05 PM
+Why the "tasktype" is an uri and not just a string? Sorry if I am asking something trivial
+
+Dave Morris  3:06 PM
+No, good question.
+3:06
+one moment ...
+3:09
+If I send a message with this
+    tasktype=frumblek
+and you see it marked as a unknown type in the logs for your service
+3:09
+what would you do ?
+3:10
+-----
+If I send a message with this
+    tasktype=https://raw.githubusercontent.com/ivoa/IVOA-ExecutionPlannerNote/main/frumblek.md
+3:10
+and you see it marked as a unknown type in the logs for your service, what would you do ?
+3:12
+----
+Or better yet, if I send a message with this
+    tasktype=https://edin.ac/3rarcQO
+and you see it marked as a unknown type in the logs for your service, what would you do ?
+
+Stefano Alberto Russo  3:12 PM
+Interesting
+3:12
+Thanks
+
+Dave Morris  3:12 PM
+The computer don't care, they are all just strings
+3:12
+The humans can make use of a resolvable URL.
+
+Stefano Alberto Russo  3:13 PM
+This however links the type to a hostname. What is githubusercontent gets renamed in githubrepocontents?
+
+Dave Morris  3:13 PM
+also asking people to use a URL in their GitHub repo or their project website guarantees they are all unique
+3:14
+try this
+    tasktype=https://edin.ac/3rarcQO
+
+Stefano Alberto Russo  3:14 PM
+maybe we should just use a doi :stuck_out_tongue: (edited)
+
+Dave Morris  3:14 PM
+yes, totally
+
+Stefano Alberto Russo  3:15 PM
+got the point however
+
+Dave Morris  3:15 PM
+asking them to use a URL in their website is the easiest
+3:15
+a registered DOI or IVOA registry entry is even better
+3:16
+the standard will say tasktype = anyURI, preferably one resolvable to something descriptive
+
+Stefano Alberto Russo  3:16 PM
+from my side, but perhaps it would be more suited for a deep dive in a call, to anser to the "can this Rosetta deployment run it" it will be required something more like the following:
+3:16
+{
+    "tasktype": "uri://rosetta-container",
+    "taskinfo": {
+        "registry": "docker://docker.io"
+	     "image_name": "example"
+	     "image_arch": "amd64"
+	     "image_os": "linux"
+	     "interface_protocol": "http"
+	     "interface_transport": "tcp/ip"
+        "interface_port": 8888
+        }
+    } (edited)
+
+Dave Morris  3:17 PM
+excellent :smile:
+3:17
+that is exactly what we need to know
+3:17
+the content of the messages has a standard part and a type specific part
+
+Stefano Alberto Russo  3:17 PM
+This is kind of what is already done inside Rlosetta to check if a container can be run on a specific computing resource (kind of)
+
+Dave Morris  3:18 PM
+as the owner of the 'rosetta-container' task type, you get to define what is needed in the task-specific part
+
+Stefano Alberto Russo  3:18 PM
+However please note that this doe NOT support singularity. Which has a tonne of limitations and would require even more filelds
+
+Dave Morris  3:18 PM
+and we get SciServer developers to define what goes in a 'sciserver-container' task message
+3:19
+so step one, each sciience platform gets to define their own task typoe, and specify what is needed in the message
+3:19
+then, once we have that working, we begin to find the common ground between us and create more generic task types
+3:20
+so Rosetta will always say YES to a rosetta-container task type
+3:21
+but if we find common ground between Rosetta and SciServer, we create a common-container task type that both services can accept (edited)
+3:21
+gradually the proprietary types get used less and the common types gain acceptance
+3:21
+small steps
+
+Stefano Alberto Russo  3:22 PM
+Yeah but this goes in a direction which is very opposite to what "we" were trying to do in ESAP and OSSR... which was to provide metadata together to the software stating its requirements, not bind to a specific "executor" i.e. Rosetta or SciServer (edited)
+
+Dave Morris  3:22 PM
+we also have a different service API from the Canadian SciencePlatform at CADC
+3:23
+and a commercial system too in Portainer
+https://github.com/portainer/portainer
+3:24
+Yes, what I want to end up with is tasktype = common-container-task
+3:25
+but to get there, we have to accept that everyone has already developed their own interfaces and requirements for their science platforms
+
+Dave Morris  3:26 PM
+if I said that a science platform must accept generic containers with no TCP interface, that would immediately exclude Rosetta
+
+1 reply
+Today at 3:31 PMView thread
+
+Dave Morris  3:26 PM
+on the other hand, if we include Rosetta by allowing support for containers with TCP interfaces
+3:27
+then perhaps SciServer would also accept and run that type of container - we have one step of overlay
+3:27
+gradually getting people to agree by starting from where they already are
+3:28
+----
+3:28
+note I'm not binding to a specific executor
+3:28
+I'm allowing you to define a task type that defines what is needed to run a container in Rosetta
+3:29
+the task type is separate from the server type
+3:29
+that allows SciServer to say, YES, we also accept tasks of that type
+3:30
+our own UWS based service would be able to accept rosetta-compatible containers too
+3:30
+and I think Portainer service would also me able to run them
+3:30
+the OSSR uses tags to say what the task (container) requires contains (edited)
+3:32
+the ExecPlanner finds services that can run that type of task
+3:32
+and the server-type in the response tells the client how to drive the service
+
+Stefano Alberto Russo  3:33 PM
+If I upload my python Library in the OSSR what task type should I add use? (edited)
+
+Dave Morris  3:33 PM
+if it is just a Python library, no idea
+3:34
+tag it with a URI that means Python library ?
+3:34
+if you wrap that Python library in a container, then tag it as oci-container
+
+Stefano Alberto Russo  3:34 PM
+Then impossible to run. using the ExecutionPalnner.... or not?
+
+Dave Morris  3:34 PM
+the two things are separate, the software and the runnable thing
+3:35
+you can run Python code in a Jupyter notebook yes ?
+:+1:
+1
+
+
+Stefano Alberto Russo  3:35 PM
+OK - but this is exactly what they do not want to do in the OSSR
+3:37
+I mean, if your solution is that software in the OSSR should specify, besides it code, the execution environment then we are on the very same line and just talking about an implementation of how to run it (edited)
+
+Dave Morris  3:38 PM
+In which case all of the people who provide JupyterHub services would respond with something like this.
+3:38
+request:
+        {
+        "tasktype": "uri://python-library",
+        "taskinfo": {
+            "pipname": "my-example-lib"
+            }
+        }
+    response:
+        {
+        "reponseword": "YES",
+        "interfaces": [
+            {
+            "servicetype": "uri://jupyter-hub",
+            "serviceinfo": {
+                "endpoint": "http://example.org/hub",
+                }
+            },
+            {
+            "servicetype": "uri://binder",
+            "serviceinfo": {
+                "endpoint": "http://example.org/binder",
+                }
+            }
+        }
+3:39
+I agree with you that the current OSSR plan needs work
+
+Stefano Alberto Russo  3:39 PM
+How about dependencis of such library? The OS? the architecture if uses some low level calls? the CPU instructionset if using advanced features as AVX2 etc.?
+
+Dave Morris  3:39 PM
+They need to separate the software projects from the executable things like containers and notebooks
+:+1:
+1
+
+3:40
+The people who define "tasktype": "uri://python-library" can define what is needed to run a Python task
+
+Stefano Alberto Russo  3:40 PM
+But the average person using OSSR will NOT know
+
+Dave Morris  3:40 PM
+It separates the concerns into small specialist groups
+3:41
+A small group of Python experts define what uri://python-library means
+3:41
+They define what is needed in the type-spefici part of the message.
+3:41
+Yes, probably all of the above.
+3:42
+They publish a document that defines the type specific message.
+3:42
+Ordinary OSSR users would read that document, provide the metadata it descibes and tag their object with tasktype": "uri://python-library"
+3:43
+The Jupyter experts who
+3:43
+get together and work out if a JupyterHub can run a uri://python-library and document it.
+3:44
+Ordinary system admins just deploy a JupyterHub and a ExecPlanner configured to accept tasktype": "uri://python-library" to act as the point of contact.
+3:45
+The two teams of experts (probably two or three people) solve the specific problem of running Python libraries oin JupyterHub services.
+
+Stefano Alberto Russo  3:45 PM
+No, dave, sorry but I respectfully disagree on this: "Ordinary OSSR users would read that document, provide the metadata it descibes and tag their object with tasktype": "uri://python-library""
+
+Dave Morris  3:45 PM
+The EsxecPlanner just acts as a brokewr between them
+
+Stefano Alberto Russo  3:46 PM
+They will not, and if they will compile all the fileds, the will set wrong parameters IMHO
+
+Dave Morris  3:46 PM
+Yep, quite probably, but that is the problem of self-registration.
+
+Stefano Alberto Russo  3:47 PM
+This is why I was hoping in the beginning to require software containers: no need to state dependencies, what works on the user pc automatically includes anything to reproduce (edited)
+
+Dave Morris  3:47 PM
+then we write a validator task that checks the metadata and tries to run it
+3:47
+adding a 'validated' tag to the OSSR
+3:48
+I totally, agree, wrapping thinsg in containers is the better way
+3:48
+but right now, people have Python code they want to run
+
+Stefano Alberto Russo  3:48 PM
+It is not about validating the entries, but to make the software run (work)
+
+Dave Morris  3:49 PM
+I agree, your software will be more reliable if you wrap it in a generic container
+
+Stefano Alberto Russo  3:49 PM
+but since we can't...
+3:49
+all other stuff is risky IMO.
+
+Dave Morris  3:49 PM
+this is one of mine
+3:49
+https://github.com/ivoa/ivoatex-docker
+
+GitHubGitHub
+GitHub - ivoa/ivoatex-docker: Docker container for building IvoaTex documents
+Docker container for building IvoaTex documents . Contribute to ivoa/ivoatex-docker development by creating an account on GitHub. (70 kB)
+https://github.com/ivoa/ivoatex-docker
+
+3:49
+because installing latex "just so" is a nightmare (edited)
+
+Stefano Alberto Russo  3:50 PM
+Ok, let's stop a moment here and fix two things
+
+Dave Morris  3:51 PM
+this is really useful by the way - making me think hard about the design as I try to respond to your points
+
+Stefano Alberto Russo  3:52 PM
+ahah :slightly_smiling_face:
+3:52
+So, here are the two points:
+3:54
+OSSR: we both agree that they should provide some info about how to run the software. I personally think we should have adopted binder configs (given we cannot use SW containers), and I doubt people will be willing to fill you thing (which would be good but not going to happen IMO)
+If we assume that somehow, someday, the OSSR will do this and provide us a way of identifying the execution environment for a SW, then we are talking about how to schedule WELL DEFINED "things" on computing resources. Can be containers, well written deps, etc. We can use your idea of the ExecturionPlanner
+3:54
+Do we agree on this distinction?
+
+Dave Morris  3:58 PM
+1. yes, the OSSR needs separate metadata about each runnable thing. Without this, it just won't work. The simplest is to tag  thing with simple tags, like jupter-notebook or oci-container.
+3:59
+2. yes, tagging the thing means we can find services that are willing or able to execute it
+
+Stefano Alberto Russo  4:00 PM
+Ok, then my answer to the entire story is: this is very interesting and makes a lot of sense. I truly understand your point of "luring" people in like this with little steps. However, while we can of course try to integrate Rosetta with the execution planner, this is unrelated from ESCAPE at the moment because of how OSSR done things. And because of this, the pragmatic answer I should give you is "above my paygrade". Given this, and given that I am quite interested in the topic, allow me some time to let all this to sink in an make myself a global, clearer idea  :slightly_smiling_face:
+4:01
+Hope makes sense
+
+Dave Morris  4:01 PM
+yep
+4:03
+My aim to get to the stage where our UWS-docker service, SciServer, Rosetta and Portainer all able to run a simple hello world container.
+4:03
+and possibly one or two of the JupyterHub / BinderHub services able to run a notebook
+4:04
+and demonstrate what metadata was needed to make all this connect together
+4:05
+take that back to OSSR and be able to say "that is what we need"
+4:05
+OSSR are open to suggestions
+4:05
+they don't know how to do this either
+4:05
+and OSSR have been waiting for ESAP to tell them what ESAP needs
+4:06
+and ESAP have been waiting for OSSR to provide more metadata
+4:06
+if we can demonstrate a working prototype, people will see what it can do and understand what is needed
+4:07
+that - for my sins- is my pay grade
+4:07
+I used to write cool and exciting software
+4:08
+Now I spend much more of my time writing boring specifications and talking in meetings to get people to collaborate together
+4:09
+Sara and I need to do a bit more to the document, then we will publish a new draft
+4:09
+Your feedback is really useful in this.
+4:10
+Making me think hard about how to do things - I totally made up the Python library part on the fly because I hadn't looked at that yet.
+4:12
+If we get a hello-world service working that can distinguish between a generic oci-container and a oci-container with a TCP interface, would you be prepared to help us getting it working with Rosetta ?
+
+Stefano Alberto Russo  4:16 PM
+At prototyping level yes, sure
+
+Dave Morris  4:16 PM
+:smiley::+1:
+
+Stefano Alberto Russo  4:16 PM
+Different story is to start making an international collaboration work - that's the above my paygrade part :wink:
+:heavy_plus_sign:
+1
+
+Sara Bertocco  4:27 PM
+For today I'm a bit tired, so, I lay down the arms
+4:28
+don't know if it is the right translation of "deporre le armi"
+4:29
+bye
+
+
+
+
