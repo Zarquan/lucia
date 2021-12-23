@@ -1,0 +1,73 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+Example metadata for describing the compute resources required by an executable component.
+
+The metadata for this would either be stored in a YAML file linked to the component, or as a `string` attribute of the component registration.
+
+```yaml
+
+    compute-resources:
+
+    - name: "example-instance"
+      description: |
+          A template for a computing resource.
+
+      # The minimum and maximum number of cores.
+      mincores: 1234
+      maxcores: 1234
+
+      # The minimum and maximum memory (SI units + binary).
+      minmemory: 1234 GiB
+      maxmemory: 1234 GiB
+
+      # The list of storage resources required.
+      storage:
+
+        - name: "workspace"
+          type: [ephemeral|persistent]
+          path: "/data/workspace"
+          minsize: 1234 GiB
+          maxsize: 1234 GiB
+
+````
+
+
+
+
+
+      # The minimum and maximum startup time (ISO 8601 period).
+      minstartup: PTnHnMnS
+      maxstartup: PTnHnMnS
+
+      # The minimum and maximum duration (ISO 8601 period).
+      minduration: PTnHnMnS
+      maxduration: PTnHnMnS
+
+

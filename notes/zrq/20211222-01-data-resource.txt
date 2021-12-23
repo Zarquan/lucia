@@ -1,0 +1,88 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Removed sections on publishing - add them if/when we need them.
+
+
+```yaml
+    data-resources:
+      - name: "example"
+        description: |
+            A template for a data resource.
+        cardinality: [single|container]
+        mimetype: [mime-type]
+
+        ....
+
+        # Publish the data making it accessible from outside.
+        publish:
+            protocol: [http|scp|S3|nfs|...]
+            url: "...."
+            accessmode: [
+                readonlyonce,
+                readonlymany,
+                readwriteonce,
+                readwritemany
+                ]
+            accesscontrol: [
+                public,
+                protected,
+                private
+                ]
+            lifetime: [ISO_8601 Duration]
+```
+
+Likewise, the task writes the results to a known location inside the container. The execution platform automagically pushes the results to the remote webdav server and makes them available on a publicly readable webserver for one hour.
+
+
+```yaml
+    data-resources:
+
+        ....
+
+      # The results.
+      - name: "results"
+        description: |
+            The list of results, downloadable as a VOTable file.
+
+
+        # Publish the data making it accessible from outside.
+        publish:
+            protocol: "http"
+            url: "http://www.example.org/path/c59bbae5-fe0e-455d-9320-e073e83e8398"
+            accessmode: "readonlymany"
+            accesscontrol: "public"
+            lifetime: "PT1H"
+```
+
+    ....
+    In addition, the external URL of the published results may depend on the configuration of the platform executing the task, and so would be filled in as part of the response when the task is executed.
+
+    ....
+    Adding functionality to publish the data on a website may sound complex, but it may turn out to be easier to implement than managing the credentials to enable the execution platform to write the results to a remote server using the user's credentials.
+

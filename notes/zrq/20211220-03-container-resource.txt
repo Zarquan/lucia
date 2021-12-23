@@ -1,0 +1,83 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+Example metadata for describing an executable container.
+
+Each OSSR component registered in Zenodo will need to have a metadata description for each container in the project.
+
+This metadata can either be stored in a YAML file linked to the component,
+at a well known location (`esap-containers.yml`) in the source code for the component,
+or as a `string` attribute of the component registration.
+
+Note that this needs to be a hirerarchical tree of metadata.
+Each container in the list will need to have a separate section for the compute resources and data resources for that continer.
+
+```yaml
+
+    containers:
+
+    - name: "example"
+      description: |
+          A template for an executable container.
+
+      type: [docker|singularity|oci]
+      version: ""
+
+      binary-image:
+        format: [raw|targzip]
+        url: [url]
+
+      build-source:
+        url:  [url]
+
+      ports:
+        - name: "portname"
+          protocol: "tcp"
+          internal: 8080
+          external: 8080
+        - name: "portname"
+          protocol: "tcp"
+          internal: 8081
+          external: 8081
+        environment:
+        - name:  "ENV_NAME"
+          value: "xxxx"
+        - name:  "ENV_NAME"
+          value: "xxxx"
+
+      compute-resources:
+
+        # A list of the compute resources needed by this container.
+
+      data-resources:
+
+        # A list of the data resources needed by this container.
+
+```
+

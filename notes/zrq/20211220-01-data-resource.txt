@@ -1,0 +1,147 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+Example metadata for describing the data resources required by an executable task.
+
+The metadata for an executable component would either be stored in a YAML file linked to the component, or as a `string` attribute of the component registration.
+```yaml
+    data-resources:
+      - name: "example"
+        description: |
+            A template for a data resource.
+        cardinality: [single|container]
+        mimetype: [mime-type]
+
+        # The source location to access the data.
+        source:
+            protocol: [http|scp|S3|nfs|...]
+            url: "...."
+
+        # The mount point inside the notebook or container.
+        mount:
+            protocol: [file|posix|http|S3|nfs|....]
+            path: "...."
+            accessmode: [
+                readonlyonce,
+                readonlymany,
+                readwriteonce,
+                readwritemany
+                ]
+
+        # The external location to publish the data.
+        publish:
+            protocol: [http|scp|S3|nfs|...]
+            accessmode: [
+                readonlyonce,
+                readonlymany,
+                readwriteonce,
+                readwritemany
+                ]
+            accesscontrol: [
+                public,
+                protected,
+                private
+                ]
+            lifetime: [ISO_8601 Duration]
+```
+
+An example list of data resources required for a cross match task which takes two inputs, a simple VOTable file of target sources and a collection of Parquet files for the data catalog to crossmatch them with and outputs a single VOTable file of results.
+
+```yaml
+    data-resources:
+
+      # The list of targets.
+      - name: "targets"
+        description: |
+            The list of target sources to crossmatch with the main dataset.
+            The results from a TAP query stored in a VOTable file.
+
+        # A single VOTable file.
+        cardinality: "single"
+        mimetype: "application/x-votable+xml"
+
+        # The source location of the target file.
+        source:
+            protocol: "http"
+            url: "https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/example.vot"
+
+        # The mount point inside the notebook or container.
+        mount:
+            protocol: "file"
+            path: "/data/inputs/targets.vot"
+            accessmode: "readonlyonce"
+
+      # The main catalog.
+      - name: "catalog"
+        description: |
+            The main source table from the Gaia DR3 catalog.
+
+        # A collection of Parquet files, clustered and indexed by source ID.
+        cardinality: "collection"
+        mimetype: "application/parquet"
+        parquet:
+            indexcolum: "source_id"
+            clustercolum: "source_id"
+            bucketcount: 2048
+
+        # The source location of the data set.
+        source:
+            protocol: "S3a"
+            endpoint: "s3.echo.stfc.ac.uk"
+            url: "s3a://gaia-edr3/"
+
+        # The mount point inside the notebook or container.
+        mount:
+            protocol: "posix"
+            path: "/data/inputs/gaia/gaiasource"
+            accessmode: "readonlyonce"
+
+      # The results.
+      - name: "results"
+        description: |
+            The list of results, downloadable as a VOTable file.
+
+        # A single VOTable file.
+        cardinality: "single"
+        mimetype: "application/x-votable+xml"
+
+        # The mount point, inside the notebook or container.
+        mount:
+            protocol: "file"
+            path: "/data/outputs/results.vot"
+            accessmode: "readwriteonce"
+
+        # The external location, accessible from outside.
+        publish:
+            protocol: "http"
+            accessmode: "readonlymany"
+            accesscontrol: "public"
+            lifetime: "PT1H"
+```
+
