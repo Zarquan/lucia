@@ -1,0 +1,103 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+# ----------------------------------------------
+
+    ESAP WP5 monthly
+    https://indico.in2p3.fr/event/25321/
+
+    CTAO
+    New branch to create framework for DIRAC branch submission:
+        https://git.astron.nl/astron-sdc/escape-wp5/esap-general/-/issues/95
+        https://git.astron.nl/astron-sdc/esap-api-gateway/-/tree/99_CONCORDIA_framework
+
+    Submitting 'Hello World' jobs to CTADIRAC from localhost version of ESAP.
+    https://youtu.be/WyOs2mwPh2w
+
+    https://indico.in2p3.fr/event/25321/?note=3588#sc-2-5-ctao
+
+
+# ----------------------------------------------
+
+    ESAP design
+
+
+
+    Slack with Susana
+
+    Executable-metadata
+    https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Executable-metadata
+
+
+    OSSR template project
+    https://gitlab.in2p3.fr/escape2020/wp3/template_project_escape
+
+    HCG-16 project
+    https://github.com/AMIGA-IAA/hcg-16
+
+        run.sh
+        Shell script to run the pipeline
+        Downloads stuff and then runs Pytho program
+        https://github.com/AMIGA-IAA/hcg-16/blob/master/run.sh#L185
+
+            python pipeline.py make plotting --local --timeit=pipeline.time
+
+        pipeline.py
+        Uses components from cgatcore to run a 'pipeline'
+        https://github.com/AMIGA-IAA/hcg-16/blob/master/cgatcore/pipeline.py
+
+            Seems to be a Python library to run command line 'statements' ?
+            Uses udocker to run containerised code.
+            Layers upon layers upon layers ...
+
+
+        Uses cgat-core
+        https://github.com/cgat-developers/cgat-core
+
+
+        HCG-16 notebooks are also available in EUDAT
+        https://b2share.eudat.eu/records/adf6e2e942b04561a8640c449b48c14a
+
+        Learn how the EUDAT taxonomy works ...
+        https://b2share.eudat.eu/records?q=3.5.2.1.1+%E2%86%92+Observational+astronomy+%E2%86%92+Radio+astronomy
+
+        TL;DR
+        I think all we need is command line access to a VM (or container) that runs Python.
+        Need to test to see if udocker can be run inside a container ..
+
+
+        https://github.com/indigo-dc/udocker
+        https://indigo-dc.github.io/udocker/installation_manual.html#6-external-tools-and-libraries
+
+            udocker uses the OCI crun and runc binaries ..
+
+                https://github.com/containers/crun
+                https://github.com/opencontainers/runc
+
+

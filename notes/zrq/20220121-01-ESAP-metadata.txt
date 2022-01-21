@@ -1,0 +1,1552 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    HCG-16 project
+    https://github.com/AMIGA-IAA/hcg-16
+
+# -----------------------------------------------------
+# Try run the pipeline in a container.
+#[user@desktop]
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --name hcg-16 \
+        fedora \
+            bash
+
+        mkdir pipeline-run
+        pushd pipeline-run
+
+            curl -O https://raw.githubusercontent.com/AMIGA-IAA/hcg-16/master/run.sh
+            bash run.sh
+
+
+    # Already we get errors ..
+    curl -O https://raw.githubusercontent.com/AMIGA-IAA/hcg-16/master/run.sh
+
+    >   curl: (6) getaddrinfo() thread failed to start
+
+    # Turns out to be an issue in curl !?
+    # https://github.com/curl/curl/issues/6495
+
+    # Downgrade to earlier version of Fedora
+
+
+# -----------------------------------------------------
+# Try an earlier version of Fedora.
+#[user@desktop]
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --name hcg-16 \
+        fedora:31 \
+            bash
+
+        mkdir pipeline-run
+        pushd pipeline-run
+
+            curl -O https://raw.githubusercontent.com/AMIGA-IAA/hcg-16/master/run.sh
+            bash run.sh
+
+# -----------------------------------------------------
+# Shell script makes assumptions about the host that aren't true.
+#[root@container]
+
+    bash run.sh
+
+    >   run.sh: line 63: which: command not found
+    >   run.sh: line 100: which: command not found
+    >   run.sh: line 47: hostname: command not found
+    >   # run.sh log |  | Fri Jan 21 12:40:01 UTC 2022 |  Downloading conda...
+    >   
+    >    ##########################################################
+    >   
+    >    An error occurred in:
+    >   
+    >    - line number: 121
+    >    - exit status: 127
+    >    - command: $DOWNLOAD_CMD_CONDA Miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &> /dev/null
+    >   
+    >    The script will abort now. User input was:
+    >   
+    >    run.sh
+
+# -----------------------------------------------------
+# Install the undocumented dependencies ...
+#[root@container]
+
+    dnf install -y which
+    dnf install -y hostname
+
+
+# -----------------------------------------------------
+# Try again ...
+#[root@container]
+
+    bash run.sh
+
+    >   which: no conda in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:44:10 UTC 2022 |  Downloading conda...
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:44:18 UTC 2022 |  Install conda...
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:44:45 UTC 2022 |  Activate conda...
+    >   which: no mamba in (/pipeline-run/conda-install/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:44:45 UTC 2022 |  Install mamba...
+    >   Collecting package metadata (current_repodata.json): done
+    >   Solving environment: done
+    >   
+    >   
+    >   ==> WARNING: A newer version of conda exists. <==
+    >     current version: 4.10.3
+    >     latest version: 4.11.0
+    >   
+    >   Please update conda by running
+    >   
+    >       $ conda update -n base -c defaults conda
+    >   
+    >   
+    >   
+    >   ## Package Plan ##
+    >   
+    >     environment location: /pipeline-run/conda-install
+    >   
+    >     added / updated specs:
+    >       - mamba
+    >   
+    >   
+    >   The following packages will be downloaded:
+    >   
+    >       package                    |            build
+    >       ---------------------------|-----------------
+    >       _libgcc_mutex-0.1          |      conda_forge           3 KB  conda-forge
+    >       _openmp_mutex-4.5          |           1_llvm           5 KB  conda-forge
+    >       bzip2-1.0.8                |       h7f98852_4         484 KB  conda-forge
+    >       c-ares-1.18.1              |       h7f98852_0         113 KB  conda-forge
+    >       ca-certificates-2021.10.8  |       ha878542_0         139 KB  conda-forge
+    >       certifi-2021.10.8          |   py39hf3d152e_1         145 KB  conda-forge
+    >       conda-4.11.0               |   py39hf3d152e_0        16.8 MB  conda-forge
+    >       icu-68.2                   |       h9c3ff4c_0        13.1 MB  conda-forge
+    >       krb5-1.19.2                |       hcc1bbae_0         1.4 MB  conda-forge
+    >       libarchive-3.5.2           |       hccf745f_1         1.6 MB  conda-forge
+    >       libcurl-7.80.0             |       h0b77cf5_0         339 KB
+    >       libedit-3.1.20191231       |       he28a2e2_2         121 KB  conda-forge
+    >       libev-4.33                 |       h516909a_1         104 KB  conda-forge
+    >       libgcc-ng-11.2.0           |      h1d223b6_11         887 KB  conda-forge
+    >       libiconv-1.16              |       h516909a_0         1.4 MB  conda-forge
+    >       libmamba-0.19.1            |       h3985d26_0         1.5 MB  conda-forge
+    >       libmambapy-0.19.1          |   py39h8bfa403_0         314 KB  conda-forge
+    >       libnghttp2-1.46.0          |       hce63b2e_0         680 KB
+    >       libsolv-0.7.19             |       h780b84a_5         445 KB  conda-forge
+    >       libssh2-1.10.0             |       ha56f1ee_2         233 KB  conda-forge
+    >       libstdcxx-ng-11.2.0        |      he4da1e4_11         4.2 MB  conda-forge
+    >       libxml2-2.9.12             |       h72842e0_0         772 KB  conda-forge
+    >       llvm-openmp-12.0.1         |       h4bd325d_1         2.8 MB  conda-forge
+    >       lz4-c-1.9.3                |       h9c3ff4c_1         179 KB  conda-forge
+    >       lzo-2.10                   |    h516909a_1000         314 KB  conda-forge
+    >       mamba-0.19.1               |   py39hfa8f2c8_0          41 KB  conda-forge
+    >       openssl-1.1.1l             |       h7f98852_0         2.1 MB  conda-forge
+    >       pybind11-abi-4             |       hd8ed1ab_3          10 KB  conda-forge
+    >       python_abi-3.9             |           2_cp39           4 KB  conda-forge
+    >       reproc-14.2.3              |       h7f98852_0          28 KB  conda-forge
+    >       reproc-cpp-14.2.3          |       h9c3ff4c_0          20 KB  conda-forge
+    >       yaml-cpp-0.6.3             |       he1b5a44_4         208 KB  conda-forge
+    >       zstd-1.5.0                 |       ha4553b6_1         524 KB
+    >       ------------------------------------------------------------
+    >                                              Total:        50.9 MB
+    >   
+    >   The following NEW packages will be INSTALLED:
+    >   
+    >     bzip2              conda-forge/linux-64::bzip2-1.0.8-h7f98852_4
+    >     c-ares             conda-forge/linux-64::c-ares-1.18.1-h7f98852_0
+    >     icu                conda-forge/linux-64::icu-68.2-h9c3ff4c_0
+    >     krb5               conda-forge/linux-64::krb5-1.19.2-hcc1bbae_0
+    >     libarchive         conda-forge/linux-64::libarchive-3.5.2-hccf745f_1
+    >     libcurl            pkgs/main/linux-64::libcurl-7.80.0-h0b77cf5_0
+    >     libedit            conda-forge/linux-64::libedit-3.1.20191231-he28a2e2_2
+    >     libev              conda-forge/linux-64::libev-4.33-h516909a_1
+    >     libiconv           conda-forge/linux-64::libiconv-1.16-h516909a_0
+    >     libmamba           conda-forge/linux-64::libmamba-0.19.1-h3985d26_0
+    >     libmambapy         conda-forge/linux-64::libmambapy-0.19.1-py39h8bfa403_0
+    >     libnghttp2         pkgs/main/linux-64::libnghttp2-1.46.0-hce63b2e_0
+    >     libsolv            conda-forge/linux-64::libsolv-0.7.19-h780b84a_5
+    >     libssh2            conda-forge/linux-64::libssh2-1.10.0-ha56f1ee_2
+    >     libxml2            conda-forge/linux-64::libxml2-2.9.12-h72842e0_0
+    >     llvm-openmp        conda-forge/linux-64::llvm-openmp-12.0.1-h4bd325d_1
+    >     lz4-c              conda-forge/linux-64::lz4-c-1.9.3-h9c3ff4c_1
+    >     lzo                conda-forge/linux-64::lzo-2.10-h516909a_1000
+    >     mamba              conda-forge/linux-64::mamba-0.19.1-py39hfa8f2c8_0
+    >     pybind11-abi       conda-forge/noarch::pybind11-abi-4-hd8ed1ab_3
+    >     python_abi         conda-forge/linux-64::python_abi-3.9-2_cp39
+    >     reproc             conda-forge/linux-64::reproc-14.2.3-h7f98852_0
+    >     reproc-cpp         conda-forge/linux-64::reproc-cpp-14.2.3-h9c3ff4c_0
+    >     yaml-cpp           conda-forge/linux-64::yaml-cpp-0.6.3-he1b5a44_4
+    >     zstd               pkgs/main/linux-64::zstd-1.5.0-ha4553b6_1
+    >   
+    >   The following packages will be REMOVED:
+    >   
+    >     libgomp-9.3.0-h5101ec6_17
+    >   
+    >   The following packages will be UPDATED:
+    >   
+    >     ca-certificates    pkgs/main::ca-certificates-2021.7.5-h~ --> conda-forge::ca-certificates-2021.10.8-ha878542_0
+    >     certifi            pkgs/main::certifi-2021.5.30-py39h06a~ --> conda-forge::certifi-2021.10.8-py39hf3d152e_1
+    >     conda              pkgs/main::conda-4.10.3-py39h06a4308_0 --> conda-forge::conda-4.11.0-py39hf3d152e_0
+    >     libgcc-ng          pkgs/main::libgcc-ng-9.3.0-h5101ec6_17 --> conda-forge::libgcc-ng-11.2.0-h1d223b6_11
+    >     libstdcxx-ng       pkgs/main::libstdcxx-ng-9.3.0-hd4cf53~ --> conda-forge::libstdcxx-ng-11.2.0-he4da1e4_11
+    >     openssl              pkgs/main::openssl-1.1.1k-h27cfd23_0 --> conda-forge::openssl-1.1.1l-h7f98852_0
+    >   
+    >   The following packages will be SUPERSEDED by a higher-priority channel:
+    >   
+    >     _libgcc_mutex           pkgs/main::_libgcc_mutex-0.1-main --> conda-forge::_libgcc_mutex-0.1-conda_forge
+    >     _openmp_mutex          pkgs/main::_openmp_mutex-4.5-1_gnu --> conda-forge::_openmp_mutex-4.5-1_llvm
+    >   
+    >   
+    >   
+    >   Downloading and Extracting Packages
+    >   icu-68.2             | 13.1 MB   | ####################################################################################### | 100%
+    >   libmamba-0.19.1      | 1.5 MB    | ####################################################################################### | 100%
+    >   lzo-2.10             | 314 KB    | ####################################################################################### | 100%
+    >   openssl-1.1.1l       | 2.1 MB    | ####################################################################################### | 100%
+    >   libarchive-3.5.2     | 1.6 MB    | ####################################################################################### | 100%
+    >   c-ares-1.18.1        | 113 KB    | ####################################################################################### | 100%
+    >   libgcc-ng-11.2.0     | 887 KB    | ####################################################################################### | 100%
+    >   libstdcxx-ng-11.2.0  | 4.2 MB    | ####################################################################################### | 100%
+    >   libedit-3.1.20191231 | 121 KB    | ####################################################################################### | 100%
+    >   yaml-cpp-0.6.3       | 208 KB    | ####################################################################################### | 100%
+    >   libev-4.33           | 104 KB    | ####################################################################################### | 100%
+    >   libsolv-0.7.19       | 445 KB    | ####################################################################################### | 100%
+    >   libnghttp2-1.46.0    | 680 KB    | ####################################################################################### | 100%
+    >   pybind11-abi-4       | 10 KB     | ####################################################################################### | 100%
+    >   llvm-openmp-12.0.1   | 2.8 MB    | ####################################################################################### | 100%
+    >   conda-4.11.0         | 16.8 MB   | ####################################################################################### | 100%
+    >   mamba-0.19.1         | 41 KB     | ####################################################################################### | 100%
+    >   reproc-cpp-14.2.3    | 20 KB     | ####################################################################################### | 100%
+    >   certifi-2021.10.8    | 145 KB    | ####################################################################################### | 100%
+    >   bzip2-1.0.8          | 484 KB    | ####################################################################################### | 100%
+    >   lz4-c-1.9.3          | 179 KB    | ####################################################################################### | 100%
+    >   zstd-1.5.0           | 524 KB    | ####################################################################################### | 100%
+    >   libssh2-1.10.0       | 233 KB    | ####################################################################################### | 100%
+    >   libcurl-7.80.0       | 339 KB    | ####################################################################################### | 100%
+    >   libiconv-1.16        | 1.4 MB    | ####################################################################################### | 100%
+    >   reproc-14.2.3        | 28 KB     | ####################################################################################### | 100%
+    >   libxml2-2.9.12       | 772 KB    | ####################################################################################### | 100%
+    >   libmambapy-0.19.1    | 314 KB    | ####################################################################################### | 100%
+    >   _openmp_mutex-4.5    | 5 KB      | ####################################################################################### | 100%
+    >   ca-certificates-2021 | 139 KB    | ####################################################################################### | 100%
+    >   krb5-1.19.2          | 1.4 MB    | ####################################################################################### | 100%
+    >   python_abi-3.9       | 4 KB      | ####################################################################################### | 100%
+    >   _libgcc_mutex-0.1    | 3 KB      | ####################################################################################### | 100%
+    >   Preparing transaction: done
+    >   Verifying transaction: done
+    >   Executing transaction: done
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:45:35 UTC 2022 |  Download conda environment...
+    >     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+    >                                    Dload  Upload   Total   Spent    Left  Speed
+    >   100   261  100   261    0     0    996      0 --:--:-- --:--:-- --:--:--   996
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:45:36 UTC 2022 |  Install hcg-16 environment...
+    >   bioconda/linux-64        [====================] (00m:01s) Done
+    >   pkgs/r/noarch            [====================] (00m:00s) Done
+    >   pkgs/main/noarch         [====================] (00m:00s) Done
+    >   pkgs/r/linux-64          [====================] (00m:00s) Done
+    >   bioconda/noarch          [====================] (00m:03s) Done
+    >   pkgs/main/linux-64       [====================] (00m:06s) Done
+    >   conda-forge/noarch       [====================] (00m:24s) Done
+    >   conda-forge/linux-64     [====================] (00m:36s) Done
+    >   
+    >   
+    >   Looking for: ['python=3.6', 'aplpy=2.0', 'astropy=3.1', 'cgatcore==0.5.12', 'jupyter', 'matplotlib=3.0', 'nbconvert=5.5', 'numpy=1.16', 'unzip', 'curl', 'pip']
+    >   
+    >   
+    >   warning  Extracted package cache '/pipeline-run/conda-install/pkgs/_openmp_mutex-4.5-1_gnu' has invalid size
+    >   warning  Extracted package cache '/pipeline-run/conda-install/pkgs/_openmp_mutex-4.5-1_gnu' has invalid SHA-256 checksum
+    >   warning  Package tarball '/pipeline-run/conda-install/pkgs/_openmp_mutex-4.5-1_gnu.tar.bz2' is invalid
+    >   Transaction
+    >   
+    >     Prefix: /pipeline-run/conda-install/envs/hcg-16
+    >   
+    >     Updating specs:
+    >   
+    >      - python=3.6
+    >      - aplpy=2.0
+    >      - astropy=3.1
+    >      - cgatcore==0.5.12
+    >      - jupyter
+    >      - matplotlib=3.0
+    >      - nbconvert=5.5
+    >      - numpy=1.16
+    >      - unzip
+    >      - curl
+    >      - pip
+    >   
+    >   
+    >     Package                               Version  Build                Channel                     Size
+    >   ────────────────────────────────────────────────────────────────────────────────────────────────────────
+    >     Install:
+    >   ────────────────────────────────────────────────────────────────────────────────────────────────────────
+    >   
+    >     + _libgcc_mutex                           0.1  conda_forge          conda-forge/linux-64      Cached
+    >     + _openmp_mutex                           4.5  1_gnu                conda-forge/linux-64       22 KB
+    >     + aplpy                                 2.0.3  py_1                 conda-forge/noarch         53 KB
+    >     + argon2-cffi                          21.1.0  py36h8f6f2f9_0       conda-forge/linux-64       46 KB
+    >     + astropy                               3.1.2  py36h14c3975_0       conda-forge/linux-64        7 MB
+    >     + astropy-healpix                         0.5  py36ha112f06_1       conda-forge/linux-64      100 KB
+    >     + attrs                                21.4.0  pyhd8ed1ab_0         conda-forge/noarch         49 KB
+    >     + backcall                              0.2.0  pyh9f0ad1d_0         conda-forge/noarch         13 KB
+    >     + backports                               1.0  py_2                 conda-forge/noarch          4 KB
+    >     + backports.functools_lru_cache         1.6.4  pyhd8ed1ab_0         conda-forge/noarch          9 KB
+    >     + bcrypt                                3.2.0  py36h8f6f2f9_1       conda-forge/linux-64       44 KB
+    >     + bleach                                4.1.0  pyhd8ed1ab_0         conda-forge/noarch        121 KB
+    >     + c-ares                               1.18.1  h7f98852_0           conda-forge/linux-64      Cached
+    >     + ca-certificates                   2021.10.8  ha878542_0           conda-forge/linux-64      Cached
+    >     + cffi                                 1.14.6  py36hd8eec40_1       conda-forge/linux-64      224 KB
+    >     + cgatcore                             0.5.12  py36_1               bioconda/linux-64         163 KB
+    >     + click                                 8.0.1  py36h5fab9bb_0       conda-forge/linux-64      145 KB
+    >     + cloudpickle                           2.0.0  pyhd8ed1ab_0         conda-forge/noarch         24 KB
+    >     + coreutils                               9.0  h7f98852_0           conda-forge/linux-64        4 MB
+    >     + coverage                                6.0  py36h8f6f2f9_1       conda-forge/linux-64      275 KB
+    >     + cryptography                         35.0.0  py36hb60f036_0       conda-forge/linux-64        2 MB
+    >     + curl                                 7.81.0  h2574ce0_0           conda-forge/linux-64       90 KB
+    >     + cycler                               0.11.0  pyhd8ed1ab_0         conda-forge/noarch         10 KB
+    >     + cytoolz                              0.11.0  py36h8f6f2f9_3       conda-forge/linux-64      393 KB
+    >     + dask-core                          2021.3.0  pyhd8ed1ab_0         conda-forge/noarch        702 KB
+    >     + dbus                                 1.13.6  h5008d03_3           conda-forge/linux-64      604 KB
+    >     + decorator                             5.1.1  pyhd8ed1ab_0         conda-forge/noarch         12 KB
+    >     + defusedxml                            0.7.1  pyhd8ed1ab_0         conda-forge/noarch         23 KB
+    >     + drmaa                                 0.7.9  py_1000              conda-forge/noarch         18 KB
+    >     + entrypoints                             0.3  pyhd8ed1ab_1003      conda-forge/noarch          8 KB
+    >     + expat                                 2.4.3  h9c3ff4c_0           conda-forge/linux-64      183 KB
+    >     + fontconfig                           2.13.1  he4413a7_1000        conda-forge/linux-64      327 KB
+    >     + freetype                             2.10.4  h0708190_1           conda-forge/linux-64      890 KB
+    >     + geos                                  3.9.1  h9c3ff4c_2           conda-forge/linux-64        1 MB
+    >     + gettext                            0.19.8.1  h73d1719_1008        conda-forge/linux-64        4 MB
+    >     + gevent                               21.8.0  py36h8f6f2f9_0       conda-forge/linux-64        2 MB
+    >     + glib                                 2.70.2  h780b84a_1           conda-forge/linux-64      437 KB
+    >     + glib-tools                           2.70.2  h780b84a_1           conda-forge/linux-64      105 KB
+    >     + greenlet                              1.1.1  py36hc4f0c31_0       conda-forge/linux-64       82 KB
+    >     + gst-plugins-base                     1.14.0  hbbd80ab_1           pkgs/main/linux-64          5 MB
+    >     + gstreamer                            1.14.0  h28cd5cc_2           pkgs/main/linux-64          3 MB
+    >     + hypothesis                           6.36.0  pyhd8ed1ab_0         conda-forge/noarch        254 KB
+    >     + icu                                    58.2  hf484d3e_1000        conda-forge/linux-64       23 MB
+    >     + imagecodecs-lite                  2019.12.3  py36h92226af_3       conda-forge/linux-64      206 KB
+    >     + imageio                              2.13.5  pyh239f2a4_0         conda-forge/noarch          3 MB
+    >     + importlib-metadata                    4.8.1  py36h5fab9bb_0       conda-forge/linux-64       32 KB
+    >     + importlib_metadata                    4.8.1  hd8ed1ab_1           conda-forge/noarch          4 KB
+    >     + iniconfig                             1.1.1  pyh9f0ad1d_0         conda-forge/noarch          8 KB
+    >     + ipykernel                             5.5.5  py36hcb3619a_0       conda-forge/linux-64      166 KB
+    >     + ipython                              7.16.1  py36he448a4c_2       conda-forge/linux-64        1 MB
+    >     + ipython_genutils                      0.2.0  py_1                 conda-forge/noarch         21 KB
+    >     + ipywidgets                            7.6.5  pyhd8ed1ab_0         conda-forge/noarch        101 KB
+    >     + jbig                                    2.1  h7f98852_2003        conda-forge/linux-64       43 KB
+    >     + jedi                                 0.17.2  py36h5fab9bb_1       conda-forge/linux-64      957 KB
+    >     + jinja2                                3.0.3  pyhd8ed1ab_0         conda-forge/noarch         99 KB
+    >     + jpeg                                     9d  h36c2ea0_0           conda-forge/linux-64      264 KB
+    >     + jsonschema                            4.1.2  pyhd8ed1ab_0         conda-forge/noarch         54 KB
+    >     + jupyter                               1.0.0  py36h5fab9bb_6       conda-forge/linux-64        6 KB
+    >     + jupyter_client                       6.1.12  pyhd8ed1ab_0         conda-forge/noarch         79 KB
+    >     + jupyter_console                       6.4.0  pyhd8ed1ab_1         conda-forge/noarch         22 KB
+    >     + jupyter_core                          4.8.1  py36h5fab9bb_0       conda-forge/linux-64       78 KB
+    >     + jupyterlab_widgets                    1.0.2  pyhd8ed1ab_0         conda-forge/noarch        130 KB
+    >     + kiwisolver                            1.3.1  py36h605e78d_1       conda-forge/linux-64       78 KB
+    >     + krb5                                 1.19.2  hcc1bbae_3           conda-forge/linux-64        1 MB
+    >     + lcms2                                  2.12  hddcbb42_0           conda-forge/linux-64      443 KB
+    >     + ld_impl_linux-64                     2.36.1  hea4e1c9_2           conda-forge/linux-64      667 KB
+    >     + lerc                                    3.0  h9c3ff4c_0           conda-forge/linux-64      216 KB
+    >     + libblas                               3.9.0  13_linux64_openblas  conda-forge/linux-64       12 KB
+    >     + libcblas                              3.9.0  13_linux64_openblas  conda-forge/linux-64       12 KB
+    >     + libcurl                              7.81.0  h2574ce0_0           conda-forge/linux-64      338 KB
+    >     + libdeflate                              1.8  h7f98852_0           conda-forge/linux-64       67 KB
+    >     + libedit                        3.1.20191231  he28a2e2_2           conda-forge/linux-64      Cached
+    >     + libev                                  4.33  h516909a_1           conda-forge/linux-64      Cached
+    >     + libffi                                3.4.2  h7f98852_5           conda-forge/linux-64       57 KB
+    >     + libgcc-ng                            11.2.0  h1d223b6_11          conda-forge/linux-64      Cached
+    >     + libgfortran-ng                       11.2.0  h69a702a_11          conda-forge/linux-64       19 KB
+    >     + libgfortran5                         11.2.0  h5c6108e_11          conda-forge/linux-64        2 MB
+    >     + libglib                              2.70.2  h174f98d_1           conda-forge/linux-64        3 MB
+    >     + libgomp                              11.2.0  h1d223b6_11          conda-forge/linux-64      427 KB
+    >     + libiconv                               1.16  h516909a_0           conda-forge/linux-64      Cached
+    >     + liblapack                             3.9.0  13_linux64_openblas  conda-forge/linux-64       12 KB
+    >     + libnghttp2                           1.43.0  h812cca2_1           conda-forge/linux-64      790 KB
+    >     + libnsl                                2.0.0  h7f98852_0           conda-forge/linux-64       31 KB
+    >     + libopenblas                          0.3.18  pthreads_h8fe5266_0  conda-forge/linux-64       10 MB
+    >     + libpng                               1.6.37  h21135ba_2           conda-forge/linux-64      306 KB
+    >     + libsodium                            1.0.18  h36c2ea0_1           conda-forge/linux-64      366 KB
+    >     + libssh2                              1.10.0  ha56f1ee_2           conda-forge/linux-64      Cached
+    >     + libstdcxx-ng                         11.2.0  he4da1e4_11          conda-forge/linux-64      Cached
+    >     + libtiff                               4.3.0  h6f004c6_2           conda-forge/linux-64      614 KB
+    >     + libuuid                              2.32.1  h7f98852_1000        conda-forge/linux-64       28 KB
+    >     + libuv                                1.43.0  h7f98852_0           conda-forge/linux-64        1 MB
+    >     + libwebp-base                          1.2.2  h7f98852_0           conda-forge/linux-64      858 KB
+    >     + libxcb                                 1.13  h7f98852_1004        conda-forge/linux-64      391 KB
+    >     + libxml2                               2.9.9  h13577e0_2           conda-forge/linux-64        1 MB
+    >     + libzlib                              1.2.11  h36c2ea0_1013        conda-forge/linux-64       59 KB
+    >     + lz4-c                                 1.9.3  h9c3ff4c_1           conda-forge/linux-64      Cached
+    >     + markupsafe                            2.0.1  py36h8f6f2f9_0       conda-forge/linux-64       22 KB
+    >     + matplotlib                            3.0.3  py36_1               conda-forge/linux-64        6 KB
+    >     + matplotlib-base                       3.0.3  py36h5f35d83_1       conda-forge/linux-64        7 MB
+    >     + mistune                               0.8.4  py36h8f6f2f9_1004    conda-forge/linux-64       54 KB
+    >     + more-itertools                       8.12.0  pyhd8ed1ab_0         conda-forge/noarch         47 KB
+    >     + nbconvert                             5.5.0  py_0                 conda-forge/noarch        375 KB
+    >     + nbformat                              5.1.3  pyhd8ed1ab_0         conda-forge/noarch         47 KB
+    >     + ncurses                                 6.3  h9c3ff4c_0           conda-forge/linux-64     1012 KB
+    >     + networkx                                2.5  py_0                 conda-forge/noarch          1 MB
+    >     + nomkl                                   1.0  h5ca1d4c_0           conda-forge/noarch          4 KB
+    >     + notebook                              6.3.0  py36h5fab9bb_0       conda-forge/linux-64        6 MB
+    >     + numpy                                1.16.6  py36h2aa4a07_0       conda-forge/linux-64        4 MB
+    >     + olefile                                0.46  pyh9f0ad1d_1         conda-forge/noarch         32 KB
+    >     + openjpeg                              2.4.0  hb52868f_1           conda-forge/linux-64      444 KB
+    >     + openssl                              1.1.1l  h7f98852_0           conda-forge/linux-64      Cached
+    >     + packaging                              21.3  pyhd8ed1ab_0         conda-forge/noarch         36 KB
+    >     + pandas                                1.1.5  py36h284efc9_0       conda-forge/linux-64       11 MB
+    >     + pandoc                             2.17.0.1  h7f98852_0           conda-forge/linux-64       12 MB
+    >     + pandocfilters                         1.5.0  pyhd8ed1ab_0         conda-forge/noarch         11 KB
+    >     + paramiko                              2.9.2  pyhd8ed1ab_0         conda-forge/noarch        139 KB
+    >     + parso                                 0.7.1  pyh9f0ad1d_0         conda-forge/noarch         70 KB
+    >     + pcre                                   8.45  h9c3ff4c_0           conda-forge/linux-64      253 KB
+    >     + pexpect                               4.8.0  pyh9f0ad1d_2         conda-forge/noarch         47 KB
+    >     + pickleshare                           0.7.5  py_1003              conda-forge/noarch          9 KB
+    >     + pillow                                8.3.2  py36h676a545_0       conda-forge/linux-64      703 KB
+    >     + pip                                  21.3.1  pyhd8ed1ab_0         conda-forge/noarch          1 MB
+    >     + pluggy                                1.0.0  py36h5fab9bb_1       conda-forge/linux-64       25 KB
+    >     + prometheus_client                    0.12.0  pyhd8ed1ab_0         conda-forge/noarch         47 KB
+    >     + prompt-toolkit                       3.0.24  pyha770c72_0         conda-forge/noarch        249 KB
+    >     + prompt_toolkit                       3.0.24  hd8ed1ab_0           conda-forge/noarch          5 KB
+    >     + psutil                                5.8.0  py36h8f6f2f9_1       conda-forge/linux-64      342 KB
+    >     + pthread-stubs                           0.4  h36c2ea0_1001        conda-forge/linux-64        5 KB
+    >     + ptyprocess                            0.7.0  pyhd3deb0d_0         conda-forge/noarch         16 KB
+    >     + py                                   1.11.0  pyh6c4a22f_0         conda-forge/noarch         74 KB
+    >     + pyavm                                 0.9.5  pyhac0dd68_0         conda-forge/noarch        214 KB
+    >     + pycparser                              2.21  pyhd8ed1ab_0         conda-forge/noarch        100 KB
+    >     + pygments                             2.11.2  pyhd8ed1ab_0         conda-forge/noarch        796 KB
+    >     + pynacl                                1.4.0  py36h8f6f2f9_2       conda-forge/linux-64        1 MB
+    >     + pyparsing                             3.0.7  pyhd8ed1ab_0         conda-forge/noarch         79 KB
+    >     + pyqt                                  5.9.2  py36hcca6a23_4       conda-forge/linux-64        6 MB
+    >     + pyregion                                2.0  py36h92226af_1001    conda-forge/linux-64      174 KB
+    >     + pyrsistent                           0.17.3  py36h8f6f2f9_2       conda-forge/linux-64       89 KB
+    >     + pytest                                6.2.5  py36h5fab9bb_0       conda-forge/linux-64      430 KB
+    >     + pytest-arraydiff                        0.3  py_0                 conda-forge/noarch         11 KB
+    >     + pytest-astropy                        0.9.0  pyhd8ed1ab_0         conda-forge/noarch          7 KB
+    >     + pytest-astropy-header                 0.1.2  py_0                 conda-forge/noarch         10 KB
+    >     + pytest-cov                            3.0.0  pyhd8ed1ab_0         conda-forge/noarch         21 KB
+    >     + pytest-doctestplus                    0.9.0  pyhd8ed1ab_0         conda-forge/noarch         20 KB
+    >     + pytest-filter-subpackage              0.1.1  py_0                 conda-forge/noarch          8 KB
+    >     + pytest-mock                           3.6.1  pyhd8ed1ab_0         conda-forge/noarch         20 KB
+    >     + pytest-openfiles                      0.5.0  py_0                 conda-forge/noarch          9 KB
+    >     + pytest-remotedata                     0.3.3  pyhd8ed1ab_0         conda-forge/noarch         11 KB
+    >     + python                               3.6.15  hb7a2778_0_cpython   conda-forge/linux-64       38 MB
+    >     + python-dateutil                       2.8.2  pyhd8ed1ab_0         conda-forge/noarch        240 KB
+    >     + python_abi                              3.6  2_cp36m              conda-forge/linux-64        4 KB
+    >     + pytz                                 2021.3  pyhd8ed1ab_0         conda-forge/noarch        242 KB
+    >     + pywavelets                            1.1.1  py36h92226af_3       conda-forge/linux-64        4 MB
+    >     + pyyaml                                5.4.1  py36h8f6f2f9_1       conda-forge/linux-64      194 KB
+    >     + pyzmq                                22.3.0  py36h7068817_0       conda-forge/linux-64      500 KB
+    >     + qt                                    5.9.7  h5867ecd_1           pkgs/main/linux-64         68 MB
+    >     + qtconsole                             5.2.2  pyhd8ed1ab_1         conda-forge/noarch          5 KB
+    >     + qtconsole-base                        5.2.2  pyhd8ed1ab_1         conda-forge/noarch         90 KB
+    >     + qtpy                                  2.0.0  pyhd8ed1ab_0         conda-forge/noarch         38 KB
+    >     + readline                                8.1  h46c0cb4_0           conda-forge/linux-64      295 KB
+    >     + reproject                             0.5.1  py36hc1659b7_0       conda-forge/linux-64      328 KB
+    >     + ruffus                                2.8.4  pyh864c0ab_1         bioconda/noarch           150 KB
+    >     + scikit-image                         0.17.2  py36h284efc9_4       conda-forge/linux-64       11 MB
+    >     + scipy                                 1.5.3  py36h9e8f40b_0       conda-forge/linux-64       19 MB
+    >     + send2trash                            1.8.0  pyhd8ed1ab_0         conda-forge/noarch         17 KB
+    >     + setuptools                           58.0.4  py36h5fab9bb_2       conda-forge/linux-64      966 KB
+    >     + shapely                               1.7.1  py36h93b233e_4       conda-forge/linux-64      442 KB
+    >     + sip                                  4.19.8  py36hf484d3e_1000    conda-forge/linux-64      290 KB
+    >     + six                                  1.16.0  pyh6c4a22f_0         conda-forge/noarch         14 KB
+    >     + sortedcontainers                      2.4.0  pyhd8ed1ab_0         conda-forge/noarch         26 KB
+    >     + sqlalchemy                           1.4.25  py36h8f6f2f9_0       conda-forge/linux-64        2 MB
+    >     + sqlite                               3.37.0  h9cd32fc_0           conda-forge/linux-64        1 MB
+    >     + terminado                            0.12.1  py36h5fab9bb_0       conda-forge/linux-64       27 KB
+    >     + testpath                              0.5.0  pyhd8ed1ab_0         conda-forge/noarch         86 KB
+    >     + tifffile                           2020.6.3  py_0                 conda-forge/noarch        109 KB
+    >     + time                                    1.8  h516909a_0           conda-forge/linux-64       38 KB
+    >     + tk                                   8.6.11  h27826a3_1           conda-forge/linux-64        3 MB
+    >     + toml                                 0.10.2  pyhd8ed1ab_0         conda-forge/noarch         18 KB
+    >     + tomli                                 1.2.2  pyhd8ed1ab_0         conda-forge/noarch         15 KB
+    >     + toolz                                0.11.2  pyhd8ed1ab_0         conda-forge/noarch         48 KB
+    >     + tornado                                 6.1  py36h8f6f2f9_1       conda-forge/linux-64      643 KB
+    >     + traitlets                             4.3.3  pyhd8ed1ab_2         conda-forge/noarch         62 KB
+    >     + typing_extensions                     4.0.1  pyha770c72_0         conda-forge/noarch         26 KB
+    >     + unzip                                   6.0  h7f98852_2           conda-forge/linux-64      143 KB
+    >     + wcwidth                               0.2.5  pyh9f0ad1d_2         conda-forge/noarch         33 KB
+    >     + webencodings                          0.5.1  py_1                 conda-forge/noarch         12 KB
+    >     + wheel                                0.37.1  pyhd8ed1ab_0         conda-forge/noarch         31 KB
+    >     + widgetsnbextension                    3.5.1  py36h5fab9bb_4       conda-forge/linux-64        2 MB
+    >     + xorg-libxau                           1.0.9  h7f98852_0           conda-forge/linux-64       13 KB
+    >     + xorg-libxdmcp                         1.1.3  h7f98852_0           conda-forge/linux-64       19 KB
+    >     + xz                                    5.2.5  h516909a_1           conda-forge/linux-64      343 KB
+    >     + yaml                                  0.2.5  h7f98852_2           conda-forge/linux-64       87 KB
+    >     + zeromq                                4.3.4  h9c3ff4c_1           conda-forge/linux-64      351 KB
+    >     + zipp                                  3.7.0  pyhd8ed1ab_0         conda-forge/noarch         12 KB
+    >     + zlib                                 1.2.11  h36c2ea0_1013        conda-forge/linux-64       86 KB
+    >     + zope.event                            4.5.0  pyh9f0ad1d_0         conda-forge/noarch          9 KB
+    >     + zope.interface                        5.4.0  py36h8f6f2f9_0       conda-forge/linux-64      317 KB
+    >     + zstd                                  1.5.2  ha95c52a_0           conda-forge/linux-64      458 KB
+    >   
+    >     Summary:
+    >   
+    >     Install: 198 packages
+    >   
+    >     Total download: 298 MB
+    >   
+    >   ────────────────────────────────────────────────────────────────────────────────────────────────────────
+    >   
+    >   Finished nomkl                                (00m:00s)               4 KB     25 KB/s
+    >   Finished ld_impl_linux-64                     (00m:00s)             667 KB      2 MB/s
+    >   Finished pthread-stubs                        (00m:00s)               5 KB      9 KB/s
+    >   Finished pcre                                 (00m:00s)             253 KB    360 KB/s
+    >   Finished libgfortran5                         (00m:00s)               2 MB      2 MB/s
+    >   Finished xz                                   (00m:00s)             343 KB    328 KB/s
+    >   Finished libgomp                              (00m:01s)             427 KB    406 KB/s
+    >   Finished libffi                               (00m:00s)              57 KB     50 KB/s
+    >   Finished lerc                                 (00m:00s)             216 KB    187 KB/s
+    >   Finished libblas                              (00m:00s)              12 KB     10 KB/s
+    >   Finished zlib                                 (00m:00s)              86 KB     64 KB/s
+    >   Finished libnsl                               (00m:00s)              31 KB     21 KB/s
+    >   Finished liblapack                            (00m:00s)              12 KB      7 KB/s
+    >   Finished libnghttp2                           (00m:00s)             790 KB    413 KB/s
+    >   Finished openjpeg                             (00m:00s)             444 KB    196 KB/s
+    >   Finished sqlite                               (00m:01s)               1 MB    526 KB/s
+    >   Finished geos                                 (00m:01s)               1 MB    359 KB/s
+    >   Finished fontconfig                           (00m:00s)             327 KB    105 KB/s
+    >   Finished curl                                 (00m:00s)              90 KB     28 KB/s
+    >   Finished cloudpickle                          (00m:00s)              24 KB      7 KB/s
+    >   Finished send2trash                           (00m:00s)              17 KB      5 KB/s
+    >   Finished backcall                             (00m:00s)              13 KB      4 KB/s
+    >   Finished libopenblas                          (00m:02s)              10 MB      3 MB/s
+    >   Finished iniconfig                            (00m:00s)               8 KB      2 KB/s
+    >   Finished sortedcontainers                     (00m:00s)              26 KB      7 KB/s
+    >   Finished attrs                                (00m:00s)              49 KB     14 KB/s
+    >   Finished pyparsing                            (00m:00s)              79 KB     22 KB/s
+    >   Finished olefile                              (00m:00s)              32 KB      9 KB/s
+    >   Finished testpath                             (00m:00s)              86 KB     22 KB/s
+    >   Finished entrypoints                          (00m:00s)               8 KB      2 KB/s
+    >   Finished jupyterlab_widgets                   (00m:00s)             130 KB     33 KB/s
+    >   Finished pip                                  (00m:00s)               1 MB    308 KB/s
+    >   Finished drmaa                                (00m:00s)              18 KB      4 KB/s
+    >   Finished traitlets                            (00m:00s)              62 KB     15 KB/s
+    >   Finished psutil                               (00m:00s)             342 KB     76 KB/s
+    >   Finished bleach                               (00m:00s)             121 KB     25 KB/s
+    >   Finished pyzmq                                (00m:00s)             500 KB    102 KB/s
+    >   Finished markupsafe                           (00m:00s)              22 KB      4 KB/s
+    >   Finished pandoc                               (00m:05s)              12 MB      2 MB/s
+    >   Finished tornado                              (00m:00s)             643 KB    121 KB/s
+    >   Finished coverage                             (00m:00s)             275 KB     50 KB/s
+    >   Finished imagecodecs-lite                     (00m:00s)             206 KB     36 KB/s
+    >   Finished pillow                               (00m:00s)             703 KB    122 KB/s
+    >   Finished networkx                             (00m:01s)               1 MB    208 KB/s
+    >   Finished argon2-cffi                          (00m:00s)              46 KB      8 KB/s
+    >   Finished shapely                              (00m:00s)             442 KB     69 KB/s
+    >   Finished click                                (00m:00s)             145 KB     22 KB/s
+    >   Finished ipython                              (00m:01s)               1 MB    168 KB/s
+    >   Finished gstreamer                            (00m:01s)               3 MB    438 KB/s
+    >   Finished numpy                                (00m:02s)               4 MB    591 KB/s
+    >   Finished paramiko                             (00m:00s)             139 KB     17 KB/s
+    >   Finished dask-core                            (00m:01s)             702 KB     85 KB/s
+    >   Finished imageio                              (00m:02s)               3 MB    363 KB/s
+    >   Finished qtconsole-base                       (00m:00s)              90 KB     10 KB/s
+    >   Finished pytest-openfiles                     (00m:00s)               9 KB      1 KB/s
+    >   Finished pytest-astropy-header                (00m:00s)              10 KB      1 KB/s
+    >   Finished pytest-cov                           (00m:00s)              21 KB      2 KB/s
+    >   Finished pytest-astropy                       (00m:00s)               7 KB    783  B/s
+    >   Finished pyregion                             (00m:00s)             174 KB     18 KB/s
+    >   Finished aplpy                                (00m:00s)              53 KB      5 KB/s
+    >   Finished libuuid                              (00m:00s)              28 KB      3 KB/s
+    >   Finished jpeg                                 (00m:00s)             264 KB     26 KB/s
+    >   Finished pyqt                                 (00m:03s)               6 MB    556 KB/s
+    >   Finished jbig                                 (00m:00s)              43 KB      4 KB/s
+    >   Finished libzlib                              (00m:00s)              59 KB      5 KB/s
+    >   Finished libuv                                (00m:00s)               1 MB     96 KB/s
+    >   Finished zeromq                               (00m:00s)             351 KB     31 KB/s
+    >   Finished libpng                               (00m:00s)             306 KB     24 KB/s
+    >   Finished python                               (00m:10s)              38 MB      3 MB/s
+    >   Finished coreutils                            (00m:02s)               4 MB    306 KB/s
+    >   Finished gettext                              (00m:02s)               4 MB    274 KB/s
+    >   Finished libcurl                              (00m:00s)             338 KB     25 KB/s
+    >   Finished krb5                                 (00m:00s)               1 MB    105 KB/s
+    >   Finished wheel                                (00m:00s)              31 KB      2 KB/s
+    >   Finished backports                            (00m:00s)               4 KB    258  B/s
+    >   Finished ptyprocess                           (00m:00s)              16 KB      1 KB/s
+    >   Finished toml                                 (00m:00s)              18 KB      1 KB/s
+    >   Finished zope.event                           (00m:00s)               9 KB    689  B/s
+    >   Finished ipython_genutils                     (00m:00s)              21 KB      2 KB/s
+    >   Finished libglib                              (00m:01s)               3 MB    224 KB/s
+    >   Finished six                                  (00m:00s)              14 KB   1015  B/s
+    >   Finished pytz                                 (00m:00s)             242 KB     17 KB/s
+    >   Finished packaging                            (00m:00s)              36 KB      3 KB/s
+    >   Finished qtpy                                 (00m:00s)              38 KB      3 KB/s
+    >   Finished pygments                             (00m:00s)             796 KB     55 KB/s
+    >   Finished pyrsistent                           (00m:00s)              89 KB      6 KB/s
+    >   Finished mistune                              (00m:00s)              54 KB      4 KB/s
+    >   Finished glib                                 (00m:00s)             437 KB     30 KB/s
+    >   Finished jupyter_core                         (00m:00s)              78 KB      5 KB/s
+    >   Finished notebook                             (00m:06s)               6 MB    445 KB/s
+    >   Finished cytoolz                              (00m:00s)             393 KB     27 KB/s
+    >   Finished pynacl                               (00m:00s)               1 MB     89 KB/s
+    >   Finished jsonschema                           (00m:00s)              54 KB      4 KB/s
+    >   Finished scikit-image                         (00m:07s)              11 MB    741 KB/s
+    >   Finished hypothesis                           (00m:00s)             254 KB     16 KB/s
+    >   Finished gevent                               (00m:00s)               2 MB    113 KB/s
+    >   Finished pluggy                               (00m:00s)              25 KB      2 KB/s
+    >   Finished jupyter_console                      (00m:00s)              22 KB      1 KB/s
+    >   Finished pytest-doctestplus                   (00m:00s)              20 KB      1 KB/s
+    >   Finished ipywidgets                           (00m:00s)             101 KB      6 KB/s
+    >   Finished pytest                               (00m:00s)             430 KB     27 KB/s
+    >   Finished libgfortran-ng                       (00m:00s)              19 KB      1 KB/s
+    >   Finished xorg-libxau                          (00m:00s)              13 KB    848  B/s
+    >   Finished libwebp-base                         (00m:00s)             858 KB     53 KB/s
+    >   Finished unzip                                (00m:00s)             143 KB      9 KB/s
+    >   Finished zstd                                 (00m:00s)             458 KB     27 KB/s
+    >   Finished ncurses                              (00m:01s)            1012 KB     60 KB/s
+    >   Finished gst-plugins-base                     (00m:02s)               5 MB    288 KB/s
+    >   Finished python_abi                           (00m:00s)               4 KB    231  B/s
+    >   Finished tomli                                (00m:00s)              15 KB    895  B/s
+    >   Finished libxml2                              (00m:00s)               1 MB     78 KB/s
+    >   Finished zipp                                 (00m:00s)              12 KB    698  B/s
+    >   Finished cycler                               (00m:00s)              10 KB    590  B/s
+    >   Finished pandocfilters                        (00m:00s)              11 KB    664  B/s
+    >   Finished py                                   (00m:00s)              74 KB      4 KB/s
+    >   Finished pexpect                              (00m:00s)              47 KB      3 KB/s
+    >   Finished freetype                             (00m:00s)             890 KB     50 KB/s
+    >   Finished sip                                  (00m:00s)             290 KB     16 KB/s
+    >   Finished importlib-metadata                   (00m:00s)              32 KB      2 KB/s
+    >   Finished prompt-toolkit                       (00m:00s)             249 KB     14 KB/s
+    >   Finished pyyaml                               (00m:00s)             194 KB     11 KB/s
+    >   Finished cryptography                         (00m:01s)               2 MB     82 KB/s
+    >   Finished astropy                              (00m:03s)               7 MB    374 KB/s
+    >   Finished tifffile                             (00m:00s)             109 KB      6 KB/s
+    >   Finished ipykernel                            (00m:00s)             166 KB      9 KB/s
+    >   Finished pytest-arraydiff                     (00m:00s)              11 KB    604  B/s
+    >   Finished jupyter                              (00m:00s)               6 KB    321  B/s
+    >   Finished cgatcore                             (00m:00s)             163 KB      8 KB/s
+    >   Finished expat                                (00m:00s)             183 KB      9 KB/s
+    >   Finished _openmp_mutex                        (00m:00s)              22 KB      1 KB/s
+    >   Finished yaml                                 (00m:00s)              87 KB      4 KB/s
+    >   Finished readline                             (00m:00s)             295 KB     15 KB/s
+    >   Finished dbus                                 (00m:00s)             604 KB     29 KB/s
+    >   Finished toolz                                (00m:00s)              48 KB      2 KB/s
+    >   Finished more-itertools                       (00m:00s)              47 KB      2 KB/s
+    >   Finished decorator                            (00m:00s)              12 KB    566  B/s
+    >   Finished defusedxml                           (00m:00s)              23 KB      1 KB/s
+    >   Finished wcwidth                              (00m:00s)              33 KB      2 KB/s
+    >   Finished tk                                   (00m:01s)               3 MB    156 KB/s
+    >   Finished kiwisolver                           (00m:00s)              78 KB      4 KB/s
+    >   Finished cffi                                 (00m:00s)             224 KB     10 KB/s
+    >   Finished jupyter_client                       (00m:00s)              79 KB      4 KB/s
+    >   Finished scipy                                (00m:07s)              19 MB    887 KB/s
+    >   Finished matplotlib                           (00m:00s)               6 KB    273  B/s
+    >   Finished ruffus                               (00m:00s)             150 KB      7 KB/s
+    >   Finished astropy-healpix                      (00m:00s)             100 KB      4 KB/s
+    >   Finished libsodium                            (00m:00s)             366 KB     16 KB/s
+    >   Finished pytest-filter-subpackage             (00m:00s)               8 KB    351  B/s
+    >   Finished time                                 (00m:00s)              38 KB      2 KB/s
+    >   Finished libtiff                              (00m:00s)             614 KB     26 KB/s
+    >   Finished pickleshare                          (00m:00s)               9 KB    394  B/s
+    >   Finished pyavm                                (00m:00s)             214 KB      9 KB/s
+    >   Finished pandas                               (00m:06s)              11 MB    483 KB/s
+    >   Finished setuptools                           (00m:01s)             966 KB     40 KB/s
+    >   Finished python-dateutil                      (00m:00s)             240 KB     10 KB/s
+    >   Finished greenlet                             (00m:00s)              82 KB      3 KB/s
+    >   Finished nbconvert                            (00m:00s)             375 KB     15 KB/s
+    >   Finished pytest-mock                          (00m:00s)              20 KB    814  B/s
+    >   Finished matplotlib-base                      (00m:03s)               7 MB    275 KB/s
+    >   Finished xorg-libxdmcp                        (00m:00s)              19 KB    768  B/s
+    >   Finished glib-tools                           (00m:00s)             105 KB      4 KB/s
+    >   Finished libxcb                               (00m:00s)             391 KB     16 KB/s
+    >   Finished backports.functools_lru_cache        (00m:00s)               9 KB    360  B/s
+    >   Finished pycparser                            (00m:00s)             100 KB      4 KB/s
+    >   Finished jinja2                               (00m:00s)              99 KB      4 KB/s
+    >   Finished jedi                                 (00m:00s)             957 KB     38 KB/s
+    >   Finished reproject                            (00m:00s)             328 KB     13 KB/s
+    >   Finished libcblas                             (00m:00s)              12 KB    483  B/s
+    >   Finished prometheus_client                    (00m:00s)              47 KB      2 KB/s
+    >   Finished sqlalchemy                           (00m:01s)               2 MB     89 KB/s
+    >   Finished prompt_toolkit                       (00m:00s)               5 KB    179  B/s
+    >   Finished pytest-remotedata                    (00m:00s)              11 KB    444  B/s
+    >   Finished zope.interface                       (00m:00s)             317 KB     12 KB/s
+    >   Finished widgetsnbextension                   (00m:01s)               2 MB     70 KB/s
+    >   Finished webencodings                         (00m:00s)              12 KB    447  B/s
+    >   Finished qtconsole                            (00m:00s)               5 KB    191  B/s
+    >   Finished parso                                (00m:00s)              70 KB      3 KB/s
+    >   Finished importlib_metadata                   (00m:00s)               4 KB    142  B/s
+    >   Finished typing_extensions                    (00m:00s)              26 KB    990  B/s
+    >   Finished lcms2                                (00m:00s)             443 KB     16 KB/s
+    >   Finished nbformat                             (00m:00s)              47 KB      2 KB/s
+    >   Finished pywavelets                           (00m:02s)               4 MB    166 KB/s
+    >   Finished terminado                            (00m:00s)              27 KB   1021  B/s
+    >   Finished libdeflate                           (00m:00s)              67 KB      2 KB/s
+    >   Finished bcrypt                               (00m:00s)              44 KB      2 KB/s
+    >   Finished icu                                  (00m:07s)              23 MB    685 KB/s
+    >   Finished qt                                   (00m:17s)              68 MB      2 MB/s
+    >   Downloading  [===========================================================================================] (01m:44s)    8.50 MB/s
+    >   Extracting   [===========================================================================================] (01m:44s)    187 / 187
+    >   Preparing transaction: done
+    >   Verifying transaction: done
+    >   Executing transaction: / Enabling notebook extension jupyter-js-widgets/extension...
+    >         - Validating: OK
+    >   
+    >   done
+    >   Installing pip dependencies: | Ran pip subprocess with arguments:
+    >   ['/pipeline-run/conda-install/envs/hcg-16/bin/python', '-m', 'pip', 'install', '-U', '-r', '/pipeline-run/condaenv.r3ej3llk.requirements.txt']
+    >   Pip subprocess output:
+    >   Collecting udocker==1.3.1
+    >     Downloading udocker-1.3.1-py2.py3-none-any.whl (109 kB)
+    >   Installing collected packages: udocker
+    >   Successfully installed udocker-1.3.1
+    >   
+    >   done
+    >   #
+    >   # To activate this environment, use
+    >   #
+    >   #     $ conda activate hcg-16
+    >   #
+    >   # To deactivate an active environment, use
+    >   #
+    >   #     $ conda deactivate
+    >   
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:49:14 UTC 2022 |  Download pipeline...
+    >     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+    >                                    Dload  Upload   Total   Spent    Left  Speed
+    >   100  3944  100  3944    0     0  15794      0 --:--:-- --:--:-- --:--:-- 15839
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:49:14 UTC 2022 |  Download pipeline config...
+    >     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+    >                                    Dload  Upload   Total   Spent    Left  Speed
+    >   100   460  100   460    0     0   1741      0 --:--:-- --:--:-- --:--:--  1749
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:49:14 UTC 2022 |  Run pipeline...
+    >   # 2022-01-21 12:49:16,146 INFO pipeline log is pipeline.log
+    >   # 2022-01-21 12:49:16,146 INFO output generated by pipeline.py make plotting --local --timeit=pipeline.time \
+    >   #                              job started at Fri Jan 21 12:49:16 2022 on 66da100216ea -- 73b33f13-c4b5-475f-a407-2b56ba39bed8 \
+    >   #                              pid: 1111, system: Linux 5.11.22-100.fc32.x86_64 #1 SMP Wed May 19 18:58:25 UTC 2021 x86_64
+    >   # 2022-01-21 12:49:16,147 INFO always_mount                            : False \
+    >   #                              cluster_memory_default                  : unlimited \
+    >   #                              cluster_memory_resource                 : None \
+    >   #                              cluster_num_jobs                        : None \
+    >   #                              cluster_options                         : None \
+    >   #                              cluster_parallel_environment            : None \
+    >   #                              cluster_priority                        : None \
+    >   #                              cluster_queue                           : None \
+    >   #                              cluster_queue_manager                   : sge \
+    >   #                              config_file                             : pipeline.yml \
+    >   #                              debug                                   : False \
+    >   #                              dry_run                                 : False \
+    >   #                              engine                                  : local \
+    >   #                              exceptions_terminate_immediately        : None \
+    >   #                              force_run                               : False \
+    >   #                              input_globs                             : [] \
+    >   #                              input_validation                        : False \
+    >   #                              is_test                                 : False \
+    >   #                              log_config_filename                     : None \
+    >   #                              log_exceptions                          : True \
+    >   #                              loglevel                                : 1 \
+    >   #                              multiprocess                            : None \
+    >   #                              only_info                               : False \
+    >   #                              pipeline_action                         : None \
+    >   #                              pipeline_format                         : svg \
+    >   #                              pipeline_logfile                        : pipeline.log \
+    >   #                              pipeline_targets                        : [] \
+    >   #                              random_seed                             : None \
+    >   #                              ruffus_checksums_level                  : 0 \
+    >   #                              shell_logfile                           : None \
+    >   #                              short_help                              : None \
+    >   #                              stderr                                  : <_io.TextIOWrapper name='<stderr>' mode='w' encoding='UTF-8'> \
+    >   #                              stdin                                   : <_io.TextIOWrapper name='<stdin>' mode='r' encoding='UTF-8'> \
+    >   #                              stdlog                                  : <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'> \
+    >   #                              stdout                                  : <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'> \
+    >   #                              terminate                               : None \
+    >   #                              timeit_file                             : pipeline.time \
+    >   #                              timeit_header                           : None \
+    >   #                              timeit_name                             : all \
+    >   #                              tracing                                 : None \
+    >   #                              variables_to_set                        : [] \
+    >   #                              without_cluster                         : True \
+    >   #                              work_dir                                : None
+    >   # 2022-01-21 12:49:16,147 INFO started in directory: /pipeline-run
+    >   # 2022-01-21 12:49:16,161 INFO code location: /pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline
+    >   # 2022-01-21 12:49:16,162 INFO code version:
+    >   # 2022-01-21 12:49:16,162 INFO working directory is: /pipeline-run
+    >   # 2022-01-21 12:49:16,162 INFO changing directory to /pipeline-run
+    >   # 2022-01-21 12:49:16,162 INFO pipeline has been initialized
+    >   # 2022-01-21 12:49:16,163 WARNING local temporary directory /tmp/root did not exist - created
+    >   # 2022-01-21 12:49:16,163 INFO temporary directory is /tmp/root
+    >   # 2022-01-21 12:49:16,171 INFO current directory is /pipeline-run
+    >   # 2022-01-21 12:49:16,187 INFO
+    >   # 2022-01-21 12:49:16,188 INFO ________________________________________
+    >   # 2022-01-21 12:49:16,188 INFO Tasks which will be run:
+    >   # 2022-01-21 12:49:16,188 INFO
+    >   # 2022-01-21 12:49:16,189 INFO
+    >   # 2022-01-21 12:49:16,189 INFO Task enters queue = 'dependency_check'
+    >   # 2022-01-21 12:49:16,290 INFO Task enters queue = 'get_decals_jpeg'
+    >   # 2022-01-21 12:49:16,391 INFO Task enters queue = 'get_decals_fits'
+    >   # 2022-01-21 12:49:16,506 INFO {"task": "'dependency_check'", "task_status": "update", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:49:16,505 ERROR  \
+    >   #                                   Exception #1 \
+    >   #                                     'builtins.OSError(Required dependency "wget" not found)' raised in ... \
+    >   #                                      Task = def dependency_check(...): \
+    >   #                                      Job  = [None -> dependency_check.done] \
+    >   
+
+
+# -----------------------------------------------------
+# Install the undocumented dependencies ...
+#[root@container]
+
+    dnf install -y wget
+
+
+# -----------------------------------------------------
+# Try again ...
+#[root@container]
+
+    bash run.sh
+
+    >   which: no conda in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:52 UTC 2022 |  Conda already installed.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:52 UTC 2022 |  Activate conda...
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:52 UTC 2022 |  mamba already available.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:52 UTC 2022 |  Conda environment downloaded.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:53 UTC 2022 |  Activate hcg-16 environment...
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:53 UTC 2022 |  Pipeline downloaded.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:53 UTC 2022 |  Pipeline config downloaded.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 12:52:53 UTC 2022 |  Run pipeline...
+    >   # 2022-01-21 12:52:55,139 INFO pipeline log is pipeline.log
+    >   # 2022-01-21 12:52:55,139 INFO output generated by pipeline.py make plotting --local --timeit=pipeline.time \
+    >   #                              job started at Fri Jan 21 12:52:55 2022 on 66da100216ea -- cd628654-836d-4479-a61e-76ec1b304ac5 \
+    >   #                              pid: 1204, system: Linux 5.11.22-100.fc32.x86_64 #1 SMP Wed May 19 18:58:25 UTC 2021 x86_64
+    >   # 2022-01-21 12:52:55,139 INFO always_mount                            : False \
+    >   #                              cluster_memory_default                  : unlimited \
+    >   #                              cluster_memory_resource                 : None \
+    >   #                              cluster_num_jobs                        : None \
+    >   #                              cluster_options                         : None \
+    >   #                              cluster_parallel_environment            : None \
+    >   #                              cluster_priority                        : None \
+    >   #                              cluster_queue                           : None \
+    >   #                              cluster_queue_manager                   : sge \
+    >   #                              config_file                             : pipeline.yml \
+    >   #                              debug                                   : False \
+    >   #                              dry_run                                 : False \
+    >   #                              engine                                  : local \
+    >   #                              exceptions_terminate_immediately        : None \
+    >   #                              force_run                               : False \
+    >   #                              input_globs                             : [] \
+    >   #                              input_validation                        : False \
+    >   #                              is_test                                 : False \
+    >   #                              log_config_filename                     : None \
+    >   #                              log_exceptions                          : True \
+    >   #                              loglevel                                : 1 \
+    >   #                              multiprocess                            : None \
+    >   #                              only_info                               : False \
+    >   #                              pipeline_action                         : None \
+    >   #                              pipeline_format                         : svg \
+    >   #                              pipeline_logfile                        : pipeline.log \
+    >   #                              pipeline_targets                        : [] \
+    >   #                              random_seed                             : None \
+    >   #                              ruffus_checksums_level                  : 0 \
+    >   #                              shell_logfile                           : None \
+    >   #                              short_help                              : None \
+    >   #                              stderr                                  : <_io.TextIOWrapper name='<stderr>' mode='w' encoding='UTF-8'> \
+    >   #                              stdin                                   : <_io.TextIOWrapper name='<stdin>' mode='r' encoding='UTF-8'> \
+    >   #                              stdlog                                  : <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'> \
+    >   #                              stdout                                  : <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'> \
+    >   #                              terminate                               : None \
+    >   #                              timeit_file                             : pipeline.time \
+    >   #                              timeit_header                           : None \
+    >   #                              timeit_name                             : all \
+    >   #                              tracing                                 : None \
+    >   #                              variables_to_set                        : [] \
+    >   #                              without_cluster                         : True \
+    >   #                              work_dir                                : None
+    >   # 2022-01-21 12:52:55,140 INFO started in directory: /pipeline-run
+    >   # 2022-01-21 12:52:55,150 INFO code location: /pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline
+    >   # 2022-01-21 12:52:55,150 INFO code version:
+    >   # 2022-01-21 12:52:55,150 INFO working directory is: /pipeline-run
+    >   # 2022-01-21 12:52:55,150 INFO changing directory to /pipeline-run
+    >   # 2022-01-21 12:52:55,151 INFO pipeline has been initialized
+    >   # 2022-01-21 12:52:55,151 INFO temporary directory is /tmp/root
+    >   # 2022-01-21 12:52:55,158 INFO current directory is /pipeline-run
+    >   # 2022-01-21 12:52:55,173 INFO
+    >   # 2022-01-21 12:52:55,174 INFO ________________________________________
+    >   # 2022-01-21 12:52:55,174 INFO Tasks which will be run:
+    >   # 2022-01-21 12:52:55,174 INFO
+    >   # 2022-01-21 12:52:55,174 INFO
+    >   # 2022-01-21 12:52:55,175 INFO Task enters queue = 'dependency_check'
+    >   # 2022-01-21 12:52:55,275 INFO Task enters queue = 'get_decals_jpeg'
+    >   # 2022-01-21 12:52:55,376 INFO Task enters queue = 'get_decals_fits'
+    >   # 2022-01-21 12:52:55,496 INFO {"task": "'dependency_check'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:52:55,495 INFO Completed Task = 'dependency_check'
+    >   # 2022-01-21 12:52:55,498 INFO Task enters queue = 'download_code'
+    >   # 2022-01-21 12:52:55,503 INFO running statement: \
+    >   #                              wget "http://legacysurvey.org//viewer/jpeg-cutout?ra=32.4509&dec=-10.2335&width=3000&height=3000&pixscale=0.524&layer=decals-dr7" -O HCG16_DECaLS_cutout.jpeg
+    >   # 2022-01-21 12:52:55,504 INFO running statement: \
+    >   #                              wget "http://legacysurvey.org//viewer/fits-cutout?ra=32.4509&dec=-10.2335&width=3000&height=3000&pixscale=0.524&layer=decals-dr7&bands=r" -O HCG16_DECaLS_r_cutout.fits
+    >   # 2022-01-21 12:52:55,600 INFO Task enters queue = 'download_data'
+    >   # 2022-01-21 12:53:11,396 WARNING {'task': '__main__.get_decals_jpeg', 'engine': 'LocalExecutor', 'statement': 'wget "http://legacysurvey.org//viewer/jpeg-cutout?ra=32.4509&dec=-10.2335&width=3000&height=3000&pixscale=0.524&layer=decals-dr7" -O HCG16_DECaLS_cutout.jpeg', 'job_id': 1230, 'slots': 1, 'start_time': 1642769575.5151541, 'end_time': 1642769591.3935144, 'submission_time': 1642769575.5151541, 'hostname': '66da100216ea', 'total_t': 15.878360271453857, 'exit_status': 0, 'user_t': 0.12, 'sys_t': 0.08, 'wall_t': 15.82, 'shared_data': 0, 'io_input': 0, 'io_output': 6744, 'average_memory_total': 0, 'percent_cpu': 1.2595759044437373, 'average_rss': 0, 'max_rss': 13928, 'max_vmem': 13928, 'minor_page_faults': 2539, 'swapped': 0, 'context_switches_involuntarily': 17, 'context_switches_voluntarily': 1928, 'average_uss': 0, 'signal': 0, 'major_page_fault': 51, 'unshared_data': 0, 'cpu_t': 0.2}
+    >   # 2022-01-21 12:53:11,397 INFO {"task": "__main__.get_decals_jpeg", "engine": "LocalExecutor", "statement": "wget \"http://legacysurvey.org//viewer/jpeg-cutout?ra=32.4509&dec=-10.2335&width=3000&height=3000&pixscale=0.524&layer=decals-dr7\" -O HCG16_DECaLS_cutout.jpeg", "job_id": 1230, "slots": 1, "start_time": 1642769575.5151541, "end_time": 1642769591.3935144, "submission_time": 1642769575.5151541, "hostname": "66da100216ea", "total_t": 15.878360271453857, "exit_status": 0, "user_t": 0.12, "sys_t": 0.08, "wall_t": 15.82, "shared_data": 0, "io_input": 0, "io_output": 6744, "average_memory_total": 0, "percent_cpu": 1.2595759044437373, "average_rss": 0, "max_rss": 13928, "max_vmem": 13928, "minor_page_faults": 2539, "swapped": 0, "context_switches_involuntarily": 17, "context_switches_voluntarily": 1928, "average_uss": 0, "signal": 0, "major_page_fault": 51, "unshared_data": 0, "cpu_t": 0.2}
+    >   # 2022-01-21 12:53:11,409 INFO {"task": "'get_decals_jpeg'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:53:11,409 INFO Completed Task = 'get_decals_jpeg'
+    >   # 2022-01-21 12:53:11,414 INFO running statement: \
+    >   #                              wget https://github.com/AMIGA-IAA/hcg-16/archive/master.zip && touch download_code.done
+    >   # 2022-01-21 12:53:12,364 WARNING {'task': '__main__.download_code', 'engine': 'LocalExecutor', 'statement': 'wget https://github.com/AMIGA-IAA/hcg-16/archive/master.zip && touch download_code.done', 'job_id': 1253, 'slots': 1, 'start_time': 1642769591.4176357, 'end_time': 1642769592.3636863, 'submission_time': 1642769591.4176357, 'hostname': '66da100216ea', 'total_t': 0.9460506439208984, 'exit_status': 0, 'user_t': 0.1, 'sys_t': 0.02, 'wall_t': 0.85, 'shared_data': 0, 'io_input': 0, 'io_output': 136, 'average_memory_total': 0, 'percent_cpu': 12.000000000000002, 'average_rss': 0, 'max_rss': 13916, 'max_vmem': 13916, 'minor_page_faults': 2681, 'swapped': 0, 'context_switches_involuntarily': 467, 'context_switches_voluntarily': 464, 'average_uss': 0, 'signal': 0, 'major_page_fault': 0, 'unshared_data': 0, 'cpu_t': 0.12000000000000001}
+    >   # 2022-01-21 12:53:12,365 INFO {"task": "__main__.download_code", "engine": "LocalExecutor", "statement": "wget https://github.com/AMIGA-IAA/hcg-16/archive/master.zip && touch download_code.done", "job_id": 1253, "slots": 1, "start_time": 1642769591.4176357, "end_time": 1642769592.3636863, "submission_time": 1642769591.4176357, "hostname": "66da100216ea", "total_t": 0.9460506439208984, "exit_status": 0, "user_t": 0.1, "sys_t": 0.02, "wall_t": 0.85, "shared_data": 0, "io_input": 0, "io_output": 136, "average_memory_total": 0, "percent_cpu": 12.000000000000002, "average_rss": 0, "max_rss": 13916, "max_vmem": 13916, "minor_page_faults": 2681, "swapped": 0, "context_switches_involuntarily": 467, "context_switches_voluntarily": 464, "average_uss": 0, "signal": 0, "major_page_fault": 0, "unshared_data": 0, "cpu_t": 0.12000000000000001}
+    >   # 2022-01-21 12:53:12,369 INFO running statement: \
+    >   #                              wget https://b2share.eudat.eu/api/files/831f14fa-1840-454c-819b-d0b61500583b/hcg16-data.tar.gz && touch download_data.done
+    >   # 2022-01-21 12:53:12,369 INFO {"task": "'download_code'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:53:12,369 INFO Completed Task = 'download_code'
+    >   # 2022-01-21 12:53:12,370 INFO Task enters queue = 'prepare_code'
+    >   # 2022-01-21 12:53:36,473 WARNING {'task': '__main__.get_decals_fits', 'engine': 'LocalExecutor', 'statement': 'wget "http://legacysurvey.org//viewer/fits-cutout?ra=32.4509&dec=-10.2335&width=3000&height=3000&pixscale=0.524&layer=decals-dr7&bands=r" -O HCG16_DECaLS_r_cutout.fits', 'job_id': 1229, 'slots': 1, 'start_time': 1642769575.514586, 'end_time': 1642769616.4714746, 'submission_time': 1642769575.514586, 'hostname': '66da100216ea', 'total_t': 40.9568886756897, 'exit_status': 0, 'user_t': 0.56, 'sys_t': 0.69, 'wall_t': 40.9, 'shared_data': 0, 'io_input': 0, 'io_output': 70392, 'average_memory_total': 0, 'percent_cpu': 3.051989641835142, 'average_rss': 0, 'max_rss': 13652, 'max_vmem': 13652, 'minor_page_faults': 2543, 'swapped': 0, 'context_switches_involuntarily': 336, 'context_switches_voluntarily': 19994, 'average_uss': 0, 'signal': 0, 'major_page_fault': 41, 'unshared_data': 0, 'cpu_t': 1.25}
+    >   # 2022-01-21 12:53:36,475 INFO {"task": "__main__.get_decals_fits", "engine": "LocalExecutor", "statement": "wget \"http://legacysurvey.org//viewer/fits-cutout?ra=32.4509&dec=-10.2335&width=3000&height=3000&pixscale=0.524&layer=decals-dr7&bands=r\" -O HCG16_DECaLS_r_cutout.fits", "job_id": 1229, "slots": 1, "start_time": 1642769575.514586, "end_time": 1642769616.4714746, "submission_time": 1642769575.514586, "hostname": "66da100216ea", "total_t": 40.9568886756897, "exit_status": 0, "user_t": 0.56, "sys_t": 0.69, "wall_t": 40.9, "shared_data": 0, "io_input": 0, "io_output": 70392, "average_memory_total": 0, "percent_cpu": 3.051989641835142, "average_rss": 0, "max_rss": 13652, "max_vmem": 13652, "minor_page_faults": 2543, "swapped": 0, "context_switches_involuntarily": 336, "context_switches_voluntarily": 19994, "average_uss": 0, "signal": 0, "major_page_fault": 41, "unshared_data": 0, "cpu_t": 1.25}
+    >   # 2022-01-21 12:53:36,485 INFO {"task": "'get_decals_fits'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:53:36,485 INFO Completed Task = 'get_decals_fits'
+    >   # 2022-01-21 12:53:36,488 INFO running statement: \
+    >   #                              unzip master.zip &&     rm master.zip &&     touch prepare_code.done
+    >   # 2022-01-21 12:53:36,586 WARNING {'task': '__main__.prepare_code', 'engine': 'LocalExecutor', 'statement': 'unzip master.zip &&     rm master.zip &&     touch prepare_code.done', 'job_id': 1280, 'slots': 1, 'start_time': 1642769616.4930744, 'end_time': 1642769616.5849955, 'submission_time': 1642769616.4930744, 'hostname': '66da100216ea', 'total_t': 0.09192109107971191, 'exit_status': 0, 'user_t': 0.0, 'sys_t': 0.02, 'wall_t': 0.04, 'shared_data': 0, 'io_input': 0, 'io_output': 616, 'average_memory_total': 0, 'percent_cpu': 2.0, 'average_rss': 0, 'max_rss': 3536, 'max_vmem': 3536, 'minor_page_faults': 1164, 'swapped': 0, 'context_switches_involuntarily': 2, 'context_switches_voluntarily': 606, 'average_uss': 0, 'signal': 0, 'major_page_fault': 0, 'unshared_data': 0, 'cpu_t': 0.02}
+    >   # 2022-01-21 12:53:36,587 INFO {"task": "__main__.prepare_code", "engine": "LocalExecutor", "statement": "unzip master.zip &&     rm master.zip &&     touch prepare_code.done", "job_id": 1280, "slots": 1, "start_time": 1642769616.4930744, "end_time": 1642769616.5849955, "submission_time": 1642769616.4930744, "hostname": "66da100216ea", "total_t": 0.09192109107971191, "exit_status": 0, "user_t": 0.0, "sys_t": 0.02, "wall_t": 0.04, "shared_data": 0, "io_input": 0, "io_output": 616, "average_memory_total": 0, "percent_cpu": 2.0, "average_rss": 0, "max_rss": 3536, "max_vmem": 3536, "minor_page_faults": 1164, "swapped": 0, "context_switches_involuntarily": 2, "context_switches_voluntarily": 606, "average_uss": 0, "signal": 0, "major_page_fault": 0, "unshared_data": 0, "cpu_t": 0.02}
+    >   # 2022-01-21 12:53:36,590 INFO {"task": "'prepare_code'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:53:36,589 INFO Completed Task = 'prepare_code'
+    >   # 2022-01-21 12:54:19,913 WARNING {'task': '__main__.download_data', 'engine': 'LocalExecutor', 'statement': 'wget https://b2share.eudat.eu/api/files/831f14fa-1840-454c-819b-d0b61500583b/hcg16-data.tar.gz && touch download_data.done', 'job_id': 1267, 'slots': 1, 'start_time': 1642769592.3717115, 'end_time': 1642769659.9118745, 'submission_time': 1642769592.3717115, 'hostname': '66da100216ea', 'total_t': 67.54016304016113, 'exit_status': 0, 'user_t': 2.87, 'sys_t': 4.73, 'wall_t': 67.5, 'shared_data': 0, 'io_input': 0, 'io_output': 579960, 'average_memory_total': 0, 'percent_cpu': 11.252563893695138, 'average_rss': 0, 'max_rss': 13976, 'max_vmem': 13976, 'minor_page_faults': 2684, 'swapped': 0, 'context_switches_involuntarily': 3739, 'context_switches_voluntarily': 151180, 'average_uss': 0, 'signal': 0, 'major_page_fault': 0, 'unshared_data': 0, 'cpu_t': 7.6000000000000005}
+    >   # 2022-01-21 12:54:19,916 INFO {"task": "__main__.download_data", "engine": "LocalExecutor", "statement": "wget https://b2share.eudat.eu/api/files/831f14fa-1840-454c-819b-d0b61500583b/hcg16-data.tar.gz && touch download_data.done", "job_id": 1267, "slots": 1, "start_time": 1642769592.3717115, "end_time": 1642769659.9118745, "submission_time": 1642769592.3717115, "hostname": "66da100216ea", "total_t": 67.54016304016113, "exit_status": 0, "user_t": 2.87, "sys_t": 4.73, "wall_t": 67.5, "shared_data": 0, "io_input": 0, "io_output": 579960, "average_memory_total": 0, "percent_cpu": 11.252563893695138, "average_rss": 0, "max_rss": 13976, "max_vmem": 13976, "minor_page_faults": 2684, "swapped": 0, "context_switches_involuntarily": 3739, "context_switches_voluntarily": 151180, "average_uss": 0, "signal": 0, "major_page_fault": 0, "unshared_data": 0, "cpu_t": 7.6000000000000005}
+    >   # 2022-01-21 12:54:19,919 INFO {"task": "'download_data'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:54:19,919 INFO Completed Task = 'download_data'
+    >   # 2022-01-21 12:54:19,920 INFO Task enters queue = 'prepare_data'
+    >   # 2022-01-21 12:54:20,025 INFO running statement: \
+    >   #                              tar xzf hcg16-data.tar.gz &&     rm hcg16-data.tar.gz &&     touch prepare_data.done
+    >   # 2022-01-21 12:54:24,883 WARNING {'task': '__main__.prepare_data', 'engine': 'LocalExecutor', 'statement': 'tar xzf hcg16-data.tar.gz &&     rm hcg16-data.tar.gz &&     touch prepare_data.done', 'job_id': 1298, 'slots': 1, 'start_time': 1642769660.028466, 'end_time': 1642769664.8826342, 'submission_time': 1642769660.028466, 'hostname': '66da100216ea', 'total_t': 4.854168176651001, 'exit_status': 0, 'user_t': 3.4, 'sys_t': 1.57, 'wall_t': 4.8, 'shared_data': 0, 'io_input': 0, 'io_output': 880056, 'average_memory_total': 0, 'percent_cpu': 102.38623424516194, 'average_rss': 0, 'max_rss': 3596, 'max_vmem': 3596, 'minor_page_faults': 1167, 'swapped': 0, 'context_switches_involuntarily': 2588, 'context_switches_voluntarily': 56969, 'average_uss': 0, 'signal': 0, 'major_page_fault': 10, 'unshared_data': 0, 'cpu_t': 4.97}
+    >   # 2022-01-21 12:54:24,883 INFO {"task": "__main__.prepare_data", "engine": "LocalExecutor", "statement": "tar xzf hcg16-data.tar.gz &&     rm hcg16-data.tar.gz &&     touch prepare_data.done", "job_id": 1298, "slots": 1, "start_time": 1642769660.028466, "end_time": 1642769664.8826342, "submission_time": 1642769660.028466, "hostname": "66da100216ea", "total_t": 4.854168176651001, "exit_status": 0, "user_t": 3.4, "sys_t": 1.57, "wall_t": 4.8, "shared_data": 0, "io_input": 0, "io_output": 880056, "average_memory_total": 0, "percent_cpu": 102.38623424516194, "average_rss": 0, "max_rss": 3596, "max_vmem": 3596, "minor_page_faults": 1167, "swapped": 0, "context_switches_involuntarily": 2588, "context_switches_voluntarily": 56969, "average_uss": 0, "signal": 0, "major_page_fault": 10, "unshared_data": 0, "cpu_t": 4.97}
+    >   # 2022-01-21 12:54:24,886 INFO {"task": "'prepare_data'", "task_status": "completed", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:54:24,886 INFO Completed Task = 'prepare_data'
+    >   # 2022-01-21 12:54:24,887 INFO Task enters queue = 'calibration'
+    >   # 2022-01-21 12:54:24,994 INFO running statement: \
+    >   #                              \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+    >   # 2022-01-21 12:54:25,223 INFO {"task": "'calibration'", "task_status": "update", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 12:54:25,222 ERROR  \
+    >   #                                   Exception #1 \
+    >   #                                     'builtins.OSError(--------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                   /etc/bashrc: line 12: BASHRCSOURCED: unbound variable \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   -----------------------------------------)' raised in ... \
+    >   #                                      Task = def calibration(...): \
+    >   #                                      Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log] \
+    >   #                                    \
+    >   #                                   Traceback (most recent call last): \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions \
+    >   #                                       register_cleanup, touch_files_only) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 545, in job_wrapper_io_files \
+    >   #                                       ret_val = user_defined_work_func(*params) \
+    >   #                                     File "pipeline.py", line 53, in calibration \
+    >   #                                       P.run(statement) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 1206, in run \
+    >   #                                       benchmark_data = r.run(statement_list) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 996, in run \
+    >   #                                       (-process.returncode, stderr, statement)) \
+    >   #                                   OSError: --------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                   /etc/bashrc: line 12: BASHRCSOURCED: unbound variable \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   ----------------------------------------- \
+    >   #                                    \
+    >   #
+    >   # 2022-01-21 12:54:25,278 ERROR 0 tasks with errors, please see summary below:
+    >   # 2022-01-21 12:54:25,279 ERROR full traceback is in pipeline.log
+    >   # 2022-01-21 12:54:25,279 ERROR start of all error messages
+    >   # 2022-01-21 12:54:25,279 ERROR  \
+    >   #                                    \
+    >   #                                    \
+    >   #                                    \
+    >   #                               Original exception: \
+    >   #                                \
+    >   #                                   Exception #1 \
+    >   #                                     'builtins.OSError(--------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                   /etc/bashrc: line 12: BASHRCSOURCED: unbound variable \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   -----------------------------------------)' raised in ... \
+    >   #                                      Task = def calibration(...): \
+    >   #                                      Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log] \
+    >   #                                    \
+    >   #                                   Traceback (most recent call last): \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions \
+    >   #                                       register_cleanup, touch_files_only) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 545, in job_wrapper_io_files \
+    >   #                                       ret_val = user_defined_work_func(*params) \
+    >   #                                     File "pipeline.py", line 53, in calibration \
+    >   #                                       P.run(statement) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 1206, in run \
+    >   #                                       benchmark_data = r.run(statement_list) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 996, in run \
+    >   #                                       (-process.returncode, stderr, statement)) \
+    >   #                                   OSError: --------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                   /etc/bashrc: line 12: BASHRCSOURCED: unbound variable \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   ----------------------------------------- \
+    >   #                                    \
+    >   #
+    >   # 2022-01-21 12:54:25,280 ERROR end of all error messages
+    >   Traceback (most recent call last):
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1232, in run_workflow
+    >       **opts
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 5429, in pipeline_run
+    >       raise job_errors
+    >   ruffus.ruffus_exceptions.RethrownJobError:
+    >   
+    >   
+    >   
+    >   Original exception:
+    >   
+    >       Exception #1
+    >         'builtins.OSError(---------------------------------------
+    >       Child was terminated by signal -1:
+    >       The stderr was:
+    >       /etc/bashrc: line 12: BASHRCSOURCED: unbound variable
+    >   
+    >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+    >       -----------------------------------------)' raised in ...
+    >          Task = def calibration(...):
+    >          Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log]
+    >   
+    >       Traceback (most recent call last):
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions
+    >           register_cleanup, touch_files_only)
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 545, in job_wrapper_io_files
+    >           ret_val = user_defined_work_func(*params)
+    >         File "pipeline.py", line 53, in calibration
+    >           P.run(statement)
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 1206, in run
+    >           benchmark_data = r.run(statement_list)
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 996, in run
+    >           (-process.returncode, stderr, statement))
+    >       OSError: ---------------------------------------
+    >       Child was terminated by signal -1:
+    >       The stderr was:
+    >       /etc/bashrc: line 12: BASHRCSOURCED: unbound variable
+    >   
+    >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+    >       -----------------------------------------
+    >   
+    >   
+    >   
+    >   The above exception was the direct cause of the following exception:
+    >   
+    >   Traceback (most recent call last):
+    >     File "pipeline.py", line 114, in <module>
+    >       sys.exit(P.main(sys.argv))
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1390, in main
+    >       run_workflow(options, args)
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1320, in run_workflow
+    >       raise ValueError("pipeline failed with %i errors" % len(ex.args)) from ex
+    >   ValueError: pipeline failed with 0 errors
+    >   
+    >    ##########################################################
+    >   
+    >    An error occurred in:
+    >   
+    >    - line number: 185
+    >    - exit status: 1
+    >    - command: python pipeline.py make plotting --local --timeit=pipeline.time
+    >   
+    >    The script will abort now. User input was:
+    >   
+    >    run.sh
+    >   
+    >    ##########################################################
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+
+    Over zealous shell checking for null values catches a null in a system file.
+
+    >   #   The stderr was:  \
+    >   #   /etc/bashrc: line 12: BASHRCSOURCED: unbound variable \
+
+    head /etc/bashrc
+
+    >   ....
+    >   # Prevent doublesourcing
+    >   if [ -z "$BASHRCSOURCED" ]; then
+    >     BASHRCSOURCED="Y"
+    >   ....
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Try again ...
+#[root@container]
+
+    export BASHRCSOURCED=''
+
+    bash run.sh
+
+    >   which: no conda in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:44 UTC 2022 |  Conda already installed.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:44 UTC 2022 |  Activate conda...
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:44 UTC 2022 |  mamba already available.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:44 UTC 2022 |  Conda environment downloaded.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:45 UTC 2022 |  Activate hcg-16 environment...
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:45 UTC 2022 |  Pipeline downloaded.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:45 UTC 2022 |  Pipeline config downloaded.
+    >   # run.sh log | 66da100216ea | Fri Jan 21 13:00:45 UTC 2022 |  Run pipeline...
+    >   # 2022-01-21 13:00:46,812 INFO pipeline log is pipeline.log
+    >   # 2022-01-21 13:00:46,813 INFO output generated by pipeline.py make plotting --local --timeit=pipeline.time \
+    >   #                              job started at Fri Jan 21 13:00:46 2022 on 66da100216ea -- e33c7bab-3e74-4938-864c-2d1d21fc211f \
+    >   #                              pid: 1370, system: Linux 5.11.22-100.fc32.x86_64 #1 SMP Wed May 19 18:58:25 UTC 2021 x86_64
+    >   # 2022-01-21 13:00:46,813 INFO always_mount                            : False \
+    >   #                              cluster_memory_default                  : unlimited \
+    >   #                              cluster_memory_resource                 : None \
+    >   #                              cluster_num_jobs                        : None \
+    >   #                              cluster_options                         : None \
+    >   #                              cluster_parallel_environment            : None \
+    >   #                              cluster_priority                        : None \
+    >   #                              cluster_queue                           : None \
+    >   #                              cluster_queue_manager                   : sge \
+    >   #                              config_file                             : pipeline.yml \
+    >   #                              debug                                   : False \
+    >   #                              dry_run                                 : False \
+    >   #                              engine                                  : local \
+    >   #                              exceptions_terminate_immediately        : None \
+    >   #                              force_run                               : False \
+    >   #                              input_globs                             : [] \
+    >   #                              input_validation                        : False \
+    >   #                              is_test                                 : False \
+    >   #                              log_config_filename                     : None \
+    >   #                              log_exceptions                          : True \
+    >   #                              loglevel                                : 1 \
+    >   #                              multiprocess                            : None \
+    >   #                              only_info                               : False \
+    >   #                              pipeline_action                         : None \
+    >   #                              pipeline_format                         : svg \
+    >   #                              pipeline_logfile                        : pipeline.log \
+    >   #                              pipeline_targets                        : [] \
+    >   #                              random_seed                             : None \
+    >   #                              ruffus_checksums_level                  : 0 \
+    >   #                              shell_logfile                           : None \
+    >   #                              short_help                              : None \
+    >   #                              stderr                                  : <_io.TextIOWrapper name='<stderr>' mode='w' encoding='UTF-8'> \
+    >   #                              stdin                                   : <_io.TextIOWrapper name='<stdin>' mode='r' encoding='UTF-8'> \
+    >   #                              stdlog                                  : <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'> \
+    >   #                              stdout                                  : <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'> \
+    >   #                              terminate                               : None \
+    >   #                              timeit_file                             : pipeline.time \
+    >   #                              timeit_header                           : None \
+    >   #                              timeit_name                             : all \
+    >   #                              tracing                                 : None \
+    >   #                              variables_to_set                        : [] \
+    >   #                              without_cluster                         : True \
+    >   #                              work_dir                                : None
+    >   # 2022-01-21 13:00:46,813 INFO started in directory: /pipeline-run
+    >   # 2022-01-21 13:00:46,825 INFO code location: /pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline
+    >   # 2022-01-21 13:00:46,825 INFO code version:
+    >   # 2022-01-21 13:00:46,826 INFO working directory is: /pipeline-run
+    >   # 2022-01-21 13:00:46,826 INFO changing directory to /pipeline-run
+    >   # 2022-01-21 13:00:46,826 INFO pipeline has been initialized
+    >   # 2022-01-21 13:00:46,826 INFO temporary directory is /tmp/root
+    >   # 2022-01-21 13:00:46,834 INFO current directory is /pipeline-run
+    >   # 2022-01-21 13:00:46,856 INFO
+    >   # 2022-01-21 13:00:46,857 INFO ________________________________________
+    >   # 2022-01-21 13:00:46,857 INFO Tasks which are up-to-date:
+    >   # 2022-01-21 13:00:46,857 INFO
+    >   # 2022-01-21 13:00:46,857 INFO
+    >   # 2022-01-21 13:00:46,857 INFO Task = 'dependency_check'
+    >   # 2022-01-21 13:00:46,858 INFO Task = 'download_code'
+    >   # 2022-01-21 13:00:46,858 INFO Task = 'prepare_code'
+    >   # 2022-01-21 13:00:46,858 INFO Task = 'download_data'
+    >   # 2022-01-21 13:00:46,858 INFO Task = 'prepare_data'
+    >   # 2022-01-21 13:00:46,858 INFO Task = 'get_decals_jpeg'
+    >   # 2022-01-21 13:00:46,858 INFO Task = 'get_decals_fits'
+    >   # 2022-01-21 13:00:46,858 INFO ________________________________________
+    >   # 2022-01-21 13:00:46,858 INFO
+    >   # 2022-01-21 13:00:46,859 INFO
+    >   # 2022-01-21 13:00:46,859 INFO
+    >   # 2022-01-21 13:00:46,859 INFO ________________________________________
+    >   # 2022-01-21 13:00:46,859 INFO Tasks which will be run:
+    >   # 2022-01-21 13:00:46,859 INFO
+    >   # 2022-01-21 13:00:46,859 INFO
+    >   # 2022-01-21 13:00:46,860 INFO Task enters queue = 'calibration'
+    >   # 2022-01-21 13:00:46,972 INFO running statement: \
+    >   #                              \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+    >   # 2022-01-21 13:00:47,199 INFO {"task": "'calibration'", "task_status": "update", "task_total": 1, "task_completed": 0, "task_completed_percent": 0.0}
+    >   # 2022-01-21 13:00:47,198 ERROR  \
+    >   #                                   Exception #1 \
+    >   #                                     'builtins.OSError(--------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   -----------------------------------------)' raised in ... \
+    >   #                                      Task = def calibration(...): \
+    >   #                                      Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log] \
+    >   #                                    \
+    >   #                                   Traceback (most recent call last): \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions \
+    >   #                                       register_cleanup, touch_files_only) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 545, in job_wrapper_io_files \
+    >   #                                       ret_val = user_defined_work_func(*params) \
+    >   #                                     File "pipeline.py", line 53, in calibration \
+    >   #                                       P.run(statement) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 1206, in run \
+    >   #                                       benchmark_data = r.run(statement_list) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 996, in run \
+    >   #                                       (-process.returncode, stderr, statement)) \
+    >   #                                   OSError: --------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   ----------------------------------------- \
+    >   #                                    \
+    >   #
+    >   # 2022-01-21 13:00:47,254 ERROR 0 tasks with errors, please see summary below:
+    >   # 2022-01-21 13:00:47,255 ERROR full traceback is in pipeline.log
+    >   # 2022-01-21 13:00:47,255 ERROR start of all error messages
+    >   # 2022-01-21 13:00:47,255 ERROR  \
+    >   #                                    \
+    >   #                                    \
+    >   #                                    \
+    >   #                               Original exception: \
+    >   #                                \
+    >   #                                   Exception #1 \
+    >   #                                     'builtins.OSError(--------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   -----------------------------------------)' raised in ... \
+    >   #                                      Task = def calibration(...): \
+    >   #                                      Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log] \
+    >   #                                    \
+    >   #                                   Traceback (most recent call last): \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions \
+    >   #                                       register_cleanup, touch_files_only) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 545, in job_wrapper_io_files \
+    >   #                                       ret_val = user_defined_work_func(*params) \
+    >   #                                     File "pipeline.py", line 53, in calibration \
+    >   #                                       P.run(statement) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 1206, in run \
+    >   #                                       benchmark_data = r.run(statement_list) \
+    >   #                                     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 996, in run \
+    >   #                                       (-process.returncode, stderr, statement)) \
+    >   #                                   OSError: --------------------------------------- \
+    >   #                                   Child was terminated by signal -1:  \
+    >   #                                   The stderr was:  \
+    >   #                                    \
+    >   #                                   \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr \
+    >   #                                   ----------------------------------------- \
+    >   #                                    \
+    >   #
+    >   # 2022-01-21 13:00:47,256 ERROR end of all error messages
+    >   Traceback (most recent call last):
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1232, in run_workflow
+    >       **opts
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 5429, in pipeline_run
+    >       raise job_errors
+    >   ruffus.ruffus_exceptions.RethrownJobError:
+    >   
+    >   
+    >   
+    >   Original exception:
+    >   
+    >       Exception #1
+    >         'builtins.OSError(---------------------------------------
+    >       Child was terminated by signal -1:
+    >       The stderr was:
+    >   
+    >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+    >       -----------------------------------------)' raised in ...
+    >          Task = def calibration(...):
+    >          Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log]
+    >   
+    >       Traceback (most recent call last):
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions
+    >           register_cleanup, touch_files_only)
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 545, in job_wrapper_io_files
+    >           ret_val = user_defined_work_func(*params)
+    >         File "pipeline.py", line 53, in calibration
+    >           P.run(statement)
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 1206, in run
+    >           benchmark_data = r.run(statement_list)
+    >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/execution.py", line 996, in run
+    >           (-process.returncode, stderr, statement))
+    >       OSError: ---------------------------------------
+    >       Child was terminated by signal -1:
+    >       The stderr was:
+    >   
+    >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+    >       -----------------------------------------
+    >   
+    >   
+    >   
+    >   The above exception was the direct cause of the following exception:
+    >   
+    >   Traceback (most recent call last):
+    >     File "pipeline.py", line 114, in <module>
+    >       sys.exit(P.main(sys.argv))
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1390, in main
+    >       run_workflow(options, args)
+    >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1320, in run_workflow
+    >       raise ValueError("pipeline failed with %i errors" % len(ex.args)) from ex
+    >   ValueError: pipeline failed with 0 errors
+    >   
+    >    ##########################################################
+    >   
+    >    An error occurred in:
+    >   
+    >    - line number: 185
+    >    - exit status: 1
+    >    - command: python pipeline.py make plotting --local --timeit=pipeline.time
+    >   
+    >    The script will abort now. User input was:
+    >   
+    >    run.sh
+    >   
+    >    ##########################################################
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+
+    # Over zealous access control breaks the script.
+
+    cat calibration.stderr
+
+    >   Error: do not run as root !
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Try run as a different uid.
+#[user@desktop]
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --name hcg-16 \
+        --user 2000:2000 \
+        fedora:31 \
+            bash
+
+    dnf install -y wget
+
+    >   Error: This command has to be run with superuser privileges (under the root user on most systems).
+
+    # To install things, we need to be root.
+    # To run the pipeline we must not be root.
+    # Arrrgh
+
+
+# -----------------------------------------------------
+# Create a new container to run things in.
+#[user@desktop]
+
+    mkdir /tmp/hcg-16
+
+    cat > /tmp/hcg-16/buildfile << EOF
+FROM fedora:31
+
+RUN dnf install -y wget
+RUN dnf install -y which
+RUN dnf install -y hostname
+
+EOF
+
+    podman build \
+        --tag "hcg-16-image" \
+        --file /tmp/hcg-16/buildfile \
+        /tmp/hcg-16
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --name hcg-16 \
+        --user 2000:2000 \
+        hcg-16-image \
+            bash
+
+        mkdir /tmp/pipeline-run
+        pushd /tmp/pipeline-run
+
+            curl -O https://raw.githubusercontent.com/AMIGA-IAA/hcg-16/master/run.sh
+            bash run.sh
+
+    >   ....
+    >   ....
+    >   PermissionError: [Errno 13] Permission denied: '//.udocker'
+
+    # Fails because uid 2000 doesn't have a home directory to write things to.
+    # Script assumes a full user account.
+
+
+# -----------------------------------------------------
+# Add a full user account to the container image.
+#[user@desktop]
+
+    mkdir /tmp/hcg-16
+
+    cat > /tmp/hcg-16/buildfile << EOF
+FROM fedora:31
+
+RUN dnf install -y wget
+RUN dnf install -y which
+RUN dnf install -y hostname
+
+RUN useradd albert
+USER albert
+EOF
+
+    podman build \
+        --tag "hcg-16-image" \
+        --file /tmp/hcg-16/buildfile \
+        /tmp/hcg-16
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        hcg-16-image \
+            bash
+
+        export BASHRCSOURCED=''
+
+        pushd ~
+
+            curl -O https://raw.githubusercontent.com/AMIGA-IAA/hcg-16/master/run.sh
+            bash run.sh
+
+
+    >   ....
+    >   ....
+    >   # 2022-01-21 14:40:43,287 INFO running statement: \
+    >   #                              \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
+
+    #
+    # Huge stack trace and lots of nested error messages.
+    # Turns out it was missing 'find'.
+    #
+
+    cat calibration.stderr
+
+    >   Traceback (most recent call last):
+    >     File "/home/albert/conda-install/envs/hcg-16/bin/udocker", line 8, in <module>
+    >       sys.exit(main())
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/site-packages/udocker/maincmd.py", line 37, in main
+    >       exit_status = UMain(sys.argv).execute()
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/site-packages/udocker/umain.py", line 108, in execute
+    >       exit_status = cmds[command](self.cmdp)  # executes command
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/site-packages/udocker/cli.py", line 767, in do_run
+    >       container_id = self._create(imagerepo + ":" + tag)
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/site-packages/udocker/cli.py", line 559, in _create
+    >       imagerepo, tag)
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/site-packages/udocker/container/structure.py", line 137, in create_fromimage
+    >       status = self._untar_layers(layer_files, container_dir + "/ROOT")
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/site-packages/udocker/container/structure.py", line 270, in _untar_layers
+    >       if subprocess.call(cmd, stderr=Msg.chlderr, close_fds=True):
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/subprocess.py", line 287, in call
+    >       with Popen(*popenargs, **kwargs) as p:
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/subprocess.py", line 729, in __init__
+    >       restore_signals, start_new_session)
+    >     File "/home/albert/conda-install/envs/hcg-16/lib/python3.6/subprocess.py", line 1364, in _execute_child
+    >       raise child_exception_type(errno_num, err_msg, err_filename)
+    >   FileNotFoundError: [Errno 2] No such file or directory: 'find': 'find'
+
+
+# -----------------------------------------------------
+# Try again ....
+#[user@desktop]
+
+    mkdir /tmp/hcg-16
+
+    cat > /tmp/hcg-16/buildfile << EOF
+FROM fedora:31
+
+RUN dnf install -y wget
+RUN dnf install -y which
+RUN dnf install -y hostname
+RUN dnf install -y findutils
+
+RUN useradd albert
+USER albert
+EOF
+
+    podman build \
+        --tag "hcg-16-image" \
+        --file /tmp/hcg-16/buildfile \
+        /tmp/hcg-16
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        hcg-16-image \
+            bash
+
+        export BASHRCSOURCED=''
+
+        pushd ~
+
+            curl -O https://raw.githubusercontent.com/AMIGA-IAA/hcg-16/master/run.sh
+            bash run.sh
+
+    #
+    # Huge stack trace and lots of nested error messages.
+    #
+
+            cat calibration.stderr
+
+    >   proot error: ptrace(TRACEME): Operation not permitted
+    >   proot error: execve("/usr/bin/casa"): Operation not permitted
+    >   proot info: It seems your kernel contains this bug: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1202161
+    >   To workaround it, set the env. variable PROOT_NO_SECCOMP to 1.
+    >   fatal error: see `proot-x86_64-4_8_0 --help`.
+    >   proot error: can't chmod '/tmp/albert/ctmp9nkyzgft/proot-1444-bs8jUw': No such file or directory
+
+    #
+    # The bug they refer to is from 2013.
+    # I suspect the bug itself is fixed long ago.
+    # https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1202161
+    # I suspect this is because we are trying to run udocker inside a container, and it doesn't know how to cope.
+    #
+
+    #
+    # Work around .. move to using a VM to run things.
+    #
+
+
+
+
