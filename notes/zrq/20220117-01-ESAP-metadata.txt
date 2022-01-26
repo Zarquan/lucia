@@ -1,7 +1,7 @@
 #
 # <meta:header>
 #   <meta:licence>
-#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
 #
 #     This information is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -99,5 +99,24 @@
 
                 https://github.com/containers/crun
                 https://github.com/opencontainers/runc
+
+
+    Docker file (very well documented)
+    https://github.com/AMIGA-IAA/hcg-16/blob/master/docker/Dockerfile.casa.5.4
+
+    Paper describing kernsuite and casalite
+    https://arxiv.org/pdf/1710.09145.pdf
+
+    Kern - Radio Astronomy Software Suite
+    https://github.com/kernsuite
+
+    Pipleine describing inputs and oputputs
+    https://github.com/AMIGA-IAA/hcg-16/blob/master/cgatcore/pipeline.yml
+
+    CGAT-core workflow management system
+    https://github.com/cgat-developers/cgat-core
+
+    Turtles all the way down
+    https://en.wikipedia.org/wiki/Matryoshka_doll
 
 
