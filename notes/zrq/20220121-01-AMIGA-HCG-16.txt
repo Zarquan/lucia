@@ -1,7 +1,7 @@
 #
 # <meta:header>
 #   <meta:licence>
-#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
 #
 #     This information is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -87,17 +87,17 @@
     >   run.sh: line 100: which: command not found
     >   run.sh: line 47: hostname: command not found
     >   # run.sh log |  | Fri Jan 21 12:40:01 UTC 2022 |  Downloading conda...
-    >   
+    >
     >    ##########################################################
-    >   
+    >
     >    An error occurred in:
-    >   
+    >
     >    - line number: 121
     >    - exit status: 127
     >    - command: $DOWNLOAD_CMD_CONDA Miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &> /dev/null
-    >   
+    >
     >    The script will abort now. User input was:
-    >   
+    >
     >    run.sh
 
 # -----------------------------------------------------
@@ -122,28 +122,28 @@
     >   # run.sh log | 66da100216ea | Fri Jan 21 12:44:45 UTC 2022 |  Install mamba...
     >   Collecting package metadata (current_repodata.json): done
     >   Solving environment: done
-    >   
-    >   
+    >
+    >
     >   ==> WARNING: A newer version of conda exists. <==
     >     current version: 4.10.3
     >     latest version: 4.11.0
-    >   
+    >
     >   Please update conda by running
-    >   
+    >
     >       $ conda update -n base -c defaults conda
-    >   
-    >   
-    >   
+    >
+    >
+    >
     >   ## Package Plan ##
-    >   
+    >
     >     environment location: /pipeline-run/conda-install
-    >   
+    >
     >     added / updated specs:
     >       - mamba
-    >   
-    >   
+    >
+    >
     >   The following packages will be downloaded:
-    >   
+    >
     >       package                    |            build
     >       ---------------------------|-----------------
     >       _libgcc_mutex-0.1          |      conda_forge           3 KB  conda-forge
@@ -181,9 +181,9 @@
     >       zstd-1.5.0                 |       ha4553b6_1         524 KB
     >       ------------------------------------------------------------
     >                                              Total:        50.9 MB
-    >   
+    >
     >   The following NEW packages will be INSTALLED:
-    >   
+    >
     >     bzip2              conda-forge/linux-64::bzip2-1.0.8-h7f98852_4
     >     c-ares             conda-forge/linux-64::c-ares-1.18.1-h7f98852_0
     >     icu                conda-forge/linux-64::icu-68.2-h9c3ff4c_0
@@ -209,27 +209,27 @@
     >     reproc-cpp         conda-forge/linux-64::reproc-cpp-14.2.3-h9c3ff4c_0
     >     yaml-cpp           conda-forge/linux-64::yaml-cpp-0.6.3-he1b5a44_4
     >     zstd               pkgs/main/linux-64::zstd-1.5.0-ha4553b6_1
-    >   
+    >
     >   The following packages will be REMOVED:
-    >   
+    >
     >     libgomp-9.3.0-h5101ec6_17
-    >   
+    >
     >   The following packages will be UPDATED:
-    >   
+    >
     >     ca-certificates    pkgs/main::ca-certificates-2021.7.5-h~ --> conda-forge::ca-certificates-2021.10.8-ha878542_0
     >     certifi            pkgs/main::certifi-2021.5.30-py39h06a~ --> conda-forge::certifi-2021.10.8-py39hf3d152e_1
     >     conda              pkgs/main::conda-4.10.3-py39h06a4308_0 --> conda-forge::conda-4.11.0-py39hf3d152e_0
     >     libgcc-ng          pkgs/main::libgcc-ng-9.3.0-h5101ec6_17 --> conda-forge::libgcc-ng-11.2.0-h1d223b6_11
     >     libstdcxx-ng       pkgs/main::libstdcxx-ng-9.3.0-hd4cf53~ --> conda-forge::libstdcxx-ng-11.2.0-he4da1e4_11
     >     openssl              pkgs/main::openssl-1.1.1k-h27cfd23_0 --> conda-forge::openssl-1.1.1l-h7f98852_0
-    >   
+    >
     >   The following packages will be SUPERSEDED by a higher-priority channel:
-    >   
+    >
     >     _libgcc_mutex           pkgs/main::_libgcc_mutex-0.1-main --> conda-forge::_libgcc_mutex-0.1-conda_forge
     >     _openmp_mutex          pkgs/main::_openmp_mutex-4.5-1_gnu --> conda-forge::_openmp_mutex-4.5-1_llvm
-    >   
-    >   
-    >   
+    >
+    >
+    >
     >   Downloading and Extracting Packages
     >   icu-68.2             | 13.1 MB   | ####################################################################################### | 100%
     >   libmamba-0.19.1      | 1.5 MB    | ####################################################################################### | 100%
@@ -280,20 +280,20 @@
     >   pkgs/main/linux-64       [====================] (00m:06s) Done
     >   conda-forge/noarch       [====================] (00m:24s) Done
     >   conda-forge/linux-64     [====================] (00m:36s) Done
-    >   
-    >   
+    >
+    >
     >   Looking for: ['python=3.6', 'aplpy=2.0', 'astropy=3.1', 'cgatcore==0.5.12', 'jupyter', 'matplotlib=3.0', 'nbconvert=5.5', 'numpy=1.16', 'unzip', 'curl', 'pip']
-    >   
-    >   
+    >
+    >
     >   warning  Extracted package cache '/pipeline-run/conda-install/pkgs/_openmp_mutex-4.5-1_gnu' has invalid size
     >   warning  Extracted package cache '/pipeline-run/conda-install/pkgs/_openmp_mutex-4.5-1_gnu' has invalid SHA-256 checksum
     >   warning  Package tarball '/pipeline-run/conda-install/pkgs/_openmp_mutex-4.5-1_gnu.tar.bz2' is invalid
     >   Transaction
-    >   
+    >
     >     Prefix: /pipeline-run/conda-install/envs/hcg-16
-    >   
+    >
     >     Updating specs:
-    >   
+    >
     >      - python=3.6
     >      - aplpy=2.0
     >      - astropy=3.1
@@ -305,13 +305,13 @@
     >      - unzip
     >      - curl
     >      - pip
-    >   
-    >   
+    >
+    >
     >     Package                               Version  Build                Channel                     Size
     >   ────────────────────────────────────────────────────────────────────────────────────────────────────────
     >     Install:
     >   ────────────────────────────────────────────────────────────────────────────────────────────────────────
-    >   
+    >
     >     + _libgcc_mutex                           0.1  conda_forge          conda-forge/linux-64      Cached
     >     + _openmp_mutex                           4.5  1_gnu                conda-forge/linux-64       22 KB
     >     + aplpy                                 2.0.3  py_1                 conda-forge/noarch         53 KB
@@ -510,15 +510,15 @@
     >     + zope.event                            4.5.0  pyh9f0ad1d_0         conda-forge/noarch          9 KB
     >     + zope.interface                        5.4.0  py36h8f6f2f9_0       conda-forge/linux-64      317 KB
     >     + zstd                                  1.5.2  ha95c52a_0           conda-forge/linux-64      458 KB
-    >   
+    >
     >     Summary:
-    >   
+    >
     >     Install: 198 packages
-    >   
+    >
     >     Total download: 298 MB
-    >   
+    >
     >   ────────────────────────────────────────────────────────────────────────────────────────────────────────
-    >   
+    >
     >   Finished nomkl                                (00m:00s)               4 KB     25 KB/s
     >   Finished ld_impl_linux-64                     (00m:00s)             667 KB      2 MB/s
     >   Finished pthread-stubs                        (00m:00s)               5 KB      9 KB/s
@@ -712,7 +712,7 @@
     >   Verifying transaction: done
     >   Executing transaction: / Enabling notebook extension jupyter-js-widgets/extension...
     >         - Validating: OK
-    >   
+    >
     >   done
     >   Installing pip dependencies: | Ran pip subprocess with arguments:
     >   ['/pipeline-run/conda-install/envs/hcg-16/bin/python', '-m', 'pip', 'install', '-U', '-r', '/pipeline-run/condaenv.r3ej3llk.requirements.txt']
@@ -721,7 +721,7 @@
     >     Downloading udocker-1.3.1-py2.py3-none-any.whl (109 kB)
     >   Installing collected packages: udocker
     >   Successfully installed udocker-1.3.1
-    >   
+    >
     >   done
     >   #
     >   # To activate this environment, use
@@ -731,7 +731,7 @@
     >   # To deactivate an active environment, use
     >   #
     >   #     $ conda deactivate
-    >   
+    >
     >   # run.sh log | 66da100216ea | Fri Jan 21 12:49:14 UTC 2022 |  Download pipeline...
     >     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
     >                                    Dload  Upload   Total   Spent    Left  Speed
@@ -811,7 +811,7 @@
     >   #                                     'builtins.OSError(Required dependency "wget" not found)' raised in ... \
     >   #                                      Task = def dependency_check(...): \
     >   #                                      Job  = [None -> dependency_check.done] \
-    >   
+    >
 
 
 # -----------------------------------------------------
@@ -1024,22 +1024,22 @@
     >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 5429, in pipeline_run
     >       raise job_errors
     >   ruffus.ruffus_exceptions.RethrownJobError:
-    >   
-    >   
-    >   
+    >
+    >
+    >
     >   Original exception:
-    >   
+    >
     >       Exception #1
     >         'builtins.OSError(---------------------------------------
     >       Child was terminated by signal -1:
     >       The stderr was:
     >       /etc/bashrc: line 12: BASHRCSOURCED: unbound variable
-    >   
+    >
     >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
     >       -----------------------------------------)' raised in ...
     >          Task = def calibration(...):
     >          Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log]
-    >   
+    >
     >       Traceback (most recent call last):
     >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions
     >           register_cleanup, touch_files_only)
@@ -1055,14 +1055,14 @@
     >       Child was terminated by signal -1:
     >       The stderr was:
     >       /etc/bashrc: line 12: BASHRCSOURCED: unbound variable
-    >   
+    >
     >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
     >       -----------------------------------------
-    >   
-    >   
-    >   
+    >
+    >
+    >
     >   The above exception was the direct cause of the following exception:
-    >   
+    >
     >   Traceback (most recent call last):
     >     File "pipeline.py", line 114, in <module>
     >       sys.exit(P.main(sys.argv))
@@ -1071,19 +1071,19 @@
     >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1320, in run_workflow
     >       raise ValueError("pipeline failed with %i errors" % len(ex.args)) from ex
     >   ValueError: pipeline failed with 0 errors
-    >   
+    >
     >    ##########################################################
-    >   
+    >
     >    An error occurred in:
-    >   
+    >
     >    - line number: 185
     >    - exit status: 1
     >    - command: python pipeline.py make plotting --local --timeit=pipeline.time
-    >   
+    >
     >    The script will abort now. User input was:
-    >   
+    >
     >    run.sh
-    >   
+    >
     >    ##########################################################
 
 
@@ -1276,21 +1276,21 @@
     >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 5429, in pipeline_run
     >       raise job_errors
     >   ruffus.ruffus_exceptions.RethrownJobError:
-    >   
-    >   
-    >   
+    >
+    >
+    >
     >   Original exception:
-    >   
+    >
     >       Exception #1
     >         'builtins.OSError(---------------------------------------
     >       Child was terminated by signal -1:
     >       The stderr was:
-    >   
+    >
     >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
     >       -----------------------------------------)' raised in ...
     >          Task = def calibration(...):
     >          Job  = [[AW234_B891206.xp1, AW500_C990113.xp1, AW500_D990114.xp1] -> calibration.log]
-    >   
+    >
     >       Traceback (most recent call last):
     >         File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/ruffus/task.py", line 713, in run_pooled_job_without_exceptions
     >           register_cleanup, touch_files_only)
@@ -1305,14 +1305,14 @@
     >       OSError: ---------------------------------------
     >       Child was terminated by signal -1:
     >       The stderr was:
-    >   
+    >
     >       \time -o calibration.time -v     udocker run -v "$(pwd)":/data -t amigahub/casa:v1.0 --nogui --logfile calibration.log -c hcg-16-master/casa/calibration_flag.py     1> calibration.stdout     2> calibration.stderr
     >       -----------------------------------------
-    >   
-    >   
-    >   
+    >
+    >
+    >
     >   The above exception was the direct cause of the following exception:
-    >   
+    >
     >   Traceback (most recent call last):
     >     File "pipeline.py", line 114, in <module>
     >       sys.exit(P.main(sys.argv))
@@ -1321,19 +1321,19 @@
     >     File "/pipeline-run/conda-install/envs/hcg-16/lib/python3.6/site-packages/cgatcore/pipeline/control.py", line 1320, in run_workflow
     >       raise ValueError("pipeline failed with %i errors" % len(ex.args)) from ex
     >   ValueError: pipeline failed with 0 errors
-    >   
+    >
     >    ##########################################################
-    >   
+    >
     >    An error occurred in:
-    >   
+    >
     >    - line number: 185
     >    - exit status: 1
     >    - command: python pipeline.py make plotting --local --timeit=pipeline.time
-    >   
+    >
     >    The script will abort now. User input was:
-    >   
+    >
     >    run.sh
-    >   
+    >
     >    ##########################################################
 
 

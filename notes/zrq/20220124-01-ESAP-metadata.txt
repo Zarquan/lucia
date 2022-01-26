@@ -1,0 +1,298 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Notes on developing the metadata examples.
+
+# -------------------------------------------------------------------------------
+
+  * ESCAPE template project
+  * https://zenodo.org/record/4923992
+  * https://gitlab.in2p3.fr/escape2020/wp3/template_project_escape
+
+    GitLab automation for building the Docker image.
+    Means your changes have to be in GitLab before it will build.
+    Docker build automagically gets the 'latest' (most recent) tag and builds that into the container.
+    ... even if your branch isn't tagged !?
+
+    Singularity build also gets the 'latest' (most recent) tag and builds that into the container.
+    Hidden directory containing 3rd party code built into the repository !?
+
+    Lots of work to avoid building the image on your local machine.
+    Very clever, not how I would want to work.
+
+    The containers both package the example 'square_number' Python code.
+    Simple enough.
+
+    Jupyter notebook
+
+        The Jupyter notebook doesn't reference the 'square_number' example.
+        The notebook is a demo of how to interact with the Zenodo REST API.
+        The notebook has a completely different set of requirements to the top level project.
+
+        The notebook requires a pip install from a URL (commented out).
+        # pip install https://gitlab.in2p3.fr/escape2020/wp3/zenodoci/-/archive/master/zenodoci-master.zip
+
+        The notebook has a link to the ESCAPE zenodoci project, WHICH REQUIRES A LOGIN.
+        https://gitlab.in2p3.fr/escape2020/wp3/zenodoci
+
+        The codemeta releaseNotes:
+            "Jupyter Notebooks example added. Example of how to automatise the upload of the docker image - whose container was built and published during the CI - to Zenodo.",
+        As far as I can tell, the notebook doesn't do that, it just shows queries to get data not to upload.
+
+
+    The codemate softwareRequirements:
+        A slightly different set of data to the top level environment.yml file.
+
+    The Singularity container.
+
+        The Singularity build runs on your local machine, but installs the source code from the latest tagged version in GitHub,
+        using a hard coded URL for the GitHub repository - fragile.
+        You can't use this to build your copy of the code.
+
+        The Singularity build gets whatever the latest Ubuntu is
+        From: ubuntu:latest
+
+        This is a single task container. Why install conda !!
+
+        Need instructions on how to use the Singularity image.
+        "To run the image ..."
+
+    The Docker container
+
+        Why is the Docker image 1.2Gbytes, when the Singularity image is only 284.6 MB ?
+        Need instructions on how to use the Docker image.
+        "To run the image ..."
+
+        The Dockerfile uses conda to install a specific Python environment, for the current user.
+        It writes information into ~/.bashrc
+        Which means if anyone creates a derrived container and changes the user .. it won't work anymore.
+        The Singularity container doesn't _seem_ to have the same issue.
+        This is a single task container. Why install conda !!
+
+        The Dockerfile doesn't specify a version of the base image.
+        FROM continuumio/miniconda3
+
+        The Dockerfile always installs the source code from the latest tagged version in GitHub,
+        using a hard coded URL for the GitHub repository - fragile.
+        You can't use this to build your copy of the code.
+
+        The Zenodo project doesn't include the Dockerfile.
+
+# -------------------------------------------------------------------------------
+
+  * ESCAPE OSSR library
+  * https://zenodo.org/record/5592584
+  * https://gitlab.in2p3.fr/escape2020/wp3/eossr
+
+        Dockerfile always builds the same tar file.
+        Basically what is currently head of the master branch when the build is run.
+        RUN pip install https://gitlab.in2p3.fr/escape2020/wp3/eossr/-/archive/master/eossr-master.tar
+
+        The Harvest_zenodo.ipynb notebook only has one of the three examples it says it has.
+
+        The ZipUrl notebook examples haven't been run.
+        The ZipUrl notebook is wrong:
+            "ZipUrl can be used to access a zip archive stored online.
+            One can peek into the archive and extract a single file without downloading or extracting the whole archive."
+            - really !?
+
+
+        def get_mybinder_url(self):
+            Hard coded URL using the Zenodo DOI record
+            "https://mybinder.org/v2/zenodo/" + doi
+            Relies on the project being mybinder compatible.
+            Return the URL regardless ...
+
+        Guessing that this is not intended for public use ?
+        docs/notebooks/ossr_statistics.ipynb
+
+
+# -------------------------------------------------------------------------------
+
+    Try running the EOSSR example inside a container ..
+
+    source "${HOME}/projects.env"
+    pushd "${PROJECTS_ROOT:?}/ESCAPE/Astron/metadata-examples/astron-git"
+
+        podman run \
+            --rm \
+            --tty \
+            --privileged \
+            --interactive \
+            --volume "$(pwd):/project:rw,z" \
+            atolmis/ansible-client:2021.08.25 \
+            bash
+
+
+        pushd '/project/OSSR library'
+
+
+        yq eval \
+            '.executables[] | select(.type == "esap-docker-container")' \
+            esap-metadata.yml
+
+    >   name: "Docker container"
+    >   type: "esap-docker-container"
+    >   description: |
+    >     A Debian based Python container with the EOSSR library installed.
+    >   
+    >     To download and run the container:
+    >         docker run -it gitlab-registry.in2p3.fr/escape2020/wp3/eossr:latest
+    >   images:
+    >     - name: "in2p3-registry"
+    >       format: "esap-docker-image"
+    >       version: "latest"
+    >       interface: commandline
+    >       url: "gitlab-registry.in2p3.fr/escape2020/wp3/eossr:latest"
+    >     - name: "Zenodo record"
+    >       format: "esap-docker-tar"
+    >       version: "0.3.3"
+    >       interface: commandline
+    >       url: "https://zenodo.org/record/5592584/files/Docker_eossr_v0.3.3.tar"
+
+
+        yq eval \
+            '
+            .executables[]
+            | select(.type == "esap-docker-container")
+            | .images[]
+            | select(.format == "esap-docker-image")
+            ' \
+            esap-metadata.yml
+
+    >   name: "in2p3-registry"
+    >   format: "esap-docker-image"
+    >   version: "latest"
+    >   interface: commandline
+    >   url: "gitlab-registry.in2p3.fr/escape2020/wp3/eossr:latest"
+
+
+        yq eval \
+            '
+            .executables[]
+            | select(.type == "esap-docker-container")
+            | .images[]
+            | select(.format == "esap-docker-image")
+            | .url
+            ' \
+            esap-metadata.yml
+
+    >   gitlab-registry.in2p3.fr/escape2020/wp3/eossr:latest
+
+
+        imageurl=$(
+            yq eval \
+                '
+                .executables[]
+                | select(.type == "esap-docker-container")
+                | .images[]
+                | select(.format == "esap-docker-image")
+                | .url
+                ' \
+                esap-metadata.yml
+            )
+
+    podman run \
+        --rm \
+        -it \
+        "${imageurl}" \
+            bash
+
+    >   Error: kernel does not support overlay fs: unable to create kernel-style whiteout: no such file or directory
+
+    Can't run podman in podman using this system config.
+    Possibly because base system is running btrfs ?
+    Whatever ..
+
+# -------------------------------------------------------------------------------
+
+    Try running the EOSSR example on our desktop ..
+
+    imageurl=gitlab-registry.in2p3.fr/escape2020/wp3/eossr:latest
+
+    podman run \
+        --rm \
+        -it \
+        "${imageurl:?}" \
+            bash
+
+    python
+
+    >   Python 3.8.12 (default, Oct 12 2021, 03:05:25)
+    >   [GCC 10.2.1 20210110] on linux
+    >   Type "help", "copyright", "credits" or "license" for more information.
+    >   >>>
+
+    >   from eossr.api import get_ossr_records
+    >   
+    >   ossr_records = get_ossr_records()
+    >   
+    >   len(ossr_records)
+    >   15
+    >   
+    >   ossr_records
+    >   [Record(5888553), Record(5884046), Record(5884001), Record(5779170), Record(5592584), Record(5534682), Record(5526844), Record(5501338), Record(4923992), Record(4786641), Record(3854976), Record(3659184), Record(3614662), Record(3362435), Record(3356656)]
+
+
+# -------------------------------------------------------------------------------
+
+    HCG-16 project
+    https://github.com/AMIGA-IAA/hcg-16
+
+    SKA looking at providing access to Openstack platform via the OCCI interface
+    https://wiki.openstack.org/wiki/Occi
+
+    Discussion with Susana about working togetheron developing a cloud-compute launcher for ESAP that would connect to this interface.
+
+    OCCI for OpenStack
+    https://github.com/IFCA/occi-os
+
+    Open Cloud Computing Interface (OCCI) witin Nova
+    https://wiki.openstack.org/wiki/Occi
+
+    A clone and continuation of https://github.com/dizz
+    https://github.com/tmetsch/occi-os
+        Provides a python egg which can be easily deployed in OpenStack and will thereby add the 3rd party OCCI interface to OpenStack
+
+    https://github.com/stackforge/occi-os
+        Retire stackforge/occi-os - 6 years ago
+
+    Everything for OCCI in Openstack is ~8yrs ago.
+    Is this a wise choice ?
+
+    Lots of abandoned projects ...
+    https://www.indigo-datacloud.eu/occi-support-openstack-and-opennebula
+
+    OOI is an implementation the Open Cloud Computing Interface (OCCI) for OpenStack.
+    https://opendev.org/x/ooi
+
+    OCCI seems to have stopped in 2016
+    https://occi-wg.org/index.html
+
+
+
