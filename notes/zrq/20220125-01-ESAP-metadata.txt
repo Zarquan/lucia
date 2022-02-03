@@ -39,9 +39,266 @@
     Need to include hooks form IVOA EP service.
     Need to implement prototype IVOA EP.
 
+
+    In many cases, can't get Git repo from a Zendo link.
+    Ignore the 'published' zip file and give me the code repo.
+
+
+    BinderHub API
+    https://binderhub.readthedocs.io/en/latest/api.html
+
+
+    EGI Applications on Demand
+    https://www.egi.eu/services/applications-on-demand/
+    https://marketplace.egi.eu/42-applications-on-demand
+
+        How to integrate a new application in EC3
+        https://wiki.egi.eu/wiki/Applications_on_Demand_Service_-_information_for_developers#How_to_integrate_a_new_application_in_EC3
+
+            Grupo de Grid y Computación de Altas Prestaciones (GRyCAP)
+            https://www.grycap.upv.es/
+
+            Elastic Cloud Computing Cluster (EC3)
+            https://github.com/grycap/ec3
+
+                Elastic Cloud Computing Cluster (EC3) is a tool to create elastic virtual clusters on top of Infrastructure as a Service (IaaS) providers,
+                either public (such as Amazon Web Services, Google Cloud or Microsoft Azure) or on-premises (such as OpenNebula and OpenStack).
+
+            Hadoop Cluster Role
+            https://github.com/grycap/ansible-role-hadoop
+
+
+    The goal of this service is to offer user-friendly access to e-infrastructure services for members of the long tail of science,
+    i.e. for individual researchers and small research teams who do not belong to any of the established EGI Virtual Organisation communities.
+    https://documents.egi.eu/public/ShowDocument?docid=2635
+
+    https://servproject.i3m.upv.es/ec3-ltos/index.php
+    Not Authorized. You must be part of the EGI Access vo (vo.access.egi.eu)
+
+
 # -------------------------------------------------------------------------------
 
-    CTA use cases
-    https://project.escape2020.de/projects/use-cases/issues?set_filter=1&tracker_id=7
+
+    Any cross-WP project
+    https://project.escape2020.de/projects/any-cross-wp-project
+
+        Dark Matter TSP
+        https://project.escape2020.de/issues/84
+        Contact - Ian Bird
+        No details ...
+
+    ESFRI: CTA
+    https://project.escape2020.de/projects/esfri-cta
+
+        Software: agnpy
+        https://project.escape2020.de/issues/144
+
+            Documentation:
+            https://agnpy.readthedocs.io/en/latest/
+
+            Repository:
+            https://github.com/cosimoNigro/agnpy
+
+            Binder:
+            https://mybinder.org/v2/gh/cosimoNigro/agnpy/HEAD
+
+            Zenodo: (not OSSR)
+            https://zenodo.org/record/5779170
+
+            Executables:
+                9 tutorial notebooks
+                https://github.com/cosimoNigro/agnpy/tree/master/docs/tutorials
+
+        Software: gLike
+        https://project.escape2020.de/issues/143
+
+            Documentation:
+            https://github.com/javierrico/gLike#readme
+
+            Repository:
+            https://github.com/javierrico/gLike
+
+            Zenodo:
+            -
+
+            Executables:
+                2 tutorial notebooks
+                https://github.com/javierrico/gLike/tree/master/scripts
+                https://github.com/javierrico/gLike/search?l=jupyter-notebook
+
+            Metadata:
+
+                .escape.yml hidden file
+                https://github.com/javierrico/gLike/blob/master/.escape.yml
+
+                codemeta.json
+                https://github.com/javierrico/gLike/blob/master/codemeta.json
+
+            Based on ROOT
+            https://root.cern/
+
+                ROOT data processing framework
+
+                Docker containers
+                https://hub.docker.com/r/rootproject/root
+
+
+        Software: Gammalearn
+        https://project.escape2020.de/issues/26
+
+            Documentation:
+            https://gitlab.lapp.in2p3.fr/GammaLearn/GammaLearn/-/wikis/home
+            ** broken URL
+
+                Focus group 1 call - Software requirements and recommendations collection
+                https://indico.in2p3.fr/event/22516/
+                https://indico.in2p3.fr/event/22516/contributions/87503/attachments/60378/82050/20201016%20-%20ESCAPE_GammaLearn.pdf
+
+
+            Repository:
+            https://gitlab.lapp.in2p3.fr/GammaLearn/GammaLearn/
+            ** broken URL
+
+
+            Zenodo:
+            https://zenodo.org/record/5884001
+
+            Related:
+
+                Indexed Convolution
+                https://github.com/IndexedConv/IndexedConv
+                https://indexed-convolution.readthedocs.io/en/latest/
+
+                ctaplot
+                https://github.com/cta-observatory/ctaplot
+                https://ctaplot.readthedocs.io/en/latest/
+
+
+        Software: GammaPy
+        https://gammapy.org/
+
+            Zenodo:
+            https://zenodo.org/record/5721467
+
+
+        14 use cases
+        https://project.escape2020.de/projects/esfri-cta/issues?set_filter=1&tracker_id=7
+        https://docs.google.com/document/d/1HRd_jzw2lro_CB2_GyfytVYgnErsYd6J8RqvVGG50X8/edit#
+
+            CTA012 CONCORDIA
+            https://project.escape2020.de/issues/130
+
+                To use the ESAP to launch CORSIKA jobs via containers on EGI’s DIRAC system
+
+                    Navigate to CONCORDIA page
+                    They are able to configure a container
+                        If the container exists it is selected
+                        If not it is created
+                    The job is then submitted to EGI using DIRAC
+                    ...
+
+            EGI DIRAC
+            https://dirac.egi.eu/DIRAC/
+            Who to contact to get access to this ..
+
+
+            4a Simulation of CTA science data
+            https://docs.google.com/document/d/1HRd_jzw2lro_CB2_GyfytVYgnErsYd6J8RqvVGG50X8/edit#heading=h.ihf25k9wqx1c
+
+                User logs in to the ESAP
+                [Optional] Selects source model and observation table from data lake
+                Adds files to shopping basket.
+                Navigates to the Interactive Analysis Section
+                Selects the simulation gammapy workflow
+                    zrq- what does gammapy workflow mean ?
+                    zrq- is this the gammapy in a container ?
+                    zrq- is this gammapy examples/turorial in a notebook ?
+                Selects the jupyterlab resource
+                Launch service which loads the correct notebook with gammapy environment
+                    zrq- does this mean we need to load a specific notebook ?
+                [Optional] Use add inputs to notebook
+                Notebook is executed and data is downloaded
+
+
+            CTA004a: Analysis of (simulated) CTA science data by a Principal Investigator (PI) [Interactive]
+            https://project.escape2020.de/issues/73
+            https://docs.google.com/document/d/1HRd_jzw2lro_CB2_GyfytVYgnErsYd6J8RqvVGG50X8/edit#heading=h.mrrw8o2f9unl
+
+                User logs in to the ESAP and is identified as a CTA project PI
+                Search for (simulated) CTA DL3 level data by project ID or source
+                Add to shopping basket.
+                Search for corresponding IRF (instrument response function) for the data selected
+                Add to shopping basket.
+                [Optional] Search for corresponding metadata, log files etc ....
+                Selects the simulation gammapy workflow
+                    zrq- is this gammapy examples/turorial in a notebook ?
+                Selects the jupyterlab resource
+                Launch service which loads the correct notebook with gammapy environment
+                    zrq- does this mean we need to load a specific notebook ?
+                Notebook is executed and data is downloaded
+                    zrq- does this mean data is downloaded TO the notebook,
+                    or results are downloaded FROM the notebook  ?
+
+                    zrq- need to be able to launch a specific notebook, not just a 'project'
+                    needs a more specific REST API
+
+                    zrq- needs a staging area for the results
+                    persistent storage with limited lifetime and public access
+
+
+            12 Analysis of (simulated) CTA science data by a Principal Investigator (PI) [Batch]
+            https://docs.google.com/document/d/1HRd_jzw2lro_CB2_GyfytVYgnErsYd6J8RqvVGG50X8/edit#heading=h.ty17sqwe27v8
+
+                User logs in to the ESAP and is identified as a CTA project PI
+                Search for Data in the datalake
+                Search for (simulated) CTA DL3 level data by project ID
+                Select data from search results or select all
+                Add to shopping basket.
+                Search for corresponding IRF (instrument response function) for the data selected
+                Add to shopping basket.
+                [Optional] Search for corresponding metadata, log files etc ....
+                Batch mode
+                Search for compute resources
+                    zrq- what software are we going to use ?
+                Data is transferred to resource cache
+                Submit job(s)
+                Monitor job(s)
+                Save data to temporary quicklook location or download final results
+
+
+    ESFRI: EGO-Virgo
+    https://project.escape2020.de/projects/esfri-ego-virgo
+
+        1 use case
+        Enabling gravitational waves pipelines to process a stream of data from the ESCAPE datalake
+
+            The first use case we have identified is within the frame of enabling batch workflows for our gravitational wave (GW) pipelines.
+            For this purpose:
+
+                We are proceeding with the containerization of data analysis pipelines and enabling them to process a stream of data from the ESCAPE datalake.
+                To allow the easy deployment of VIRGO software inside containers, they needed to be made available via the Conda Package Manager, which required first that the software was buildable by CMake or Meson.
+                Using the software that is deployed in Conda, we are able to create a container that downloads aggregated data from the datalake, process the data into 1-second files and stream the data to the GW pipelines.
+
+            For running these containers the deployment choice is Kubernetes from which a pilot project is ongoing at CNAF.
+            This provides a realistic test of the GW pipelines to enable the offline analysis of data when deployed into any Kubernetes cluster available from computing centres.
+
+            zrq- what role does ESAP play ?
+            zrq- will the containers be registered in OSSR ?
+            zrq- will the containers fetch their own data ?
+            zrq- will the containers save their own results ?
+
+
+                    zrq- Kubernetes execution platform
+                         executable is a container ?
+                         executable is a Helm chart ?
+
+                    zrq- inputs selected from DataLake
+                    zrq- outputs selected .. how ?
+
+                    zrq- needs a staging area for the results
+                    persistent storage with limited lifetime and public access
+
+                    zrq- can we get access to the containers and K8s platform ?
+
 
 

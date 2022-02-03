@@ -1,0 +1,80 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    EOSC-Future Compute Continuum WG
+
+        Same use case as IVOA-EP and ESAP
+        "Where can I run <x>?"
+
+        Trying to do ExecPlanning using a searchable registry of compute platforms.
+        Defining the metadata to register available services and platforms.
+        I think it is useful to define a schema and collect this metadata, but won't be the complete solution.
+
+
+    EOSC Future Compute Continuum WG kick off meeting
+    Meeting minutes
+    https://docs.google.com/document/d/14A34u5ENM4DRRutyNDUXuvx5peIgiv__YBOiQuM8yLA/edit#
+    https://docs.google.com/document/d/14A34u5ENM4DRRutyNDUXuvx5peIgiv__YBOiQuM8yLA/edit#
+
+    Meeting slides
+    https://docs.google.com/presentation/d/1AO9UjdPV3d1mEq5w0n1nBiqObxgobmV_/edit#slide=id.p8
+    https://docs.google.com/presentation/d/1AO9UjdPV3d1mEq5w0n1nBiqObxgobmV_/edit#slide=id.p8
+
+    Meeting chat
+    /home/Zarquan/Documents/Zoom/2022-01-28 11.07.38 EOSC-Future Compute Continuum WG 88008408471/meeting_saved_chat.txt
+
+    Extend the v4.00 EOSC Resource Profile
+    https://wiki.eoscfuture.eu/display/PUBLIC/v4.00+EOSC+Resource+Profile
+
+
+    EOSC Future working groups
+    https://wiki.eoscfuture.eu/display/PUBLIC/Working+Groups
+
+        Working Groups are expected to demonstrate an impact on the work of WP3 and more in general of EOSC Future.
+        Some areas of interest had been identified during the project proposal preparation.
+        These include but are not limited to:
+
+            * Persistent Identifiers (PIDs)
+            * Authentication and Authorisation Infrastructure (AAI)
+            * Science Use Cases (requirements for the EOSC Architecture gathered from the scientific communities)
+            * Composability (EOSC Execution Framework to facilitate cross-cluster resource composition)
+            * Metadata (common modeling of metadata schemas and crosswalks)
+            * Compute-as-a-Service (standard interfaces to access EOSC Compute resources)
+            * Container deployment (standard interfaces to deploy and manager container clusters in EOSC), Security, FAIR.
+
+        For more information on WP3 objectives please refer to the EOSC Future Wiki.
+        https://wiki.eoscfuture.eu/pages/viewpage.action?pageId=1805501
+
+
+
+    https://wiki.eoscfuture.eu/display/PUBLIC/v4.00+EOSC+Resource+Profile
+
+    https://grid-deployment.web.cern.ch/grid-deployment/eis/docs/GLUE_SergioAndreozzi.pdf
+
+
