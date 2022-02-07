@@ -1,0 +1,112 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Try the same examples using httpie.
+        https://httpie.io/
+
+    Result:
+
+        Work in progress ..
+
+
+# -----------------------------------------------------
+# Login using the REST interface ..
+# https://app.swaggerhub.com/apis/portainer/portainer-ee/2.10.0#/auth/AuthenticateUser
+#[user@desktop]
+
+    adminuser=admin
+    adminpass=aeDae0oh:va7Aud8u
+
+    portainerapiurl=https://localhost:9443/api
+
+    http \
+        --verify=no \
+        POST \
+            "${portainerapiurl:?}/auth" \
+            Username="${adminuser}" \
+            Password="${adminpass}"
+
+
+    >   HTTP/1.1 200 OK
+    >   Content-Length: 187
+    >   Content-Type: application/json
+    >   Date: Sat, 05 Feb 2022 06:54:35 GMT
+    >   X-Content-Type-Options: nosniff
+    >   X-Xss-Protection: 1; mode=block
+    >   
+    >   {
+    >       "jwt": "eyJh....CozM"
+    >   }
+
+
+    http \
+        --verify no \
+        POST \
+            "${portainerapiurl:?}/auth" \
+            Username="${adminuser}" \
+            Password="${adminpass}" \
+    | tee '/tmp/auth-repsonse.json'
+
+    jq '.'  '/tmp/auth-repsonse.json'
+
+    >   {
+    >     "jwt": "eyJh....6Z_M"
+    >   }
+
+    jq -r '.jwt'  '/tmp/auth-repsonse.json'
+
+    >   eyJh....6Z_M
+
+    bearertoken=$(
+        jq -r '.jwt'  '/tmp/auth-repsonse.json'
+        )
+
+
+# -----------------------------------------------------
+# List the available endpoints.
+# https://app.swaggerhub.com/apis/portainer/portainer-ee/2.10.0#/endpoints/EndpointList
+# https://reqbin.com/req/c-hlt4gkzd/curl-bearer-token-authorization-header-example
+#[user@desktop]
+
+    http \
+        --verify no \
+        -A bearer \
+        -a "${bearertoken:?}" \
+        POST \
+            "${portainerapiurl:?}/endpoints" \
+
+    >   http: error: argument --auth-type/-A: invalid choice: 'bearer' (choose from 'basic', 'digest')
+
+        #
+        # Looks like the version on our desktop is too old.
+        # Use a container to wrap the client ?
+        #
+
+

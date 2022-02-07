@@ -1,0 +1,780 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Install and run a Portainer service.
+        Using instructons from Portainer website ..
+        https://docs.portainer.io/v/ce-2.11/start/install/server/docker/linux
+
+    Result:
+
+        Work in progress ..
+
+        Unfortunately the Portainer user interface is broken by design.
+        https://github.com/portainer/portainer/issues/724
+        https://github.com/portainer/portainer/issues/613
+
+        We can use Portainer to launch and manage containers.
+        The UI design means we can't launch a container via the REST API and then redirect to the URL.
+        Which is exactly what we want to do.
+        Broken by design.
+
+
+# -----------------------------------------------------
+# Create a volume for Portainer to store it's data.
+#[user@desktop]
+
+    docker volume create portainer_data
+
+
+# -----------------------------------------------------
+# Run the Portainer service.
+#[user@desktop]
+
+    docker run -d \
+        -p 8000:8000 \
+        -p 9443:9443 \
+        --name portainer \
+        --restart always \
+        --volume /var/run/docker.sock:/var/run/docker.sock \
+        --volume portainer_data:/data \
+        portainer/portainer-ce:2.11.0
+
+
+# -----------------------------------------------------
+# Login ...
+#[user@desktop]
+
+    firefox \
+        --new-window \
+        'https://localhost:9443'
+
+        admin
+        aeDae0oh:va7Aud8u
+
+    # OK, works :-)
+    # Video and audio work too :-D
+
+    # Try launching containers using the REST API ..
+
+    #
+    # Portainer REST API.
+    # https://app.swaggerhub.com/apis/portainer/portainer-ee/2.10.0#/auth/AuthenticateUser
+    # https://docs.portainer.io/v/ce-2.11/api/examples
+
+    #
+    # Curl POST examples.
+    # https://gist.github.com/subfuzion/08c5d85437d5d4f00e58
+    # https://linux.die.net/man/1/curl
+
+
+# -----------------------------------------------------
+# Login using the REST interface ..
+# https://app.swaggerhub.com/apis/portainer/portainer-ee/2.10.0#/auth/AuthenticateUser
+#[user@desktop]
+
+    adminuser=admin
+    adminpass=aeDae0oh:va7Aud8u
+
+    portainerapiurl=https://localhost:9443/api
+
+
+cat > /tmp/auth-request.json << EOF
+{
+  "password": "${adminpass}",
+  "username": "${adminuser}"
+}
+EOF
+
+    curl \
+        --verbose \
+        --insecure \
+        --request POST \
+            --header "Accept: application/json" \
+            --header "Content-Type: application/json" \
+            --data '@/tmp/auth-request.json' \
+                "${portainerapiurl:?}/auth" \
+    | tee '/tmp/auth-repsonse.json'
+
+    jq '.'  '/tmp/auth-repsonse.json'
+
+    >   {
+    >     "jwt": "eyJh....MLZg"
+    >   }
+
+    jq -r '.jwt'  '/tmp/auth-repsonse.json'
+
+    >   eyJh....MLZg
+
+    bearertoken=$(
+        jq -r '.jwt'  '/tmp/auth-repsonse.json'
+        )
+
+# -----------------------------------------------------
+# List the available endpoints.
+# https://app.swaggerhub.com/apis/portainer/portainer-ee/2.10.0#/endpoints/EndpointList
+# https://reqbin.com/req/c-hlt4gkzd/curl-bearer-token-authorization-header-example
+#[user@desktop]
+
+    curl \
+        --silent \
+        --insecure \
+        --request GET \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            "${portainerapiurl:?}/endpoints" \
+    | tee '/tmp/endpoints-repsonse.json' \
+    | jq '.'
+
+    >   [
+    >     {
+    >       "Id": 2,
+    >       "Name": "local",
+    >       "Type": 1,
+    >       "URL": "unix:///var/run/docker.sock",
+    >       "GroupId": 1,
+    >       "PublicURL": "",
+    >       "TLSConfig": {
+    >         "TLS": false,
+    >         "TLSSkipVerify": false
+    >       },
+    >       "Extensions": [],
+    >       "AzureCredentials": {
+    >         "ApplicationID": "",
+    >         "TenantID": "",
+    >         "AuthenticationKey": ""
+    >       },
+    >       "TagIds": [],
+    >       "Status": 1,
+    >       "Snapshots": [
+    >         {
+    >           "Time": 1643986621,
+    >           "DockerVersion": "20.10.7",
+    >           "Swarm": false,
+    >           "TotalCPU": 4,
+    >           "TotalMemory": 16267595776,
+    >           "RunningContainerCount": 1,
+    >           "StoppedContainerCount": 0,
+    >           "HealthyContainerCount": 0,
+    >           "UnhealthyContainerCount": 0,
+    >           "VolumeCount": 40,
+    >           "ImageCount": 3,
+    >           "ServiceCount": 0,
+    >           "StackCount": 0,
+    >           "DockerSnapshotRaw": {
+    >             "Containers": null,
+    >             "Volumes": null,
+    >             "Networks": null,
+    >             "Images": null,
+    >             "Info": null,
+    >             "Version": null
+    >           },
+    >           "NodeCount": 0
+    >         }
+    >       ],
+    >       "UserAccessPolicies": {},
+    >       "TeamAccessPolicies": {},
+    >       "EdgeKey": "",
+    >       "EdgeCheckinInterval": 5,
+    >       "Kubernetes": {
+    >         "Snapshots": [],
+    >         "Configuration": {
+    >           "UseLoadBalancer": false,
+    >           "UseServerMetrics": false,
+    >           "StorageClasses": [],
+    >           "IngressClasses": [],
+    >           "RestrictDefaultNamespace": false
+    >         }
+    >       },
+    >       "ComposeSyntaxMaxVersion": "3.9",
+    >       "SecuritySettings": {
+    >         "allowBindMountsForRegularUsers": true,
+    >         "allowPrivilegedModeForRegularUsers": true,
+    >         "allowVolumeBrowserForRegularUsers": false,
+    >         "allowHostNamespaceForRegularUsers": true,
+    >         "allowDeviceMappingForRegularUsers": true,
+    >         "allowStackManagementForRegularUsers": true,
+    >         "allowContainerCapabilitiesForRegularUsers": true,
+    >         "allowSysctlSettingForRegularUsers": true,
+    >         "enableHostManagementFeatures": false
+    >       },
+    >       "LastCheckInDate": 0,
+    >       "AuthorizedUsers": null,
+    >       "AuthorizedTeams": null,
+    >       "Tags": null
+    >     }
+    >   ]
+
+
+    dockerenvid=$(
+        jq '.[0].Id' \
+            '/tmp/endpoints-repsonse.json'
+        )
+
+
+# -----------------------------------------------------
+# List the existing containers.
+# https://docs.portainer.io/v/ce-2.11/api/examples#execute-docker-queries-against-a-specific-environment
+# https://docs.docker.com/engine/api/v1.41/#operation/ContainerList
+#[user@desktop]
+
+    dockerapiurl=${portainerapiurl:?}/endpoints/${dockerenvid:?}/docker
+    containerapiurl=${dockerapiurl:?}/containers
+
+    curl \
+        --silent \
+        --insecure \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            "${dockerapiurl:?}/containers/json" \
+    | tee '/tmp/containers-repsonse.json' \
+    | jq '.'
+
+    >   [
+    >     {
+    >       "Command": "/portainer",
+    >       "Created": 1643911018,
+    >       "HostConfig": {
+    >         "NetworkMode": "default"
+    >       },
+    >       "Id": "763448a047bccbec2d36b8384fa4988219741085479c426601d7a70bd4726553",
+    >       "Image": "portainer/portainer-ce:2.11.0",
+    >       "ImageID": "sha256:0df02179156afbf727443d0be50e8b9cdab8c044050691517539cea2e3ed01fd",
+    >       "Labels": {},
+    >       "Mounts": [
+    >         {
+    >           "Destination": "/data",
+    >           "Driver": "local",
+    >           "Mode": "z",
+    >           "Name": "portainer_data",
+    >           "Propagation": "",
+    >           "RW": true,
+    >           "Source": "/var/lib/docker/volumes/portainer_data/_data",
+    >           "Type": "volume"
+    >         },
+    >         {
+    >           "Destination": "/var/run/docker.sock",
+    >           "Mode": "",
+    >           "Propagation": "rprivate",
+    >           "RW": true,
+    >           "Source": "/var/run/docker.sock",
+    >           "Type": "bind"
+    >         }
+    >       ],
+    >       "Names": [
+    >         "/portainer"
+    >       ],
+    >       "NetworkSettings": {
+    >         "Networks": {
+    >           "bridge": {
+    >             "Aliases": null,
+    >             "DriverOpts": null,
+    >             "EndpointID": "7f1884aac6614d7e0c92d416500085e61c6e7411b497d0cd42852cd05cb62ccf",
+    >             "Gateway": "172.17.0.1",
+    >             "GlobalIPv6Address": "",
+    >             "GlobalIPv6PrefixLen": 0,
+    >             "IPAMConfig": null,
+    >             "IPAddress": "172.17.0.2",
+    >             "IPPrefixLen": 16,
+    >             "IPv6Gateway": "",
+    >             "Links": null,
+    >             "MacAddress": "02:42:ac:11:00:02",
+    >             "NetworkID": "9b4aa2d82b8cae79342b036ffae4fb4284db9dfeac8bcb08e719ae6065a6cbd8"
+    >           }
+    >         }
+    >       },
+    >       "Ports": [
+    >         {
+    >           "IP": "0.0.0.0",
+    >           "PrivatePort": 8000,
+    >           "PublicPort": 8000,
+    >           "Type": "tcp"
+    >         },
+    >         {
+    >           "IP": "::",
+    >           "PrivatePort": 8000,
+    >           "PublicPort": 8000,
+    >           "Type": "tcp"
+    >         },
+    >         {
+    >           "PrivatePort": 9000,
+    >           "Type": "tcp"
+    >         },
+    >         {
+    >           "IP": "0.0.0.0",
+    >           "PrivatePort": 9443,
+    >           "PublicPort": 9443,
+    >           "Type": "tcp"
+    >         },
+    >         {
+    >           "IP": "::",
+    >           "PrivatePort": 9443,
+    >           "PublicPort": 9443,
+    >           "Type": "tcp"
+    >         }
+    >       ],
+    >       "State": "running",
+    >       "Status": "Up 21 hours"
+    >     }
+    >   ]
+
+
+# -----------------------------------------------------
+# Create a new container.
+# https://docs.portainer.io/v/ce-2.11/api/examples#create-a-container
+# https://docs.docker.com/engine/api/v1.41/#operation/ContainerCreate
+#[user@desktop]
+
+cat > /tmp/create-request.json << EOF
+{
+  "Image": "fedora:34"
+}
+EOF
+
+    containername=frungle-two
+
+    curl \
+        --silent \
+        --insecure \
+        --request POST \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            --header "Content-Type: application/json" \
+            --data '@/tmp/create-request.json' \
+            "${dockerapiurl:?}/containers/create?name=${containername:?}" \
+    | tee '/tmp/create-repsonse.json' \
+    | jq '.'
+
+    contanerid=$(
+        jq -r '.Id' \
+            '/tmp/create-repsonse.json'
+        )
+
+    >   {
+    >     "Id": "4d35a177ec8e0e31d60f3f050016febb6c6ee3e7655fe4fd4ba384b17f347dc6",
+    >     "Portainer": {
+    >       "ResourceControl": {
+    >         "Id": 9,
+    >         "ResourceId": "4d35a177ec8e0e31d60f3f050016febb6c6ee3e7655fe4fd4ba384b17f347dc6",
+    >         "SubResourceIds": [],
+    >         "Type": 1,
+    >         "UserAccesses": [
+    >           {
+    >             "UserId": 1,
+    >             "AccessLevel": 1
+    >           }
+    >         ],
+    >         "TeamAccesses": [],
+    >         "Public": false,
+    >         "AdministratorsOnly": false,
+    >         "System": false
+    >       }
+    >     },
+    >     "Warnings": []
+    >   }
+
+    # The container names aren't really used much.
+    # Leave them blank and Docker assigns one for us.
+
+
+# -----------------------------------------------------
+# Inspect our new container.
+# https://docs.docker.com/engine/api/v1.41/#operation/ContainerInspect
+#[user@desktop]
+
+    curl \
+        --silent \
+        --insecure \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            "${dockerapiurl:?}/containers/${contanerid:?}/json" \
+    | tee '/tmp/inspect-repsonse.json' \
+    | jq '.'
+
+    >   {
+    >     "AppArmorProfile": "",
+    >     "Args": [],
+    >     "Config": {
+    >       "AttachStderr": false,
+    >       "AttachStdin": false,
+    >       "AttachStdout": false,
+    >       "Cmd": [
+    >         "/bin/bash"
+    >       ],
+    >       "Domainname": "",
+    >       "Entrypoint": null,
+    >       "Env": [
+    >         "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    >         "DISTTAG=f34container",
+    >         "FGC=f34",
+    >         "FBR=f34"
+    >       ],
+    >       "Hostname": "4d35a177ec8e",
+    >       "Image": "fedora:34",
+    >       "Labels": {
+    >         "maintainer": "Clement Verna <cverna@fedoraproject.org>"
+    >       },
+    >       "OnBuild": null,
+    >       "OpenStdin": false,
+    >       "StdinOnce": false,
+    >       "Tty": false,
+    >       "User": "",
+    >       "Volumes": null,
+    >       "WorkingDir": ""
+    >     },
+    >     "Created": "2022-02-04T15:42:45.288607068Z",
+    >     "Driver": "btrfs",
+    >     "ExecIDs": null,
+    >     "GraphDriver": {
+    >       "Data": null,
+    >       "Name": "btrfs"
+    >     },
+    >     "HostConfig": {
+    >       "AutoRemove": false,
+    >       "Binds": null,
+    >       "BlkioDeviceReadBps": null,
+    >       "BlkioDeviceReadIOps": null,
+    >       "BlkioDeviceWriteBps": null,
+    >       "BlkioDeviceWriteIOps": null,
+    >       "BlkioWeight": 0,
+    >       "BlkioWeightDevice": null,
+    >       "CapAdd": null,
+    >       "CapDrop": null,
+    >       "Cgroup": "",
+    >       "CgroupParent": "",
+    >       "CgroupnsMode": "private",
+    >       "ConsoleSize": [
+    >         0,
+    >         0
+    >       ],
+    >       "ContainerIDFile": "",
+    >       "CpuCount": 0,
+    >       "CpuPercent": 0,
+    >       "CpuPeriod": 0,
+    >       "CpuQuota": 0,
+    >       "CpuRealtimePeriod": 0,
+    >       "CpuRealtimeRuntime": 0,
+    >       "CpuShares": 0,
+    >       "CpusetCpus": "",
+    >       "CpusetMems": "",
+    >       "DeviceCgroupRules": null,
+    >       "DeviceRequests": null,
+    >       "Devices": null,
+    >       "Dns": null,
+    >       "DnsOptions": null,
+    >       "DnsSearch": null,
+    >       "ExtraHosts": null,
+    >       "GroupAdd": null,
+    >       "IOMaximumBandwidth": 0,
+    >       "IOMaximumIOps": 0,
+    >       "IpcMode": "private",
+    >       "Isolation": "",
+    >       "KernelMemory": 0,
+    >       "KernelMemoryTCP": 0,
+    >       "Links": null,
+    >       "LogConfig": {
+    >         "Config": {},
+    >         "Type": "json-file"
+    >       },
+    >       "MaskedPaths": [
+    >         "/proc/asound",
+    >         "/proc/acpi",
+    >         "/proc/kcore",
+    >         "/proc/keys",
+    >         "/proc/latency_stats",
+    >         "/proc/timer_list",
+    >         "/proc/timer_stats",
+    >         "/proc/sched_debug",
+    >         "/proc/scsi",
+    >         "/sys/firmware"
+    >       ],
+    >       "Memory": 0,
+    >       "MemoryReservation": 0,
+    >       "MemorySwap": 0,
+    >       "MemorySwappiness": null,
+    >       "NanoCpus": 0,
+    >       "NetworkMode": "default",
+    >       "OomKillDisable": false,
+    >       "OomScoreAdj": 0,
+    >       "PidMode": "",
+    >       "PidsLimit": null,
+    >       "PortBindings": null,
+    >       "Privileged": false,
+    >       "PublishAllPorts": false,
+    >       "ReadonlyPaths": [
+    >         "/proc/bus",
+    >         "/proc/fs",
+    >         "/proc/irq",
+    >         "/proc/sys",
+    >         "/proc/sysrq-trigger"
+    >       ],
+    >       "ReadonlyRootfs": false,
+    >       "RestartPolicy": {
+    >         "MaximumRetryCount": 0,
+    >         "Name": ""
+    >       },
+    >       "SecurityOpt": null,
+    >       "ShmSize": 67108864,
+    >       "UTSMode": "",
+    >       "Ulimits": null,
+    >       "UsernsMode": "",
+    >       "VolumeDriver": "",
+    >       "VolumesFrom": null
+    >     },
+    >     "HostnamePath": "",
+    >     "HostsPath": "",
+    >     "Id": "4d35a177ec8e0e31d60f3f050016febb6c6ee3e7655fe4fd4ba384b17f347dc6",
+    >     "Image": "sha256:e1f83fe2ddbd248653cf952374c351ffbef387339f746983e9d32522ec005ed7",
+    >     "LogPath": "",
+    >     "MountLabel": "",
+    >     "Mounts": [],
+    >     "Name": "/frungle-two",
+    >     "NetworkSettings": {
+    >       "Bridge": "",
+    >       "EndpointID": "",
+    >       "Gateway": "",
+    >       "GlobalIPv6Address": "",
+    >       "GlobalIPv6PrefixLen": 0,
+    >       "HairpinMode": false,
+    >       "IPAddress": "",
+    >       "IPPrefixLen": 0,
+    >       "IPv6Gateway": "",
+    >       "LinkLocalIPv6Address": "",
+    >       "LinkLocalIPv6PrefixLen": 0,
+    >       "MacAddress": "",
+    >       "Networks": {
+    >         "bridge": {
+    >           "Aliases": null,
+    >           "DriverOpts": null,
+    >           "EndpointID": "",
+    >           "Gateway": "",
+    >           "GlobalIPv6Address": "",
+    >           "GlobalIPv6PrefixLen": 0,
+    >           "IPAMConfig": null,
+    >           "IPAddress": "",
+    >           "IPPrefixLen": 0,
+    >           "IPv6Gateway": "",
+    >           "Links": null,
+    >           "MacAddress": "",
+    >           "NetworkID": ""
+    >         }
+    >       },
+    >       "Ports": {},
+    >       "SandboxID": "",
+    >       "SandboxKey": "",
+    >       "SecondaryIPAddresses": null,
+    >       "SecondaryIPv6Addresses": null
+    >     },
+    >     "Path": "/bin/bash",
+    >     "Platform": "linux",
+    >     "Portainer": {
+    >       "ResourceControl": {
+    >         "Id": 9,
+    >         "ResourceId": "4d35a177ec8e0e31d60f3f050016febb6c6ee3e7655fe4fd4ba384b17f347dc6",
+    >         "SubResourceIds": [],
+    >         "Type": 1,
+    >         "UserAccesses": [
+    >           {
+    >             "UserId": 1,
+    >             "AccessLevel": 1
+    >           }
+    >         ],
+    >         "TeamAccesses": [],
+    >         "Public": false,
+    >         "AdministratorsOnly": false,
+    >         "System": false
+    >       }
+    >     },
+    >     "ProcessLabel": "",
+    >     "ResolvConfPath": "",
+    >     "RestartCount": 0,
+    >     "State": {
+    >       "Dead": false,
+    >       "Error": "",
+    >       "ExitCode": 0,
+    >       "FinishedAt": "0001-01-01T00:00:00Z",
+    >       "OOMKilled": false,
+    >       "Paused": false,
+    >       "Pid": 0,
+    >       "Restarting": false,
+    >       "Running": false,
+    >       "StartedAt": "0001-01-01T00:00:00Z",
+    >       "Status": "created"
+    >     }
+    >   }
+
+
+# -----------------------------------------------------
+# Start our new container.
+# https://docs.portainer.io/v/ce-2.11/api/examples#start-a-container
+# https://docs.docker.com/engine/api/v1.41/#operation/ContainerStart
+#[user@desktop]
+
+    curl \
+        --silent \
+        --insecure \
+        --request POST \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            "${dockerapiurl:?}/containers/${contanerid:?}/start" \
+    | tee '/tmp/start-repsonse.json' \
+    | jq '.'
+
+    >   {
+    >     "message": "starting container with non-empty request body was deprecated since API v1.22 and removed in v1.24"
+    >   }
+
+    #
+    # Known issue with Docker.
+    # https://stackoverflow.com/a/44528968
+    # https://github.com/moby/moby/issues/25667
+    #
+
+    curl \
+        --silent \
+        --insecure \
+        --request POST \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            --data "{}" \
+            "${dockerapiurl:?}/containers/${contanerid:?}/start" \
+    | tee '/tmp/start-repsonse.json' \
+    | jq '.'
+
+    >   -
+
+    #
+    # Container starts, and finishes.
+    # Need to make it interactive ...
+    #
+
+
+# -----------------------------------------------------
+# Create a new container.
+# https://docs.portainer.io/v/ce-2.11/api/examples#create-a-container
+# https://docs.docker.com/engine/api/v1.41/#operation/ContainerCreate
+#[user@desktop]
+
+cat > /tmp/create-request.json << EOF
+{
+  "Image": "fedora:34",
+  "AttachStdin":  true,
+  "AttachStdout": true,
+  "AttachStderr": true,
+  "OpenStdin":    true,
+  "Tty": true
+}
+EOF
+
+    containername=$(date '+%Y%m%d-%H%M%S')
+
+    curl \
+        --silent \
+        --insecure \
+        --request POST \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            --header "Content-Type: application/json" \
+            --data '@/tmp/create-request.json' \
+            "${dockerapiurl:?}/containers/create?name=${containername:?}" \
+    | tee '/tmp/create-repsonse.json' \
+    | jq '.'
+
+    contanerid=$(
+        jq -r '.Id' \
+            '/tmp/create-repsonse.json'
+        )
+
+    >   {
+    >     "Id": "096c5d4f34b75ed704a2658a17f7e0e04fac2f4adbaeeacd03c42348b1d81231",
+    >     "Portainer": {
+    >       "ResourceControl": {
+    >         "Id": 10,
+    >         "ResourceId": "096c5d4f34b75ed704a2658a17f7e0e04fac2f4adbaeeacd03c42348b1d81231",
+    >         "SubResourceIds": [],
+    >         "Type": 1,
+    >         "UserAccesses": [
+    >           {
+    >             "UserId": 1,
+    >             "AccessLevel": 1
+    >           }
+    >         ],
+    >         "TeamAccesses": [],
+    >         "Public": false,
+    >         "AdministratorsOnly": false,
+    >         "System": false
+    >       }
+    >     },
+    >     "Warnings": []
+    >   }
+
+
+# -----------------------------------------------------
+# Start our new container.
+# https://docs.portainer.io/v/ce-2.11/api/examples#start-a-container
+# https://docs.docker.com/engine/api/v1.41/#operation/ContainerStart
+#[user@desktop]
+
+    curl \
+        --silent \
+        --insecure \
+        --request POST \
+            --header "Accept: application/json" \
+            --header "Authorization: Bearer ${bearertoken:?}" \
+            --data "{}" \
+            "${dockerapiurl:?}/containers/${contanerid:?}/start" \
+    | tee '/tmp/start-repsonse.json' \
+    | jq '.'
+
+    >   ....
+    >   ....
+
+    #
+    # Container runs and waits for stdin ..
+    #
+
+    #
+    # Portainer UI design doesn't allow us to use URLs as URLs !!
+    # Basically - the user interface is broken by design.
+    # https://github.com/portainer/portainer/issues/724
+    # https://github.com/portainer/portainer/issues/613
+    #
+    # Looking at the browser URLs, they are putting everything in the fragment part of the URL.
+    # https://localhost:9443/#!/2/docker/containers/096c5d4f34b75ed704a2658a17f7e0e04fac2f4adbaeeacd03c42348b1d81231
+    # https://localhost:9443/#!/2/docker/containers/096c5d4f34b75ed704a2658a17f7e0e04fac2f4adbaeeacd03c42348b1d81231/attach
+    #
+
+    #
+    # Can we avoid Portainer and attach to the container via the Docker REST API ?
+    # https://docs.docker.com/engine/api/v1.41/#operation/ContainerAttach
+    # ... annnd we are back in the game ;-)
+    #
+
+
+

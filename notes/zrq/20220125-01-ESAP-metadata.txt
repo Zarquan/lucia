@@ -39,14 +39,11 @@
     Need to include hooks form IVOA EP service.
     Need to implement prototype IVOA EP.
 
-
     In many cases, can't get Git repo from a Zendo link.
     Ignore the 'published' zip file and give me the code repo.
 
-
     BinderHub API
     https://binderhub.readthedocs.io/en/latest/api.html
-
 
     EGI Applications on Demand
     https://www.egi.eu/services/applications-on-demand/
@@ -66,7 +63,6 @@
 
             Hadoop Cluster Role
             https://github.com/grycap/ansible-role-hadoop
-
 
     The goal of this service is to offer user-friendly access to e-infrastructure services for members of the long tail of science,
     i.e. for individual researchers and small research teams who do not belong to any of the established EGI Virtual Organisation communities.
@@ -90,95 +86,99 @@
     ESFRI: CTA
     https://project.escape2020.de/projects/esfri-cta
 
-        Software: agnpy
-        https://project.escape2020.de/issues/144
+        4 Software products
 
-            Documentation:
-            https://agnpy.readthedocs.io/en/latest/
+            Software: agnpy
+            https://project.escape2020.de/issues/144
 
-            Repository:
-            https://github.com/cosimoNigro/agnpy
+                Documentation:
+                https://agnpy.readthedocs.io/en/latest/
 
-            Binder:
-            https://mybinder.org/v2/gh/cosimoNigro/agnpy/HEAD
+                Repository:
+                https://github.com/cosimoNigro/agnpy
 
-            Zenodo: (not OSSR)
-            https://zenodo.org/record/5779170
+                Binder:
+                https://mybinder.org/v2/gh/cosimoNigro/agnpy/HEAD
 
-            Executables:
-                9 tutorial notebooks
-                https://github.com/cosimoNigro/agnpy/tree/master/docs/tutorials
+                Zenodo:
+                https://zenodo.org/record/5779170
 
-        Software: gLike
-        https://project.escape2020.de/issues/143
+                Executables:
+                    9 tutorial notebooks
+                    https://github.com/cosimoNigro/agnpy/tree/master/docs/tutorials
+                    zrq- Where do the tutorials get their data ?
+                    zrq- Do any of these use the DataLake
 
-            Documentation:
-            https://github.com/javierrico/gLike#readme
+            Software: gLike
+            https://project.escape2020.de/issues/143
 
-            Repository:
-            https://github.com/javierrico/gLike
+                Documentation:
+                https://github.com/javierrico/gLike#readme
 
-            Zenodo:
-            -
+                Repository:
+                https://github.com/javierrico/gLike
 
-            Executables:
-                2 tutorial notebooks
-                https://github.com/javierrico/gLike/tree/master/scripts
-                https://github.com/javierrico/gLike/search?l=jupyter-notebook
+                Zenodo:
+                -
 
-            Metadata:
+                Executables:
+                    2 tutorial notebooks
+                    https://github.com/javierrico/gLike/tree/master/scripts
+                    https://github.com/javierrico/gLike/search?l=jupyter-notebook
+                    zrq- Where do the tutorials get their data ?
+                    zrq- Do any of these use the DataLake
 
-                .escape.yml hidden file
-                https://github.com/javierrico/gLike/blob/master/.escape.yml
+                Metadata:
 
-                codemeta.json
-                https://github.com/javierrico/gLike/blob/master/codemeta.json
+                    .escape.yml hidden file
+                    https://github.com/javierrico/gLike/blob/master/.escape.yml
 
-            Based on ROOT
-            https://root.cern/
+                    codemeta.json
+                    https://github.com/javierrico/gLike/blob/master/codemeta.json
 
-                ROOT data processing framework
+                Based on ROOT
+                https://root.cern/
 
-                Docker containers
-                https://hub.docker.com/r/rootproject/root
+                    ROOT data processing framework
+
+                    Docker containers
+                    https://hub.docker.com/r/rootproject/root
+                    zrq- does the use case run in a single container or multiple containers?
+
+            Software: Gammalearn
+            https://project.escape2020.de/issues/26
+
+                Documentation:
+                https://gitlab.lapp.in2p3.fr/GammaLearn/GammaLearn/-/wikis/home
+                ** broken URL
+
+                    Focus group 1 call - Software requirements and recommendations collection
+                    https://indico.in2p3.fr/event/22516/
+                    https://indico.in2p3.fr/event/22516/contributions/87503/attachments/60378/82050/20201016%20-%20ESCAPE_GammaLearn.pdf
+
+                Repository:
+                https://gitlab.lapp.in2p3.fr/GammaLearn/GammaLearn/
+                ** broken URL
+
+                Zenodo:
+                https://zenodo.org/record/5884001 (ESCAPE 2020)
+
+                Related:
+
+                    Indexed Convolution
+                    https://github.com/IndexedConv/IndexedConv
+                    https://indexed-convolution.readthedocs.io/en/latest/
+
+                    ctaplot
+                    https://github.com/cta-observatory/ctaplot
+                    https://ctaplot.readthedocs.io/en/latest/
 
 
-        Software: Gammalearn
-        https://project.escape2020.de/issues/26
+            Software: GammaPy
+            https://gammapy.org/
 
-            Documentation:
-            https://gitlab.lapp.in2p3.fr/GammaLearn/GammaLearn/-/wikis/home
-            ** broken URL
-
-                Focus group 1 call - Software requirements and recommendations collection
-                https://indico.in2p3.fr/event/22516/
-                https://indico.in2p3.fr/event/22516/contributions/87503/attachments/60378/82050/20201016%20-%20ESCAPE_GammaLearn.pdf
-
-
-            Repository:
-            https://gitlab.lapp.in2p3.fr/GammaLearn/GammaLearn/
-            ** broken URL
-
-
-            Zenodo:
-            https://zenodo.org/record/5884001
-
-            Related:
-
-                Indexed Convolution
-                https://github.com/IndexedConv/IndexedConv
-                https://indexed-convolution.readthedocs.io/en/latest/
-
-                ctaplot
-                https://github.com/cta-observatory/ctaplot
-                https://ctaplot.readthedocs.io/en/latest/
-
-
-        Software: GammaPy
-        https://gammapy.org/
-
-            Zenodo:
-            https://zenodo.org/record/5721467
+                Zenodo:
+                https://zenodo.org/record/5721467
 
 
         14 use cases
@@ -195,12 +195,14 @@
                         If the container exists it is selected
                         If not it is created
                     The job is then submitted to EGI using DIRAC
-                    ...
+                    The job can be monitored
+                    Results and logs can be accessed/downloaded
 
             EGI DIRAC
             https://dirac.egi.eu/DIRAC/
             Who to contact to get access to this ..
-
+            Can I learn how this works ...
+            Is this covered by existing work?
 
             4a Simulation of CTA science data
             https://docs.google.com/document/d/1HRd_jzw2lro_CB2_GyfytVYgnErsYd6J8RqvVGG50X8/edit#heading=h.ihf25k9wqx1c
@@ -211,8 +213,7 @@
                 Navigates to the Interactive Analysis Section
                 Selects the simulation gammapy workflow
                     zrq- what does gammapy workflow mean ?
-                    zrq- is this the gammapy in a container ?
-                    zrq- is this gammapy examples/turorial in a notebook ?
+                    zrq- is this in container(s) or notebook(s) ?
                 Selects the jupyterlab resource
                 Launch service which loads the correct notebook with gammapy environment
                     zrq- does this mean we need to load a specific notebook ?
@@ -229,19 +230,19 @@
                 Add to shopping basket.
                 Search for corresponding IRF (instrument response function) for the data selected
                 Add to shopping basket.
+                    zrq- Do we have examples of this type of data search in the DataLake?
                 [Optional] Search for corresponding metadata, log files etc ....
                 Selects the simulation gammapy workflow
-                    zrq- is this gammapy examples/turorial in a notebook ?
+                    zrq- what does gammapy workflow mean ?
+                    zrq- is this in container(s) or notebook(s) ?
                 Selects the jupyterlab resource
+                    zrq- jupyterlab implies notebook
                 Launch service which loads the correct notebook with gammapy environment
                     zrq- does this mean we need to load a specific notebook ?
                 Notebook is executed and data is downloaded
                     zrq- does this mean data is downloaded TO the notebook,
                     or results are downloaded FROM the notebook  ?
-
                     zrq- need to be able to launch a specific notebook, not just a 'project'
-                    needs a more specific REST API
-
                     zrq- needs a staging area for the results
                     persistent storage with limited lifetime and public access
 
@@ -260,10 +261,24 @@
                 Batch mode
                 Search for compute resources
                     zrq- what software are we going to use ?
+                    zrq- Given the software, we need a mapping between packaged software and execution platform (ExecPlanner?).
                 Data is transferred to resource cache
                 Submit job(s)
                 Monitor job(s)
                 Save data to temporary quicklook location or download final results
+
+        Summary:
+
+            CTA interactive
+                Use cases imply the software is packaged as notebooks.
+                Data is selected from DataLake.
+                zrq- Do we need a mapping to tell the notebook about the selected data.
+
+            CTA batch
+                Not clear how the sowftare is packaged.
+                Data is selected from DataLake.
+                zrq- Do we need a mapping to tell the notebook about the selected data.
+                zrq- Use case text does not describe how we select the software.
 
 
     ESFRI: EGO-Virgo
@@ -271,6 +286,7 @@
 
         1 use case
         Enabling gravitational waves pipelines to process a stream of data from the ESCAPE datalake
+        Issue status says 60% done
 
             The first use case we have identified is within the frame of enabling batch workflows for our gravitational wave (GW) pipelines.
             For this purpose:
@@ -282,23 +298,511 @@
             For running these containers the deployment choice is Kubernetes from which a pilot project is ongoing at CNAF.
             This provides a realistic test of the GW pipelines to enable the offline analysis of data when deployed into any Kubernetes cluster available from computing centres.
 
+            zrq- can we see the source code for these workflows ?
+
             zrq- what role does ESAP play ?
             zrq- will the containers be registered in OSSR ?
             zrq- will the containers fetch their own data ?
             zrq- will the containers save their own results ?
 
+                zrq- Kubernetes execution platform
+                     executable is a container ?
+                     executable is a Helm chart ?
 
-                    zrq- Kubernetes execution platform
-                         executable is a container ?
-                         executable is a Helm chart ?
+            zrq- inputs selected from DataLake
+            zrq- outputs selected .. how ?
 
-                    zrq- inputs selected from DataLake
-                    zrq- outputs selected .. how ?
+            zrq- needs a staging area for the results
+                 persistent storage with limited lifetime and public access
 
-                    zrq- needs a staging area for the results
-                    persistent storage with limited lifetime and public access
+            zrq- can we get access to the containers and K8s platform ?
 
-                    zrq- can we get access to the containers and K8s platform ?
+        Summary:
+
+            ....
+
+    ESFRI: ESO
+    https://project.escape2020.de/projects/esfri-eso
+
+        5 use cases
+
+        ALMA use case
+        https://project.escape2020.de/issues/137
+
+            This use case is written from the perspective of an observatory — ALMA — that has infrastructure in place, but does not yet have a science platform.
+
+            Provide a turnkey solution that can be deployed on our systems which provides a complete local 'Science Platform' similar to ESA DataLabs,
+            SciServer, NOAO Datalabs, CANFAR etc. including disk and CPU quota management, batch queue processing etc.
+
+        131 - La Silla Paranal Observatory: Interactive web browsing and processing of raw data
+        https://project.escape2020.de/issues/131
+
+            As a user I want to query the ESO La Silla Paranal raw data web archive interface
+            (http://archive.eso.org/eso/eso_archive_main.html)
+            and process the resulting data via the ESAP Science Platform.
+
+                I fill in the query parameters and search.
+                The raw data query form is a simple collection of text fields and checkboxes, so, if convenient for the implementation, it can be rendered directly in ESAP as it is currently done for other archives.
+
+                I review the query results and choose whether to include other relevant data
+                (e.g. raw/processed calibrations, the derived processed data, if available;
+                see an example at: https://archive.eso.org/downloadportal/a87339c7-1bcc-48d9-8cc2-ac8577d4f183).
+
+                In case the data I’m interested in is proprietary or otherwise protected, I need to authenticate with the ESO archive to access it.
+
+                The typical size of the datasets I want to process is of the order of several TB.
+                The waiting time for the data to become available for processing should be minimized,
+                e.g. by having the processing itself as close as possible to the data storage.
+
+                I want, then, to process the raw science data and calibrations into products using the dedicated ESO pipelines
+                (https://www.eso.org/sci/software/pipelines).
+                Specifically, I want to use the ESO Reflex environment (https://www.eso.org/sci/software/esoreflex),
+                which collates the individual pipeline recipes into data processing workflows.
+                It also provides additional functionalities, such as data organization and interactive display and inspection
+                of intermediate products, with the option to fine-tune processing parameters to reach the desired results,
+                including the possibility to upload my own compatible script, typically in python,
+                to integrate it in the provided workflows.
+                Note that a replacement for ESO Reflex is currently being designed and developed.
+                From a user point of view, it provides the same functionalities as described above.
+                The underlying architecture and software dependencies, though, will be different,
+                e.g. it is likely to be entirely based on Python, rather than involving also Java as ESO Reflex.
+                The expected timeline for the deployment to users of EDPS is of 2-3 years,
+                so exceeding the one of ESCAPE-ESAP, but relevant for using ESAP in the longer term.
+
+                In addition to interactive processing, I want to be able to run batch jobs for bulk processing.
+                Typically, I may want to first process all of the data non-interactively, then go back to check
+                the results and fine-tune them as needed.
+                Another typical scenario is to first process interactively a subset of the data in order to fine-tune
+                the parameters, then process the bulk non-interactively. Since processing is likely to take a
+                considerable amount of time, I want to be able to log out from ESAP while it is running and log back
+                into it at a later time(s), possibly from a different computer/IP address.
+                I want the batch job to keep running while I am not logged in.
+                Once done with pipeline processing, I want to analyze and further process the results with commonly
+                used data handling/analysis tools (e.g. a python installation with a standard set of packages,
+                including plotting capabilities TBD), as well as being able to upload custom tools
+                (e.g. a python script I have developed for a specific purpose).
+
+                I want my ESAP workspace to be persistent for a TBD amount of time and with a TBD amount of space,
+                to be able to split the work in several sessions without having to restart from scratch every time.
+                I want the workspace to be private, to protect proprietary data and my intellectual property of the
+                analysis I’m performing and the custom tools I’m using. I want to be able to share with other ESAP
+                users of my choice the content of selected areas of my workspace (read and/or write) without sharing
+                my credentials. The possibility of providing long-term storage should be explored.
+
+                Once done with processing/ analyzing, I want to have the option to download the results
+                (e.g. plots, processed data, etc.) to my local system. I want to be able to select which
+                result files to download. In addition to my local system, I want to be able to send selected
+                results to other destinations, as well, most notably submitting them back to the ESO Science
+                Archive via the “Phase 3” process (https://www.eso.org/sci/observing/phase3.html).
+
+            Notes from John Swinbank
+
+                ...
+
+
+        134 - La Silla Paranal Observatory: Programmatic browsing and processing of raw data
+        https://project.escape2020.de/issues/134
+
+            As a user I want to query the ESO La Silla Paranal raw data archive programmatically
+            and process the resulting data via the ESAP Science Platform.
+
+            'Programmatic access' means IVOA protocols to find and download data.
+            http://archive.eso.org/programmatic
 
 
 
+        135 - La Silla Paranal Observatory: Interactive web browsing and further processing of processed data
+        https://project.escape2020.de/issues/135
+
+            As a user I want to query the ESO La Silla Paranal processed data web archive interface
+            and process the resulting data via the ESAP Science Platform.
+
+            I fill in the query parameters and search.
+            The processed data query form is a complex interface, developed to guide the user to the data of interest.
+            In this case, reducing it to a simple collection of text fields and checkboxes is not acceptable.
+
+            I review the query results and choose whether to include other relevant data
+            (e.g. different flavors/categories of ancillary files, if available;
+            see an example at: http://archive.eso.org/downloadportal/079ef765-f5bf-4281-aa38-0dd35417f6d2).
+
+            In case the data I’m interested in is proprietary or otherwise protected, I need to authenticate with the ESO archive to access it.
+
+            The typical size of the datasets I want to process is of the order of several TB.
+            My waiting time for the data to become available for processing should be minimized, e.g. by having the processing itself as close as possible to the data storage.
+
+            I want to analyze and further process the results with commonly used data handling/analysis tools
+            (e.g. a python installation with a standard set of packages, including plotting capabilities TBD),
+            as well as being able to upload custom tools (e.g. a python script I have developed for a specific purpose).
+
+            I want my ESAP workspace to be persistent for a TBD amount of time and with a TBD amount of space,
+            to be able to split the work in several sessions without having to restart from scratch every time.
+
+            I want the workspace to be private, to protect proprietary data and my intellectual property of the analysis
+            I’m performing and the custom tools I’m using. I want to be able to share with other ESAP users of my choice
+            the content of selected areas of my workspace (read and/or write) without sharing my credentials.
+
+            The possibility of providing long-term storage should be explored.
+            Once done with processing/analyzing, I want to download the results (e.g. plots, processed data, etc.)
+            to my local system.
+            I want to be able to select which result files to download.
+            In addition to my local system, I want to be able to send selected results to other destinations, as well,
+            most notably submitting them back to the ESO Science Archive via the “Phase 3” process (https://www.eso.org/sci/observing/phase3.html).
+
+
+        136 - La Silla Paranal Observatory: Programmatic browsing and further processing of processed data
+        https://project.escape2020.de/issues/136
+
+            As a user I want to query the ESO La Silla Paranal processed data web archive interface
+            programmatically and process the resulting data via the ESAP Science Platform.
+
+            'Programmatic access' means IVOA protocols to find and download data.
+            http://archive.eso.org/programmatic
+
+        Related software
+        http://archive.eso.org/programmatic/
+        http://archive.eso.org/programmatic/#CHANGE
+
+            Programmatic access using IVOA protocols to access ESO data.
+            Python client in Jupyter notebooks in MyBinder.
+
+            Examples
+            https://mybinder.org/v2/gh/almicol/eso_authentication_and_authorisation/HEAD
+
+                ESO Programmatic Authentication & Authorisation
+                How to access private data and metadata
+                This jupyter notebook complements with some python examples what described in the ESO Programmatic Authentication & Authorisation documentation page.
+
+                Notebook uses IVOA protocols to query ESO archives and download data to the notebook.
+
+
+        Summary:
+
+            Select raw data from ESO raw or processed archives.
+                Using ESO interface or IVOA tools.
+                Using existing ESO interface implies it can transfer selected data to ESAP shopping basket ?
+                Using remake of ESO interface in ESAP?
+                Using IVOA tools requires the full set of protocols, including DataLink.
+
+            Stage Tbytes of selected data to make it made available for processing
+                Unless we move the data, this implies pointing to storage in ESO.
+
+            Store Tbytes of generated results from the processing.
+                Unless we move the data, this implies pointing to storage in ESO.
+                Abstract interface for data storage ?
+
+            ESO Reflex
+                Assume the plan to execute workflow on a remote compute platform.
+                Does ESO provide the platform or is is EOSC resources.
+                    Is it generic or specialist compute required ?
+                Does the Reflex workflow manager run locally or remotely?
+
+        Software:
+
+            ESO Reflex
+            https://www.eso.org/sci/software/esoreflex/
+            https://ftp.eso.org/pub/dfs/reflex/EsoReflexUserManual-3.9.pdf
+
+                The ESO Recipe Flexible Execution Workbench (Reflex) is an environment which allows an easy and flexible
+                way to execute VLT pipelines. It is built using the Kepler workflow engine (https://kepler-project.org), which
+                itself makes use of the Ptolemy II framework (http://ptolemy.eecs.berkeley.edu/ptolemyII).
+                The Kepler project has thorough documentation both for the casual and experienced user (https://kepler-
+                project.org/users/documentation).
+                Reflex allows the user to process his scientific data in the following steps:
+                - Associate scientific files with required calibrations
+                - Choose datasets to be processed
+                - Execute several pipeline recipes
+                This process, also called a workflow in Kepler terminology, is visually represented as a sequence of
+                interconnected boxes (actors) that process data: the workflow allows the user to follow the data reduction
+                process, possibly interacting with it. The user can visualize the data association and the input files and decide
+                what scientific data he wants to process. It is also possible to visualize intermediate products, using
+                components provided by Reflex, or modify the data flow with custom components.
+                Reflex uses EsoRex (http://www.eso.org/sci/data-processing/software/pipelines) to execute the pipeline
+                recipes, but this is not exposed to the user.
+
+            Kepler workflow engine
+            https://kepler-project.org
+            https://kepler-project.org/users/documentation
+
+                Kepler provides a graphical user interface and a run­-time engine that can execute workflows either from within the graphical interface or from a command line.
+                Kepler workflows can be nested, allowing com­plex tasks to be composed from simpler components, and enabling workflow designers to build re-usable, modular sub-workflows that can be saved and used for many differ­ent applications.
+                Kepler workflows can leverage the compu­tational power of grid technologies (e.g., Globus, SRB, Web and Soaplab Services), as well as take advantage of Kepler’s native support for parallel processing.
+
+            Ptolemy II framework
+            http://ptolemy.eecs.berkeley.edu/ptolemyII
+
+                Ptolemy II [1][6] is an open-source software framework supporting experimentation with actor-oriented design.
+                Actors are software components that execute concurrently and communicate through messages sent via interconnected ports.
+                A model is a hierarchical interconnection of actors.
+                In Ptolemy II, the semantics of a model is not determined by the framework, but rather by a software component in the model called a director, which implements a model of computation.
+
+
+
+    ESFRI: EST
+    https://project.escape2020.de/projects/esfri-est
+
+        No use cases
+
+    ESFRI: FAIR
+    https://project.escape2020.de/projects/esfri-fair
+
+        3 Software products
+
+            Software: FairRoot
+            https://project.escape2020.de/issues/40
+            https://github.com/FairRootGroup/FairRoot
+
+                A simulation, reconstruction and analysis framework that is based on the ROOT system.
+
+            Software: FairMQ
+            https://project.escape2020.de/issues/39
+            https://github.com/FairRootGroup/FairMQ
+
+                C++ Message Queuing Library and Framework
+                FairMQ is designed to help implementing large-scale data processing workflows needed in
+                next-generation Particle Physics experiments.
+
+            Software: DDS
+            https://project.escape2020.de/issues/38
+            https://github.com/FairRootGroup/DDS
+
+                DDS - is a tool-set that automates and significantly simplifies a deployment of user defined
+                processes and their dependencies on any resource management system using a given topology.
+
+                http://dds.gsi.de/documentation.html
+                http://dds.gsi.de/doc/nightly/install.html
+                http://dds.gsi.de/doc/nightly/quick-start.html
+
+    ESFRI: HL-LHC
+    https://project.escape2020.de/projects/esfri-hl-lhc
+
+        6 use cases
+        https://project.escape2020.de/projects/esfri-hl-lhc/issues?set_filter=1&tracker_id=7
+
+            No requirements for ESAP.
+
+        Use case ATLAS: ATLAS001
+        https://project.escape2020.de/issues/114
+
+            ATLAS open data replication, augmentation, bookkeeping and validation
+            A series of exercises (data production, replication and documentation) before and during the DAC the next November 2021.
+            They include the creation of datasets for real-kind final user analysis examples using current open access resources at http://opendata.atlas.cern/
+
+        Use case ATLAS: ATLAS002
+        https://project.escape2020.de/issues/115
+
+            ATLAS user analysis pipeline tests on experimental particle physics using augmented open data (source codes http://opendata.atlas.cern/software/)
+            The ability to run user final data analysis using datasets hosted in the datalake.
+
+        CMS 001: end to end user data analysis
+        https://project.escape2020.de/issues/116
+
+            Demonstrate a typical end to end interactive analysis on NanoAOD at CMS reading from datalake and storing back results.
+            Requirements for this use case are the availability of Input dataset from opendata, if possible with embargoed CMS data
+            Things to test IAM token storage authN, different input QoS
+            Impact Demonstrate the capability to integrate CMS analysis facilities with the ESCAPE data-lake
+            Contact "Diego Ciangottini: diego.ciangottini@pg.infn.it"
+
+        CMS 002: Running CMS analysis on a HTCondor batch IAM authenticated.
+        https://project.escape2020.de/issues/117
+
+            The objective of the use case is to demonstrate the capability to access data from ESCAPE Data-lake through CMS analysis jobs running on a HTCondor cluster and using IAM token for the whole chai of authN.Z.
+            Requirements are data accessible via IAM Token, even better if "embargoed"
+            Success A user submit a job to an HTCondor cluster authenticating via IAM token and then ask for the delegation of its identity/capabilities to the jobs, that, in turn, make use of the access_token provided to read data from the lake
+            Components: IAM token authN/Z for both HTCondor and RSEs
+            Contact "Diego Ciangottini: diego.ciangottini@pg.infn.it"
+
+
+        CMS 004: Accessing CMS data via caching layer
+        https://project.escape2020.de/issues/118
+
+            Access to data through a dedicated XCache instance during exercises CMS001,002,005
+            Requirements XCache instance at CNAF
+            Success CMS001,002,005 succeed with input data from cache
+            Specific component: XCache
+            Contact: "Diego Ciangottini: diego.ciangotti@pg.infn.it"
+
+        CMS 005: Exploiting Opportunistic HPC runing CMS workflow accessing data via caching layer
+        https://project.escape2020.de/issues/119
+
+            Running CMS workflows manage via Workload managemnt of CMS over Opportunisitc HPC. This is proved over CINECA resoures
+            Requirements same as CMS001
+            Contact "Diego Ciangottini: diego.ciangottini@pg.infn.it"
+
+
+    ESFRI: JIVE
+    https://project.escape2020.de/projects/esfri-jive
+
+        No use cases
+
+    ESFRI: KM3NeT
+    https://project.escape2020.de/projects/esfri-2
+
+        3 Products
+        https://project.escape2020.de/projects/esfri-2/issues?set_filter=1&tracker_id=5
+
+            Dataset: One week of KM3NeT ORCA4
+            https://project.escape2020.de/issues/80
+
+                This is the test data set from the deployment phase of KM3NeT, taken with a 4-line detector (ORCA)
+
+            Dataset: One week of ORCA
+            https://project.escape2020.de/issues/21
+
+                 Provide as full data set in KM3NeT portal
+
+            Software: KM3Py
+            https://project.escape2020.de/issues/23
+
+                Software used to access and handle KM3NeT data in python
+
+            Discussion: Use of Rucio for KM3NeT multisite data management
+            https://project.escape2020.de/issues/82
+
+                In KM3NeT, a data management system will be introduced to manage the full-scale detector data processing across multiple HPCs starting from Data level 2.
+                Rucio will serve as test candidate, and contribution to DIOS as prove of concept for implementation.
+
+        2 use cases
+        https://project.escape2020.de/projects/esfri-2/issues?set_filter=1&tracker_id=7
+
+            KM3NeT data releases
+            https://project.escape2020.de/issues/78
+
+                The scientist can find and read KM3NeT event data through ESAP and perform analyses on public data sets.
+
+                Use Cases of KM3NeT to ESCAPE
+                https://cloud.escape2020.de/index.php/s/rO5P3rq5aJeTAby
+
+    ESFRI: LOFAR
+    https://project.escape2020.de/projects/esfri-lofar
+
+        3 use cases
+        https://project.escape2020.de/projects/esfri-lofar/issues?set_filter=1&tracker_id=7
+
+            LOFAR001: Ingestion and replication
+            https://project.escape2020.de/issues/93
+
+                Ingestion of LOFAR data from a remote site (non-deterministic RSE) to the data lake,
+                transfer and replication in off-site RSEs and after successful replication the data
+                at origin can be deleted.
+
+            LOFAR002: Data Processing
+            https://project.escape2020.de/issues/94
+
+                The ability to process data that is in the data lake at an external location.
+
+                * Upload data (prep)
+                * Create data relations (calib, tgt, obs package)
+                * Download obs package and make image
+                * Upload image to Datalake
+                * Use ESAP to query the Data lake for the image
+                * Query the VO using ESAP for VO image in the same place
+                * Download both in the DLaaS
+                * Create combined image using DLaaS
+                * Upload combined data product in the DataLake with DLaaS
+
+
+            LOFAR003: Integration of the existing LTA in the datalake
+            https://project.escape2020.de/issues/95
+
+                Linking a currently existing system to the data lake as data input source (i.e. read-only RSE).
+                This could for instance be because a legacy archive which already exists, or that there are policy
+                reasons to not fully manage the data source by Rucio.
+
+    ESFRI: LSST
+    https://project.escape2020.de/projects/esfri-lsst
+
+        No use cases
+
+    ESFRI: SKA
+    https://project.escape2020.de/projects/esfri-ska
+
+        11 products
+        https://project.escape2020.de/projects/esfri-ska/issues?set_filter=1&tracker_id=5
+
+            Product #17
+            Data Ingest into SKA rucio
+            https://project.escape2020.de/issues/17
+
+                Data registered on non deterministic RSE, parametric collection level rules made to replicate to other sites based on QoS.
+
+            Product #18
+            Stress test the long haul links with small file size, capture throughput
+            https://project.escape2020.de/issues/18
+
+                Stress test the long haul links with small file size, capture throughput
+
+            ....
+
+        3 use cases
+        https://project.escape2020.de/projects/esfri-ska/issues?set_filter=1&tracker_id=7
+
+            Use Case #16
+            SKA Global Data Lake PoC for Astronomy-scale Data Products
+            https://project.escape2020.de/issues/16
+
+                Data management (SKA-own rucio), built on ESCAPE partner storage sites and using CERN FTS
+                - important for SKA to test long-haul (inter-continental) links, to understand how rucio data
+                management can fit SKA's use case for getting data into the SKA Regional Centres, and for
+                managing replicas between data centres.
+
+                SKAO DAC21 plans
+                https://docs.google.com/document/d/1H255SitHzE8k4DLCWBmu8dosxAev0Vq9Sm0GzzK2Pg8/edit#
+
+            Use Case #85
+            JHub Notebook access to Data Lake data products
+            https://project.escape2020.de/issues/85
+
+                Get new (simulated, or real) data, stored in Data Lake and accessible from a notebook interface, with single-sign-on for all systems (IAM).
+                SKA would be very interested to see the demonstration of data upload into rucio and visible to astronomer-user using ESAP with credentials according to IAM.
+                Requires ESAP/rucio integration (not required for DAC21)
+
+                Important cross-WP use case.
+                https://docs.google.com/document/d/1xofZ0-UdPbSA-tlM9X9q1Bm0h2K683YxNbTp0s40MOc/edit#heading=h.nxunofgr9cki
+
+
+            Use Case #86
+            Data product replica prepared for compute on request, interactive session started
+            https://project.escape2020.de/issues/86
+
+                Aim: Data found in Data Lake, transferred to compute site and access given to user via ESAP
+                SKA have delivered to WP3 OSSR a containerised workflow that takes simulated SKA data (images)
+                and undertakes source detection and machine-learning classification.
+
+                A good testing use case related to this would be to integrate this into the ESAP and prove that
+                the workflow can be run at alternative, on-demand, interactive, compute resources.
+
+                Ideally we'd want to test a user being given compute access at a site that does not already have
+                the data (but that does have a rucio RSE configured), triggering a rucio-managed(?) data transfer
+                to that site and allowing user to go via the ESAP and start their JupyterHub session.
+
+                Data Products are already stored in the ESCAPE data lake, workflows are already in the OSSR.
+
+                Probably requires further ESAP/rucio integration. Not likely in time for DAC21?
+
+
+    External partners
+    https://project.escape2020.de/projects/external-partners
+
+        1 product
+
+        Product #41
+        R3B experiment in Nustar
+        https://project.escape2020.de/issues/41
+
+            The R3BRoot software is based on the FairRoot framework and can be used to perform Monte Carlo simulations
+            and experimental data analysis of the R3B (Reactions with Relativistic Radioactive Beams) nuclear physics
+            experiments at the FAIR research center (Facility for Antiproton and Ion Research).
+
+            R3BRoot
+            https://github.com/R3BRootGroup/R3BRoot/wiki
+
+                R3BRoot is the software framework based on FairRoot, created for simulations and data analysis of R3B experiments.
+
+
+
+    WP6 ECO
+    https://project.escape2020.de/projects/wp6-eco
+
+        12 products
+        2 discussions
+        4 use cases

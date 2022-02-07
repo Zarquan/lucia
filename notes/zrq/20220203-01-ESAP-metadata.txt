@@ -1,0 +1,64 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+# -------------------------------------------------------------------------------
+
+    We can direct MyBinder to specific directories and notebopoks using 'urlpath'
+
+    * https://mybinder.org/v2/gh/norvig/pytudes/HEAD?urlpath=lab/tree/ipynb
+    * https://mybinder.org/v2/gh/norvig/pytudes/HEAD?urlpath=lab/tree/ipynb/Advent%202017.ipynb
+
+    More info on passing params to Binder
+    https://mybinder.readthedocs.io/en/latest/examples/sample_repos.html#create-a-binder-link-that-points-to-jupyterlab
+
+    Interesting test would be two directories in the same repo each containing a ipynb notebook and a requirements.txt config file.
+    Does Binder only use the local requirements.txt, or would it also get the requirements.txt from a top level directory ?
+    Test and document ....
+
+# -------------------------------------------------------------------------------
+
+    Installing and experimenting with Portainer ..
+
+    Portainer UI design doesn't allow us to use URLs as URLs !!
+    The user interface is broken by design.
+    https://github.com/portainer/portainer/issues/724
+    https://github.com/portainer/portainer/issues/613
+
+    They are putting everything in the fragment part of the URL.
+
+    endpoint    https://localhost:9443/
+    fragment    #!/2/docker/containers/096c5d4f34b75ed704a2658a17f7e0e04fac2f4adbaeeacd03c42348b1d81231
+
+    Broken by design.
+
+
+
+
+
+
+
