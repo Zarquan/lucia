@@ -1,0 +1,214 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    ESAP Batch Processing Use Cases
+    https://indico.in2p3.fr/event/26173/
+    https://yopad.eu/p/ESAP_batch_processing
+
+
+    CTA
+    https://indico.in2p3.fr/event/26173/contributions/105862/attachments/68735/96732/CTA-Batch-UseCases-v2.pdf
+
+        Master use case doc for CTA:
+        https://docs.google.com/document/d/1HRd jzw2lro CB2 GyfytVYgnErsYd6J8RqvVGG50X8
+
+        Generation of Instrument Response Function
+
+            User input of parameters (custom web form)
+                Webform includes validation steps
+
+            Search for compute resources
+                Specific software requirements
+                Specific user permissions
+
+            Job submission via WLMS (e.g. DIRAC)
+                Gareth's demo on how to do this ..
+
+            Job monitoring
+
+            Validation of simulated IRF
+                Is this part of the workflow ?
+                Could this be implemented using a separate task.
+
+            Save simulated IRF in the DataLake
+                Is this part of the workflow ?
+                Could this be implemented using a separate task.
+
+        CONCORDIA
+
+            User navigates to the ESAP
+            User logs in and recognised as an ESCAPE & CTA/KM3NeT member (EGI DIRAC)
+            Navigate to CONCORDIA page / batch page on ESAP
+
+            They are able to configure a container
+                If the container exists it is selected
+                If not it is created
+            The job is then submitted to EGI using DIRAC
+            The job can be monitored
+            Results and logs can be accessed/downloaded
+
+        CORSIKA
+
+            https://gitlab.in2p3.fr/escape-corsika/demo-containers-for-corsika
+            Demo containers for CORSIKA simulations
+
+
+        Gareth
+            There is a group in WP3 that are building and submitting containers to an EGI compute facility using DIRAC.
+            It is called CONCORDIA.
+            Not sure the best place to read up about this but here is the last WP3 status day, it is task 3.3 https://indico.in2p3.fr/event/24857/
+            Here is one of their gitlabs: https://gitlab.in2p3.fr/escape-corsika/demo-containers-for-corsika/
+            They are also working on a webgui to select the parameters for what goes into the container and send it.
+
+            For my part I am creating a container/environment where I have DIRAC and the ESAP backend running and then
+            just following the python API examples:
+            https://dirac.readthedocs.io/en/latest/UserGuide/Tutorials/JobManagementAdvanced/index.html
+            So in my case the job was just a script.
+            At the moment I am trying to figure out how to do the authorization.
+            DIRAC requires x509. Trying to figure out what that means for ESAP.
+
+
+
+    KM3NeT
+
+        Thinking a lot about batch use cases, but have not yet defined a clear vision for how it relates to ESAP.
+        Looking for high-volume data processing of data direct from the detectors; output is small volume.
+
+        Investigating nextflow as a workflow description language; looking into DIRAC.
+        Rucio for file management and distirbution.
+
+        Most logical home for ESAP is for interactive analysis rather than batch processing.
+
+        Software installed through containerization at Lyon (CCIN2P3).
+        Parameters are global across processing campaigns; not clear that ESAP really has a role here.
+        Potential for additional batch processing of high-level data, which may be very applicable to ESAP; these are not yet well defined.
+
+        Is batch processing for full data release workflows in/out of scope?
+        — not necessarily
+        — if this is really what everybody wants
+        — but seems unlikely to be something that we could take on in the remaining time in ESCAPE.
+        Could consider this sort of infrastructure for future extensions of the ESCAPE project.
+
+        NextFlow
+        https://www.nextflow.io/index.html
+        https://github.com/nextflow-io
+
+
+    AMIGA/SKA
+
+        Current HCG16 workflow uses udocker.
+        Means it can't be run inside a container, so we need to launch a VM to run it in.
+
+        Susana is interested in launching VMs from ESAP using the EGI FedCloud
+        https://github.com/tdviet/fedcloudclient
+
+        HCG16 is still their main example.
+        Susana:
+            In HCG16 we can find 3 kind of data processing that are common with other SKA pathfinders:
+            1) data preparation using tools like CASA
+            2) data analysis using notebooks
+            3) data visualisation with tools like SlicerAstro
+
+            When we took the decision of creating a workflow (based on CGAT) in which each step of the
+            processing is done in a container, we thought this will facilitate the reusability of the wf,
+            but the thing is that this part of the processing is highly coupled with the data and very
+            unlikely someone else might want to re-use it.
+            in any case I also find very interesting this idea of launching VMs from ESAP
+
+
+    EGI FedCloud
+
+        Requested access to use generic cloud compute using EGI FedCloud.
+        https://marketplace.egi.eu/31-cloud-compute
+
+        Requested access to use cloud container compute
+        https://marketplace.egi.eu/33-cloud-container-compute
+
+        FedClod client
+        https://github.com/tdviet/fedcloudclient
+
+            Wraps/extends the Openstack client.
+
+
+    EGI DIRAC
+
+        Requested access to use EGI DIRAC.
+        https://docs.egi.eu/users/workload-manager/
+
+
+        Virtual DIRAC Users’ Workshop – May 11 th , 2021
+        https://indico.cern.ch/event/852597/timetable/?view=standard
+
+        DIRAC/Rucio
+        https://indico.cern.ch/event/852597/contributions/4331719/attachments/2240931/3801098/2021-05-10%20-%20Rucio-DIRAC%20Integration%20at%20Belle%20II.pdf
+            Integration Rucio client into DIRAC compute
+
+        EGI and FG DIRAC services
+        https://indico.cern.ch/event/852597/contributions/4330558/attachments/2242337/3802370/2021%20Virtual%20DIRAC%20Users%20Workshop%20-%20Marchetti.pdf
+            EGI-ACE delivers the Compute platform in EOSC
+            EGI Workload Manager
+
+        DIRAC user guide
+        https://dirac.readthedocs.io/en/latest/
+        https://dirac.readthedocs.io/en/latest/UserGuide/index.html
+
+
+        SLURM.py is a DIRAC independent class representing SLURM batch system.
+        https://dirac.readthedocs.io/en/latest/CodeDocumentation/Resources/Computing/BatchSystems/SLURM.html
+
+
+        Advanced Job Management
+        https://dirac.readthedocs.io/en/latest/UserGuide/Tutorials/JobManagementAdvanced/index.html
+
+            Parametric Job - JDL
+
+                Executable = "testJob.sh";
+                JobName = "%n_parametric";
+                Arguments = "%s";
+                Parameters = {"first","second","third","fourth","fifth"};
+                StdOutput = "StdOut_%s";
+                StdError = "StdErr_%s";
+                InputSandbox = {"testJob.sh"};
+                OutputSandbox = {"StdOut_%s","StdErr_%s"};
+
+            Assuming that running containers involves shell scrtipt to invoke Docker manually ?
+
+
+
+
+https://indico.in2p3.fr/event/26173/contributions/105863/attachments/68737/96731/WP5%20batch%20processing%20-%20KM3NeT%20Use%20Cases%20-%20Feb%202022.pdf
+
+/home/Zarquan/Documents/Zoom/2022-02-09 13.34.30 ESAP Batch Processing Use Cases 81845907000
+
+
+https://yopad.eu/p/ESAP_batch_processing
+
+Taxonomy of Software (John Swinbank)
+https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Software-Execution/Taxonomy-of-Software
+

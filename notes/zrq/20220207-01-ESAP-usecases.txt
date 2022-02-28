@@ -88,7 +88,7 @@ Summary of use cases
 
         Select Tbytes of data (passed by reference not value)
 
-        Needs a way to refer to data in *a* (not the) DataLake.
+        Needs a way to refer to data in a DataLake.
 
             rucio://eso.eu/domain/path ...
 

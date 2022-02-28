@@ -1,0 +1,114 @@
+*ESAP batch processing
+John - gareth has been working on CTA use cases, but not really covered by the rest of ESAP design meetings.
+Goal is not to design ESAP on the fly, more to give everyone the chance to say what they would like to see, descibe use cases, resolve uncertainties etc.
+
+Gareth - CTA use cases
+CTA has 3+1 use cases in document, transcribed to RedmIne issues
+I
+Master use case doc for CTA: https://docs.google.com/document/d/1HRd jzw2lro CB2 GyfytVYgnErsYd6J8RqvVGG50X8
+
+Gareth's presentation
+https://indico.in2p3.fr/event/26173/contributions/105862/attachments/68735/96727/CTA-Batch-UseCases-v1.pdf
+
+CTA needs:
+    
+    - Login/auth, including recognizing proiject affiliations and granting permissions on that basis.
+    - User input of parameters (including validation).
+    - Check for previous / duplicate simulation runs
+    - Locate compute resources
+    - Process data based on shopping basket, including mapping different basket entries to different job inputs
+    - Work with data in the data lake
+    - Submit job
+    - Access software already installed on batch systems or provide software or container
+    - Monitor job (maybe a user should also be able to save their jobid or query via their credentials) 
+    - Validate results
+    - Store to data lake.
+    
+CTA is particularly interested in DIRAC, but open to other workflow/batch systems
+
+Use case 12 is easily parallel. — each data file can be processed in parallel.
+Data size is not huge (for use case 12; some other use cases have “huge” or “very large” datasaets) - possible to do on a laptop ?
+
+How long do the workflows take? High level data — minutes. Lower level data — longer, not clear how much (hours to days).
+Keeping certificate 'live' is an issue for long running jobs.
+One advantage of RCAuth is that the certificate generated depends on the inputs. Therefore if a certificate expires it can be recreated by a use. (I think will check)
+
+Could imagine models where:
+    - Software is available on all nodes.
+    - WMS is responsible for distirbuting software to the compute systems.
+    - Looking into technologies like CVMFS for distributing software.
+Unclear how this model could relate to containers, etc.
+
+Questions for CTA:
+    Would it be possible to 'unlink' the user intarface form and the job. The UI collects input and writes a JSON file with the params. The JSON file is passed as a param to the job. Enables us to terat them as separate sthings.
+    I think this might be the way to go, but will need to do some work to check
+    Can we create some mock containers that 
+GH: My next step is to start playing with mock containers using a local version of ESAP
+
+
+KM3NeT:
+    
+    - Thinking a lot about batch use cases, but have not yet defined a clear vision for how it relates to ESAP.
+    - Looking for high-volume data processing of data direct from the detectors; output is small volume.
+    - Investigating nextflow as a workflow description language; looking into DIRAC.
+    - Rucio for file management and distirbution.
+    - Most logical home for ESAP is for interactive analysis rather than batch processing.
+    - Software installed through containerization at Lyon (CCIN2P3).
+    - Parameters are global across processing campaigns; not clear that ESAP really has a role here.
+    - Potential for additional batch processing of high-level data, which may be very applicable to ESAP; these are not yet well defined. 
+    
+    - Is batch processing for full data release workflows in/out of scope? — not necessarily — if this is really what everybody wants — but seems unlikely to be something that we could take on in the remaining time in ESCAPE. Could consider this sort of infrastructure for future extensions of the ESCAPE project.
+    
+    
+ FAIR
+    
+    - Started some batch jobs running Python scripts.
+    - Within each job, ran a container.
+    - Those jobs staged input data from the data lake to the local filesystem and mounted directories for software installation (via CVMFS)
+    - Processed data using ROOT (analysis/reconstruction).
+    - Staged data to the Rucio storage element at GSI.
+    - Batch system currently in use is SLURM.
+	 https://dirac.readthedocs.io/en/latest/CodeDocumentation/Resources/Computing/BatchSystems/BatchSystems_Module.html
+    - Would like to have an interface of the batch computing is ESAP — this would be an advantrage.
+    - Overall workflow is similar to that that was already presented by CTA.
+    
+SKA
+    
+    - A more speculative presentation; still defining how this might work.
+    - Don't yet have a clear distinction between IDA and batch processing in the SKA system.
+	    e.g. could just have Really Powerful IDA system!
+    - Focused on SRC (Regional Rentre) processing.
+    - Will not keep all visibility data
+    - LOFAR use cases (but not processing visibility data) will apply.
+    - Caution against the observatory defining processing /data models.
+    - Data sizes are very large, but tasks are very parallelizable.
+    - Observatory will run homogenous workflows to generate ODPs.
+    - Users will run heterogeneous workflows to generate complex data products.
+    - SKAO would be open to adapting SKA use cases to follow examples provided by other projects.
+    
+    
+Proposal from Dave: can we make a small set of containers which are effectively “no-ops” which we can use for experimenting? (as an automated test functionality)
+	Broadly: yes, makes sense.
+	
+	
+	
+	
+	
+Software management:
+	Distinguish between the workflow management system (DIRAC, etc) and the payload — the scripts that define what exactly will be executed.
+	
+	WMS: SLURM or DIRAC distribute the jobs and monitor their status.
+	
+	Does the user submit some Python code that calls the Slurm API to run the payload jobs, or does the user interact with the Slurm user interface,  either interactively, or by submitting a slurm-workflow ?
+	
+	
+	
+User goals: Jutta suggests focusing on a user who is not an expert, but who wants to apply a certain step in their workflow which is relevant to their sceince case. Encapsulate the complexity that the user doesn't have to care about.
+	
+User involvement in terms of parallelization: who defines how these jobs are parallelized?
+	
+	
+	Some ongoing notes on DIRAC and Rosetta functions:
+	https://docs.google.com/document/d/1_tuQKS-RnH_hXkEw2jVXPKjGf3PuhPKABA-mN1HrrtE
+	
+	
