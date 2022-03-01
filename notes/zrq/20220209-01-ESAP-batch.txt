@@ -141,7 +141,6 @@
             unlikely someone else might want to re-use it.
             in any case I also find very interesting this idea of launching VMs from ESAP
 
-
     EGI FedCloud
 
         Requested access to use generic cloud compute using EGI FedCloud.
@@ -211,4 +210,18 @@ https://yopad.eu/p/ESAP_batch_processing
 
 Taxonomy of Software (John Swinbank)
 https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Software-Execution/Taxonomy-of-Software
+
+
+
+    From Zoom chat on 28th Feb 2022
+    15:47:33 From Enrique Garcia To Everyone : Speaking about running workflows, I would like to underline the existence of REANA, for those that doesn’t know it 🙂 - maybe a project from where we could obtain some ideas
+    15:47:46 From Dave Morris To Everyone : link ?
+    15:48:23 From Enrique Garcia To Everyone : https://docs.reana.io/
+    15:48:47 From Enrique Garcia To Everyone : (it includes snake make, CWL support and other… :) )
+    15:51:00 From Manuel Parra (IAA-CSIC) To Everyone : https://snakemake.readthedocs.io/en/stable/
+    15:51:56 From James Collinson To Everyone : @Susana didn’t your workflow also make use of Dask for parallelisation or did I make that up!?
+
+    15:57:47 From Susana Sánchez (IAA-CSIC) To Everyone : @James I think DASK parallelisation is provided by a python module that we use in our workflow, but it is not something that we manage ourselves. But I am not familiarised with DASk so may be I am not understanding your question
+    16:01:34 From James Collinson To Everyone : Thanks Susana, sorry I just remembered I asked you about that on RocketChat a couple of weeks back. Not a prob, I was just trying to get my head around the different ways the HI-FRIENDS workflow can scale its parallelisation…
+
 

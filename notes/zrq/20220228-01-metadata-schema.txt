@@ -1,0 +1,186 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Create an initial data model and schema for the ExecutionPlanner.
+        Include formatting tools to convert this into a JSON-LD schema for ESAP/OSSR.
+
+    Result:
+
+        Work in progress.
+
+        CodeMeta JSON-LD context
+        https://codemeta.github.io/jsonld/
+        https://doi.org/10.5063/schema/codemeta-2.0
+
+            CodeMeta properties are built on and extend software properties from https://schema.org.
+            A list of all properties provided by the current CodeMeta context file can be found on the terms page.
+
+        JSON-LD - JSON for Linking Data
+        https://json-ld.org/
+
+        Convert XSD to JSON Schema
+        https://www.convertsimple.com/convert-xsd-to-json-schema/
+
+        JSON Schema generation
+        https://github.com/highsource/jsonix
+        https://github.com/highsource/jsonix-schema-compiler/wiki/JSON-Schema-Generation
+
+
+# -----------------------------------------------------
+# Create our local settings.
+#[user@desktop]
+
+    cat > "${HOME:?}/ivoa-epnote.env" << 'EOF'
+
+source "${HOME:?}/projects.env"
+EPNOTE_REPO='git@github.com:Zarquan/ExecutionPlannerNote.git'
+EPNOTE_HOME="${PROJECTS_ROOT:?}/IVOA/IVOA-ExecPlannerNote"
+EPNOTE_CODE="${EPNOTE_HOME:?}/github-zrq"
+
+EOF
+
+
+# -----------------------------------------------------
+# The repository has been re-named, so we need to create a new clone.
+# old 'git@github.com:Zarquan/IVOA-ExecutionPlannerNote.git'
+# new 'git@github.com:Zarquan/ExecutionPlannerNote.git'
+#[user@desktop]
+
+    source "${HOME:?}/ivoa-epnote.env"
+    pushd  "${EPNOTE_HOME:?}"
+
+        mv 'github-zrq' 'github-old'
+
+        git clone "${EPNOTE_REPO:?}" 'github-zrq'
+
+        git config --list
+
+    popd
+
+--START--
+user.name=########
+user.email=########
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=git@github.com:Zarquan/ExecutionPlannerNote.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+--END--
+
+
+# -----------------------------------------------------
+# Create a new branch.
+#[user@desktop]
+
+    branchname=metadata-schema
+
+    source "${HOME:?}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE:?}"
+
+        branchprev=$(git branch --show-current)
+        branchnext=$(date '+%Y%m%d')-zrq-${branchname:?}
+
+        git checkout main
+        git checkout -b "${branchnext:?}"
+
+        ....
+        ....
+        ....
+
+        git push --set-upstream 'origin' "$(git branch --show-current)"
+
+    popd
+
+
+--START--
+Switched to a new branch '20220228-zrq-metadata-schema'
+--END--
+
+
+# -----------------------------------------------------
+# Create our XML schema file ...
+#[user@desktop]
+
+    source "${HOME:?}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE:?}"
+
+        gedit schema/xml/executable.xsd
+
+            ....
+            ....
+            ....
+
+    popd
+
+
+
+# -----------------------------------------------------
+# Generate JSON schema from our XML schema ..
+#[user@desktop]
+
+    source "${HOME:?}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE:?}"
+
+        pushd schema/xml
+
+            # Needs Java08 because, broken things.
+            # https://github.com/highsource/jsonix-schema-compiler/issues/81
+
+            /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.292.b10-0.fc32.x86_64/jre/bin/java \
+                -jar "${HOME}/frog/jsonix/jsonix-schema-compiler-full-2.3.9.jar" \
+                -generateJsonSchema \
+                -d mappings \
+                executable.xsd
+
+    #
+    # OK, so we can generate JsonSchema from XMLSchema.
+    # Need to add the JSON-LD annotations for context.
+    # Probably a manual step.
+    #
+
+    #
+    # Need to check what schemas OSSR are ueing.
+    #
+
+    #
+    # Can we use these to auto-generate some Java classes.
+    # We might hate the auto-generated classes, but novices love them.
+    # Having them available will help to sell the idea to scripters.
+    #
+
+
+
+
+
+
+
