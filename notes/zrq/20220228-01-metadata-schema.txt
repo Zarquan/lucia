@@ -146,6 +146,7 @@ Switched to a new branch '20220228-zrq-metadata-schema'
 
 # -----------------------------------------------------
 # Generate JSON schema from our XML schema ..
+# https://github.com/highsource/jsonix-schema-compiler/
 #[user@desktop]
 
     source "${HOME:?}/ivoa-epnote.env"
@@ -159,6 +160,7 @@ Switched to a new branch '20220228-zrq-metadata-schema'
             /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.292.b10-0.fc32.x86_64/jre/bin/java \
                 -jar "${HOME}/frog/jsonix/jsonix-schema-compiler-full-2.3.9.jar" \
                 -generateJsonSchema \
+                -compact \
                 -d mappings \
                 executable.xsd
 
@@ -179,6 +181,19 @@ Switched to a new branch '20220228-zrq-metadata-schema'
     #
 
 
+
+    Need to replace hard coded reference to base schema.
+    Looks like the original developer passed away.
+    https://github.com/highsource/jsonix/issues/255
+    https://github.com/highsource/jsonix/issues/248
+
+    Active fork
+    https://github.com/logixboard/jsonix
+
+    The otiginal website is not active, but raw content still works
+    http://www.jsonix.org/jsonschemas/w3c/2001/XMLSchema.jsonschema
+    becomes
+    https://raw.githubusercontent.com/highsource/jsonix/master/nodejs/scripts/jsonschemas/w3c/2001/XMLSchema.jsonschema
 
 
 
