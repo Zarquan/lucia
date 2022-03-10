@@ -1,0 +1,130 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Two talks on IOVAO ExcePlanner coming up.
+
+    CEVO TechForum
+
+        ESAP use cases
+        ESAP data model for executable tasks
+        JSON schema to extend CodeMeta
+
+        Python class objects based on the same data model.
+        Python plugin API based on the same data model.
+
+        IVOA ExecPlanner
+        Where to do the calculations.
+        Some options
+
+            1) Custom code running in ESAP for each type of executable.
+               Quick easy to develop, but rapidly grows in complexity.
+
+            2) Plugin API running in ESAP for each type of executable.
+               Separates the task specific code from the main platform.
+
+            3) Webservice API to move the task specific code to the services
+               More complex to develop, interoperability benefits later.
+
+        Option (2) is the appropriate comprimise for ESAP.
+        We don't have enough developer time to go for option (3) yet.
+        However, using the same data model means transition from (2) to (3) is easier to do when we need to.
+
+        Option (1) is good at answering very simple questions.
+            - Can service run notebooks [yes|no]
+            - Does OSSR entry contain notebooks [yes|no]
+
+        No details of the complexity of the notebook.
+        Assumes a hello-world notebook with minimal compute requirements and no data requirements.
+            Binder service is limited ot 1G of memory.
+
+        The more detailed the requirements the more complex the question is to answer.
+        If we add basic details of the compute resources
+            cpu cores, memory and disc space
+
+        The decider needs to know how much each compute platform provides.
+        Possible with (1) and (2) by adding metadata to a central database, equivalent to the registry.
+
+        Adding data requirements adds another level of complexity.
+        The decider needs to understand 'logical' distance between compute platforms and data resources.
+
+        If the resources available depend on the user identity adds another level of complexity.
+        The decider needs to understand the access rules that map resources and users.
+
+        Question of trust ..
+
+            Will the platform providers be willing to trust a 3rd party authority to decide access permissions ?
+
+                "Our records indicate user <x> has permission to run <y> on your platform."
+
+                That power makes the central authority a very high value target.
+
+                NFS was developed by Sun Microsystems (Sun) in 1984
+                https://en.wikipedia.org/wiki/Network_File_System
+
+                When computers were large and expensive things, and only very senior system admins would have root access.
+
+                NFS fails badly when ordinary users have root access to virtual machines.
+                The server relies on the client to authenticate the user.
+                If you can spoof the uid on your local machine you can access other peoples data on the server.
+
+                Google "nfs uid spoofing"
+
+                    Linux Hacking Case Studies
+                    https://www.netspi.com/blog/technical/network-penetration-testing/linux-hacking-case-studies-part-2-nfs/
+
+            If not, then the platform providers will need to implement code to do the calculation.
+
+                In which case, why duplicate the code in the central portal?
+                To reach the same descision, the decider code and access rules needs to be identical.
+
+            Why not let the central portal delegate the decision to the platform provider.
+
+                Moving from (2) to (3) by gradually reducing the ESAP plugin to become a stub
+                for the remote webservice API calls.
+
+
+
+    IVOA interop
+
+        ExecPlanner
+            what it is
+            where we are
+
+        UWS and ExecPlanner ..
+
+            Deploy an Openstack system using Ansible ?
+
+            Create a Kubernetes cluster using Magnum
+
+            Deploy a Zeppelin+Spark science platform using Helm
+
+            Run PySpark code in a notebook
+
+
+
+

@@ -44,5 +44,6 @@
         Understanding JSON schema
         https://json-schema.org/understanding-json-schema/index.html
 
-
+        RegEx 101
+        https://regex101.com/
 
