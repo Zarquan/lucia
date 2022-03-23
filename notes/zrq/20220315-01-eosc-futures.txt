@@ -1,0 +1,80 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+# ----------------------------
+
+    EOSC Future WP3 Working Groups Proposal Compute Continuum
+    https://wiki.eoscfuture.eu/download/attachments/16875989/Compute%20Continuum%20WG-v2-final.pdf?version=1&modificationDate=1638181335653&api=v2
+
+    Architecture and Interoperability
+    https://wiki.eoscfuture.eu/display/PUBLIC/Architecture+and+Interoperability
+
+    Working Groups
+    https://wiki.eoscfuture.eu/display/PUBLIC/Working+Groups
+
+    Compute Continuum Working Group
+    https://wiki.eoscfuture.eu/display/PUBLIC/Compute+Continuum+Working+Group
+
+    EOSC Interoperability framework consultation
+    https://eoscfuture.eu/eventsfuture/eosc-interoperability-framework-consultation/
+    25th March 14:00-15:30 CET
+    registered
+
+# ----------------------------
+
+    Email from  Sarah Jones
+
+        We wish to invite you to take part in a consultation on the EOSC Interoperability Framework.
+        https://eosc-portal.eu/sites/default/files/EOSC%20Future-WP3-EOSC%20Architecture%20and%20Interoperability%20Framework-2021-12-22%5B17%5D%5B6%5D-2.pdf
+
+        A draft proposal has been developed by the EOSC Future project and made available for the community to comment on.
+        This builds on the previous work conducted by the EOSC Executive Board and focuses on implementation by specifying a governance process for accepting and using interoperability guidelines.
+
+        Enabling interoperability across resources and services is key in building an EOSC that is fit for purpose.
+        Many existing standards, schemas and APIs are already in use, and in the federated model, we propose to endorse these for adoption in EOSC where possible.
+        We will do so using a defined governance model that allows community standards to be proposed as EOSC Interoperability Guidelines.
+        It is therefore important to gain feedback from research communities and infrastructures to validate that the processes we propose for this are appropriate.
+
+        A webinar will be held on 25th March at 2pm CET in which the proposal will be outlined.
+        This will provide an overview to support your review of the document and allow you to ask questions for clarification and engage in discussion.
+        You can register at: https://eoscfuture.eu/eventsfuture/eosc-interoperability-framework-consultation
+
+        Following the webinar, you will be invited to respond to a short online survey.
+        This aims to understand the extent to which you agree with the concepts, definitions and governance process proposed.
+
+        It is critical that respondents to the survey have a good understanding of the approaches being proposed so we strongly encourage you to attend the webinar and review the document before replying to the survey
+
+        We look forward to receiving your inputs
+
+        All best
+
+        Sarah Jones
+        On behalf of the EOSC Future consortium
+
+

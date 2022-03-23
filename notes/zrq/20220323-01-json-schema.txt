@@ -1,0 +1,53 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Putting the whole thing into one big schema works.
+    Using $defs to define sub-schema works.
+
+    Using $id to explicitly et the identifiers for the schema and sub-schema works.
+
+    More than one $defs doesn't work.
+
+    We want to use several schemae to separate the functional blocks.
+
+    Initial ExecutableTask description that comes from OSSR.
+
+    ExecutableTask request that we fill in and send to CanIDoThis
+        includes lease request
+
+    ExecutableTask response that we get back from CanIDoThis
+        includes lease and offer details
+
+    The validator we are using requires everything in one schema.
+    We can have sub-schema, and we can name them using $id.
+    But the sub-schema can't cahe sub-sub schema.
+    These might all be artefacts of the validatornot the spec.
+    Need to find a better validator ?
+
+

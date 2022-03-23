@@ -1,0 +1,245 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+
+
+    20 slides = 20 min
+
+
+    the problem
+
+        heterogenoius mixture of types
+        executable tasks and compute platforms
+        many to many mapping
+
+            if the task is a simple OCI container
+            many different platforms are capable of running it
+            slightly different implementation for each
+
+            a generic cloud compute platform capable of running several different types of task
+
+            gets more complex if we add compute resources
+                task required x resources (cores, memory etc) platform has y resources available
+
+            gets more complex if we add persistent storage
+                not all platforms will be able to provide that
+                some tasks will rely on having it
+
+            gets more complex if we add data access
+                technically not able to support that access method
+                not all platforms will be able to acces the ESCAPE Rucio DataLake directly
+                not all tasks require it,
+                some tasks rely on it
+
+            gets more complex if we add user identity
+                available resources depend on who is asking
+                ESFRIs may provide more resources for members of their own groups
+                multi messenger use cases require cross platform data access
+                combining data from different platforms in different storage systems
+
+
+    simplest solution
+
+        simple case
+            a few basic task types
+            a few basic platforms types
+            limited options for storage, e.g. ephemeral only
+            limited options for data access e.g. ESCAPE DataLake only
+            no special cases for different users
+            everyone gets the same resources
+
+            functionality implemented in the core portal codebase
+
+            as we get more complex, we need to being in more and more metadata describing the platforms
+
+                what task types this platform supports
+                what resources this platform offers
+                what storage systems this platform has access to
+                what access controls this platform applies
+
+                each time it gets more and more complex
+                to provide the central portal with enough information
+                to make the descision
+
+            but ...
+
+                once the central portal decides that this task can be run on that platform
+                in order to send the task to the platform, we have to describe it in detail
+                and then the platform will need to decode all that and veify that this platform can run that task
+                before actually running it
+
+                IF we are going to have to make that decision at the platform anyway
+                we might as well delegate the initial discovery to the platform too
+
+                we don't need to pull the metadata about all the different platforms to the central system,
+                the central system doesn't need to understand the individual platforms
+                it just asks
+                "can I do this"
+
+    the solution
+
+        pragmatic solution for ESAP
+        using an external IVOA service will take too long to develop
+
+        using Python plugin API to gradually move the code away from the core
+        Python clsses based on the same data model
+        enabling gradual transition from core toplugin to remote
+
+        first case, simple solution implemented as code in the portal core
+        second case, move the code into a plugin for each type of platform
+        helps manage the complexity as we add new types of platform
+        Python API:
+            response = platform.canIDoThis(request)
+        Python classes for request and response
+
+        based on the same data model
+        so some early plugins can implement the code as a library
+        later plugins can wrap a webservice call with the same API
+
+            response = local_platform.canIDoThis(request)
+
+                decision made locally in the pluin code
+
+            response = remote_platform.canIDoThis(request)
+
+                plugin wraps a webservice call to a remote EP service
+
+        If we incorporate the same data model into the IVOA EP service,
+        then we can we can provide a Python plugin to access external IVOA services
+
+            EP services can be registered in the registry
+            plugin polls the available services with the same request
+
+            ESAP can send tasks to remote compute platfoerms without needing additional code
+
+            => interoperable execution compute services
+
+    our progress
+
+        developing a data model to describe an executable task
+
+            based on working through the documented use cases for ESCAPE
+            plus knowlegde of our own use cases in other projects
+
+            data model mapped into JSON schema to extend Codemeta SON stored in OSSR
+
+            simple notebook tasks
+            simple contaner tasks
+
+            complex workflow services
+                different workflow description languages
+
+            all basically come down to
+
+                executable-task: {
+                    type: anyURI,
+                    name: string,
+                    data-resources: {}
+                    compute-resources: {}
+                    storage-resources: {}
+                    content:
+                        {
+                        task specific content, e.g. reference to the notebook code, container image etc.
+                        }
+                    }
+
+            common parts
+
+                compute resources
+                    list of compute resources
+                    cores and memory
+                    links to storage
+                    links to data
+
+                storage resources
+                    storage within the platform
+                    ephemeral and persistent
+
+                data resources
+                    external data
+                    read and write
+
+        not all the metadata is available at the start of the process
+        the data model is completed as part of an interactive process with the user
+
+        select the software in OSSR
+        fetch the metadata file (codemeta+)
+            list of executables for that OSSR entry
+                different ways of executing the software
+                e.g. two notebooks and an OCI container
+                    each one includes human readable descriotion of what it does
+
+                select the executable you want to use
+                    load the rest of the metadata from the OSSR metadata file
+                    this will include the minimal metadata e.g. task type and content
+                    this may also include things like required resources
+
+                    user is given the option to change the required resources
+                    e.g. the executable is a simple example notebook with small data
+                    I know I'm going to modify the code to use large data
+                    so I can double the memory requirements before I send it
+
+                    portal polls the available platforms to see which ones can run this executable
+                    some migh not support that task type
+                    some might not be able to peovide the requested resources
+                    we end up with a list of the platforms we can use
+
+                    In response, each platform fills in a bit more of the data model.
+                    e.g. My reqiest is for a minimum of 8G memory, the platform can offer a maximum of 16G in it's reply.
+
+                    For an Openstack system, the platform will have small, medium and large sizes of virtual machine.
+                    Each with a specific value for the cores, memory and storage.
+
+                    The user can then see what each platform offered and choose the one they want to use.
+
+                    The portal then sends the final version to the pltform for execution.
+
+                    In almost all cases, the platform will process the request using the same code
+                    to figure out how to execute the request.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            learning Modelo
+            initial version based on XML schema and JSON schema
+
+
+

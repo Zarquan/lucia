@@ -84,18 +84,16 @@ EOF
 
     popd
 
---START--
-user.name=########
-user.email=########
-core.repositoryformatversion=0
-core.filemode=true
-core.bare=false
-core.logallrefupdates=true
-remote.origin.url=git@github.com:Zarquan/ExecutionPlannerNote.git
-remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
-branch.main.remote=origin
-branch.main.merge=refs/heads/main
---END--
+    >   user.name=########
+    >   user.email=########
+    >   core.repositoryformatversion=0
+    >   core.filemode=true
+    >   core.bare=false
+    >   core.logallrefupdates=true
+    >   remote.origin.url=git@github.com:Zarquan/ExecutionPlannerNote.git
+    >   remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+    >   branch.main.remote=origin
+    >   branch.main.merge=refs/heads/main
 
 
 # -----------------------------------------------------
@@ -122,9 +120,7 @@ branch.main.merge=refs/heads/main
     popd
 
 
---START--
-Switched to a new branch '20220228-zrq-metadata-schema'
---END--
+    >   Switched to a new branch '20220228-zrq-metadata-schema'
 
 
 # -----------------------------------------------------

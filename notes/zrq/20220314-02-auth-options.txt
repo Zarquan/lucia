@@ -1,0 +1,164 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Notes and thoughts about Stefano's talk on auth options for ESAP.
+
+# -----------------------------------------------------
+
+    YoPad notes from Stefano's talk, notes written by Dave
+
+        ESAP Auth options for storage access.
+
+        Stefano's slides:
+        https://docs.google.com/presentation/d/e/2PACX-1vSeuOB0rFbe2jy3eKM1EuX6z4h89VVs5uHOzwRAWpBrrbindyydBfmg2hqMelBgIUggPC9SMox4lkn4/pub
+
+        What is data ?
+        Stefano : Working assumption, "data is one or more files somewhere".
+
+        Ian: Reason for not choosing 4 over 2 is tracebility of who did what. Need some kind of logging on the server side to trace who did what.
+        Stefano : In both 3 and 4 platform can still provide asomething to say who the users is. In all cases, when data is sent to the task, we always rely on the task to control what happens to the data. We have to trust the platform because the platform can send user x data to user y.
+
+        Matthias : The external token for case 3 is from IAM ? In 3 the storage can verify the user credentials, why can't we apply the same checks in the platform.
+        Stefano Once the data is sent to the task, we have to trust the task what it does with it. With 3 and 4, it is possible for  the platform to send the wrong data to the wrong task. In this regard, 1 is always the safest form, because the task has to identity itself.
+
+        Pierre: Use case is access to data owned by the user, which has been solved by OATH2. Where does this fit in the options ?
+        Stefano : Yes, OATH2 is equivalent to option (3).
+
+        John: Always assumed we are in option (1).  If I were a storage provider I would be nervous about options (2), (3) and (4). Is there a way we can acheive this using some kind of wrapper.
+
+        Ian: Part of the problem with (1) is the integration of different platforms and storage services.  With many cloud compute in distributed environment, and things like Rucio, the data access is hidden from you by thingslike (2), (3) and (4).
+        Ian : A task accessing th DataLake, access is mediated using tokens issued by IAM, equivalent to (2) or (3). Many platforms do this now using certificates and are moving to tokens.
+        Ian: reason for this is storage platforms wanted to see the identity of the user (e.g. certificate).
+
+        Problem with 2 is that the user gives the platform their certificate or token. So the platform can impersonate that user and do other things.
+
+        Ian: In delegated certificates means only the user's data is at risk, because actions are linked to their certificate. The storage system itself is not at risk.
+
+        Hugh: ESAP is currently option(1). Problem is how to make (1) less clunky. Copying token into a notebook is clunky. Work in progress to put the token into user environment ? Current state of the art is that we have a mixture of x509 and tokens for different storage systems.
+
+        Ian: Goal is to replace x509 completly. Reason is entirely historical. Issue is several storage platforms haven't completed the work yet.
+
+        Hugh: If IAM is the identity provider, it is separate.
+
+        Gareth: In work package 2 RES are being chased to make sure they accespt tokens rather than certificates. Dirac currently only accepts certificates.  Wor around is  to accept certificates from RCAuth project. Goal is that everything will accept tokens.
+
+        Matthias : User belong to groups, e.g. cta-users During the lifetime of the project a user might jion and leave different groups. Same user, different groups over time. Confirmation does this always work in all of these options ?
+        Stefano Yes. If you do use authentication you are always free to do this kind of mapping.
+        In (1) and (2) the storage has to handle the mappings.
+
+        Matthias : Group membership is external to this.
+
+        Hugh: The plan (for ESCAPE) was for IAM to mange the group assignments.
+
+# -----------------------------------------------------
+
+    Personal thoughts ..
+
+    Option(4) is a non-starter.
+    It works for a small single domain case, where all the users belong to the same institute which also owns all the storage and copmpute facilities.
+    Basically NFS from 1980's all over again.
+    Not scaleable in any sense.
+
+    Option(1) is how the IVOA works.
+
+    Option(2) is how the IVOA works using *delegated* credentials.
+
+    The description is somewhat disingenuous, because it doesn't distinguish between the user's primary credentials
+    (upload your cert here) or a delegated time limited credential.
+
+    Missing are details of where the credentials come from.
+    It does not distinguish between a static upload of a user's credentials and an active delegation process.
+    It is true, the delegation process does mean that for the duration of the task the platform has to have access to the user's credentials in order to act on their behalf.
+
+    We need to have a similar explanation of the difference between an x509 credentials and the JSWT tokens provided by OAUTH.
+    My suspicion is they are very similar.
+    The JSWT tokens delegate authority to perform actions on behalf of the user, including creating new JSWT tokens.
+    For the duration of the task the platform can perform actions on behalf of the user.
+    Not much different to x509 ?
+    Just the root signing authority is different.
+
+    Option (3) is missing some detail.
+    It isn't clear where the 'user token' comes from.
+    If the platform is able to generate the user token without requiring access to the user identity, then this is basically option (4).
+    The user token is issued by the platform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

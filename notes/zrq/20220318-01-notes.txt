@@ -1,0 +1,67 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+IVOA metadata guide
+https://mail.metagrid.co.uk/?_task=mail&_action=show&_uid=107355
+https://mail.metagrid.co.uk/?_task=mail&_action=show&_uid=107317
+
+
+Subject: [rt #1140871] Request access
+https://mail.metagrid.co.uk/?_task=mail&_action=show&_uid=109127
+
+    first we need an entry in the central person database (IAM) ...
+    ....
+    ....
+
+Subject: [rt #1140871] Request access
+https://mail.metagrid.co.uk/?_task=mail&_action=show&_uid=109127
+
+    Hi Sara, Dave,
+    Please let Aleem and myself know if you have any problems with this step.
+    Cheers,
+    Paul.
+
+Subject: [rt #1140871] Request access
+https://mail.metagrid.co.uk/?_task=mail&_action=show&_uid=109466
+
+    ....
+    ....
+
+    DESY (like many other institutes) has its own IAM service.  The DESY IAM
+    service does not use INDIGO-IAM (it's more sophisticated), and so is
+    *completely* independent from ESCAPE INDIGO-IAM instance.
+
+    So, I wouldn't worry about this.
+
+    Please contact the DESY IT secretary requesting that they create the
+    appropriate entry for you (and for Dave?).
+
+
+
+
