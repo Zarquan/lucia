@@ -50,4 +50,21 @@
     These might all be artefacts of the validatornot the spec.
     Need to find a better validator ?
 
+# ----------------------------------------------------------------
+
+    ISO 8601 duration
+    https://schema.org/Duration
+
+    ISO 8601 datetime
+    https://schema.org/DateTime
+
+
+    Understanding JSON schema
+    https://json-schema.org/understanding-json-schema/structuring.html#ref
+
+    JSON schema draft/2020-12
+    https://json-schema.org/draft/2020-12/json-schema-core.html#root
+
+
+
 
