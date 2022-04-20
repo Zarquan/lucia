@@ -1,0 +1,145 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+
+From: Carlo Maria Zwölf <carlo-maria.zwolf@observatoiredeparis.psl.eu<mailto:carlo-maria.zwolf@observatoiredeparis.psl.eu>>
+
+Hello Dave, Sara,
+
+Sorry for not showing up in Gathertown: the Interop and the RDA plenary took place at the same time last week and I had sessions in both.
+
+I read your documents with great interest (great initiative) and I have several questions/remarks: the resuming sentence « may I execute THIS » is really enlightening and I’ll use it for my questions.
+
+I think that the definition of THIS is really important: from what I see, THIS may be characterized at two different levels
+
+
+  1.  The first level concerns who defines THIS. Is it service-provider defined or user-defined?
+
+     *   The service-provider defined are the « classic » online computation code exposed as web services,
+         where users just send parameters and get a result.
+         It is the service provider who decide the behavior of the exposed code and the user has few degree of freedom to use it.
+
+     *   The user-defined services are those where the user upload the processing he/she would like the service execute,
+         directly on the service.
+         Modern containers & notebooks are in this categories,
+         but we may also think at a service who accepts zipped fortran code in post parameter,
+         compile it and run it.
+
+  2.  The second level concern the encapsulation/wrapping of this.
+     *   It concerns how THIS is exposed.
+         The exposure may be a UWS service, an AXIS/SOAP service (for nostalgic people :D ), or something else still not defined…
+
+From the document you sent me, I am not sure that the « Execution Planner » will cover also the service-provider defined services.
+Am I wrong?
+If classic online computation services are included in the perimeter, we must take care to coordination with other existing service descriptors
+(there are those in DataLink for example and there is the PDL descriptor standard).
+
+
+In the case of user-defined services (so containers/notebooks for example)
+there are different granularities: let’s consider a Jupiter notebook I sent to a service.
+
+  *   The response may be « yes, you can run it because I accepts notebooks » but then have a runtime error because a required package in the submitted notebook is not installed service-side.
+
+  *   The response may be more complex if a compilation-check is performed on the submitted notebook: « No, you cannot run it because I have no numpy installed and in your notebook you are importing it »
+
+  *   The response may also include execution time and ressources (e.g. your code takes more memory than allowed on the service).
+      Maybe we should enrich the question « May I execute THIS with THOSE_RESSOURCES »
+
+Does this new "execution planner" standard set a given common level of granularity to should it be agnostic and able to convey information from different granularity levels?
+
+I was also wondering if part of the response obtained by the services while answering the « may I execute THIS » should not be included in registries and/or capabilities,
+since this may be reformulated as « What YOU Service may execute »? What do you think?
+
+
+For the I  from « May I execute… »,
+how this I is coordinated with existing authentication/grouping initiatives (SSO, the new IVOA proposed recommandation on groups) ?
+The question indeed may be reformulated as « am I in a group who is allowed to do this? »
+Is this I expressed as a Token, an identifier ?
+
+To wrap up: I asked questions on the definition of THIS and its granularity and in integration with existing IVOA components.
+
+
+Thank you for your attention.
+If you think is is easier to discuss, let’s have a telco soon.
+
+Best,
+
+Carlo.
+
+# ----------------------------------------------------------------
+# ----------------------------------------------------------------
+
+
+Hi Carlo,
+
+Thank you for your feedack and sugestions.
+Apologies for not replying to your email sooner.
+
+Since your email the data model for the service has evolved to include many of the things that you raised.
+
+To answer your first question - yes, the ExecutionPlanner is intended to address user-defined services.
+In particular we are looking at providing a way to describe the types of services that do not already have an established way to describe them.
+
+In theory it would be possible to include service-provider defined services like ConeSearch or SIAP.
+However, the benefit would be minimal compared to the existing registration process.
+
+To anbswer your question about the level of granularity for user-defined services, we need to be pragmatic about what can be acheived.
+Later versions of the standard may be more constrained, but the first version of the ExecutionPlanner should be very flexible.
+
+Specifically, if you have just a notebook, then the task type would be set to 'urn:jupter-notebook'
+
+    task:
+        type: jupyter-notebook
+        code: https://gitlab.in2p3.fr/escape2020/wp3/eossr/-/blob/master/examples/notebooks/ossr_api-Explore_the_OSSR.ipynb
+
+Then both of the examples you give would be valid:
+
+    For a simple implementation, the response may be "yes, you can run it because I accepts notebooks", but then have a runtime error because a required package in the submitted notebook is not installed service-side.
+    For a more detailed implementation, the response may be more complex if a compilation-check is performed on the submitted notebook: "No, you cannot run it because I have no numpy installed and in your notebook you are importing it"
+
+However, if the description of the task include both a notebook and a requirements.txt file that lists the required libraries, then this is a different type of task.
+
+
+    A simple notebook service would reply "no, because I
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

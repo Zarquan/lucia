@@ -1,0 +1,83 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+
+
+    There is a spectrum from the simple parameter based HTTP GET services like ConeSearch and SIAP all the way to a UWS service that runs an arbitary package of zipped Fortran or Python code at the other end.
+
+    The simple parameter based HTTP GET services are decribed in detail by their IVOA specifications, which defines the fixed set of parameters, a fixed behaviour and a fixed dataset for each service.
+    The result is they are comparativley easy to register because the URI of the IVOA standard pretty much defines everything about the service.
+
+    The code is tightly consrained by the web-service specification, and the dataset is constrained by service configuration.
+
+    In the middle are services like TAP, which is basically a UWS service that allows users to execute arbitary code, albeit using a tightly constrained lanugage, ADQL.
+    The service description for a TAP service is more complex, because in addition to the TAP service interface standard, the service registration
+    also needs to include details of the database tables that the service operates on.
+
+    [UWS service ] + [TAP_SCHEMA] = provides [ADQL] on [database tables].
+    So the service registration is complex, but it is still constrained because the list of tables is fixed.
+
+    At the other end of spectrum we could have a UWS service that allowed you to POST arbitary Python code and executes it on a system loaded with data from local and remote resources.
+    The language is still constrained, Python, but the dataset that the code operates on is not.
+
+
+# ----------------------------------------------------------------
+
+    ESAP code to harvest CodeMeta
+    https://git.astron.nl/astron-sdc/esap-api-gateway/-/blob/master/esap/ida/api/services/harvester.py
+
+    D8.1 : Propose metadata to WP3.
+    https://git.astron.nl/astron-sdc/escape-wp5/esap-general/-/issues/97
+
+    Update metadata to match data staging
+    https://git.astron.nl/astron-sdc/escape-wp5/esap-general/-/issues/110
+
+    D1. Stage the data on a given resource (in a more user-friendly way)
+    https://git.astron.nl/astron-sdc/escape-wp5/esap-general/-/issues/109
+
+    OSSR-API example
+    https://gitlab.in2p3.fr/escape2020/wp3/eossr/-/blob/master/examples/notebooks/ossr_api-Explore_the_OSSR.ipynb
+
+
+# ----------------------------------------------------------------
+
+
+    Purl's exist :-)
+    https://purl.archive.org/domain/metagrid.org
+
+    metagrid.org/ivoa-ep/schema/json/executable-task
+    metagrid.org/ivoa-ep/schema/json/executable-lease
+
+    metagrid.org/ivoa-ep/types/jupyter-notebook
+    metagrid.org/ivoa-ep/types/binder-notebook
+
+
+
+
+

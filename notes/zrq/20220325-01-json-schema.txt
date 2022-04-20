@@ -1,0 +1,235 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Update our local copy to include changes from upstream.
+        Create a new branch to work on ..
+
+    Result:
+
+        Local clone updated.
+        Branch created but not used.
+
+
+# ----------------------------------------------------------------
+# Tidy up ..
+#[user@desktop]
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+        pushd schema
+
+            mv newProject.xpr /tmp/newProject.xpr
+            mv xml /tmp/xml
+
+            git status
+
+--START--
+	deleted:    newProject.xpr
+	deleted:    xml/executable.xsd
+--END--
+
+            git add .
+            git commit -m "Removed unrelated files"
+
+            mv /tmp/newProject.xpr ./schemata.xpr
+
+        popd
+
+        vi .gitignore
+
+            *.aux
+            *.bbl
+            *.blg
+            *.log
+            *.out
+            *.pdf
+            *.toc
+        +   *.xpr
+            ivoatexmeta.tex
+
+        git add .gitignore
+        git commit -m "Ignore xpr files"
+
+# ----------------------------------------------------------------
+# ----------------------------------------------------------------
+
+    Create and merge pull request ..
+    https://github.com/ivoa/ExecutionPlannerNote/pull/13
+
+# ----------------------------------------------------------------
+# ----------------------------------------------------------------
+# Delete the old branch
+#[user@desktop]
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        git checkout main
+
+        git branch
+
+--START--
+  20220228-zrq-metadata-schema
+* main
+--END--
+
+
+        git branch -d 20220228-zrq-metadata-schema
+
+--START--
+warning: deleting branch '20220228-zrq-metadata-schema' that has been merged to
+         'refs/remotes/origin/20220228-zrq-metadata-schema', but not yet merged to HEAD.
+Deleted branch 20220228-zrq-metadata-schema (was eaea299).
+--END--
+
+
+    popd
+
+
+# -----------------------------------------------------
+# Add our upstream repository and merge the changes to main.
+#[user@desktop]
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        git remote -v
+
+--START--
+origin	git@github.com:Zarquan/ExecutionPlannerNote.git (fetch)
+origin	git@github.com:Zarquan/ExecutionPlannerNote.git (push)
+--END--
+
+
+        git remote add upstream https://github.com/ivoa/ExecutionPlannerNote.git
+
+        git remote -v
+
+--START--
+origin      git@github.com:Zarquan/ExecutionPlannerNote.git (fetch)
+origin      git@github.com:Zarquan/ExecutionPlannerNote.git (push)
+upstream    https://github.com/ivoa/ExecutionPlannerNote.git (fetch)
+upstream    https://github.com/ivoa/ExecutionPlannerNote.git (push)
+--END--
+
+
+        git fetch upstream
+
+--START--
+remote: Enumerating objects: 2, done.
+remote: Counting objects: 100% (2/2), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 2 (delta 0), reused 1 (delta 0), pack-reused 0
+Unpacking objects: 100% (2/2), 826 bytes | 826.00 KiB/s, done.
+From https://github.com/ivoa/ExecutionPlannerNote
+ * [new branch]      main       -> upstream/main
+--END--
+
+
+        git merge upstream/main
+
+--START--
+Updating 8ded526..081b921
+Fast-forward
+ .gitignore                                |   2 ++
+ schema/json/data/executable-task-001.json |  57 ++++++++++++++++++++++++++++++++++++++
+ schema/json/executable-lease.json         |  29 ++++++++++++++++++++
+ schema/json/executable-task.json          | 147 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ schema/json/execution-planner.json        |  28 +++++++++++++++++++
+ 5 files changed, 263 insertions(+)
+ create mode 100644 schema/json/data/executable-task-001.json
+ create mode 100644 schema/json/executable-lease.json
+ create mode 100644 schema/json/executable-task.json
+ create mode 100644 schema/json/execution-planner.json
+--END--
+
+
+        git status
+
+--START--
+On branch main
+Your branch is ahead of 'origin/main' by 21 commits.
+  (use "git push" to publish your local commits)
+--END--
+
+
+        git push
+
+--START--
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:Zarquan/ExecutionPlannerNote.git
+   8ded526..081b921  main -> main
+--END--
+
+
+    popd
+
+
+# -----------------------------------------------------
+# Create a new branch.
+#[user@desktop]
+
+    branchname=metadata-schema
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        branchprev=$(git branch --show-current)
+        branchnext=$(date '+%Y%m%d')-zrq-${branchname:?}
+
+        git checkout main
+        git checkout -b "${branchnext:?}"
+
+--START--
+Already on 'main'
+Your branch is up to date with 'origin/main'.
+--END--
+
+--START--
+Switched to a new branch '20220325-zrq-metadata-schema'
+--END--
+
+
+        git push --set-upstream 'origin' "$(git branch --show-current)"
+
+--START--
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for '20220325-zrq-metadata-schema' on GitHub by visiting:
+remote:      https://github.com/Zarquan/ExecutionPlannerNote/pull/new/20220325-zrq-metadata-schema
+remote:
+To github.com:Zarquan/ExecutionPlannerNote.git
+ * [new branch]      20220325-zrq-metadata-schema -> 20220325-zrq-metadata-schema
+Branch '20220325-zrq-metadata-schema' set up to track remote branch '20220325-zrq-metadata-schema' from 'origin'.
+--END--
+
+
+    popd
+

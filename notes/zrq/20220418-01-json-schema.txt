@@ -1,0 +1,122 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2022, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Update to the metadata schema to be able to describe our TopCat/Aladin container.
+        https://github.com/ivoa/Oligia
+
+    Result:
+
+        Work in progress ...
+
+
+# -----------------------------------------------------
+# Create a new branch.
+#[user@desktop]
+
+    branchname=metadata-schema
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        branchprev=$(git branch --show-current)
+        branchnext=$(date '+%Y%m%d')-zrq-${branchname:?}
+
+        git checkout main
+        git checkout -b "${branchnext:?}"
+
+--START--
+Already on 'main'
+Your branch is up to date with 'origin/main'.
+--END--
+
+--START--
+Switched to a new branch '20220418-zrq-metadata-schema'
+--END--
+
+
+        git push --set-upstream 'origin' "$(git branch --show-current)"
+
+--START--
+....
+....
+To github.com:Zarquan/ExecutionPlannerNote.git
+ * [new branch]      20220418-zrq-metadata-schema -> 20220418-zrq-metadata-schema
+branch '20220418-zrq-metadata-schema' set up to track 'origin/20220418-zrq-metadata-schema'.
+--END--
+
+    popd
+
+
+# -----------------------------------------------------
+
+    Updates to the JSON schema.
+
+    Define Purl URLs for the schema namespaces.
+
+        https://purl.archive.org/domain/cevo.escape.eu
+        https://purl.archive.org/domain/esap.escape.eu
+
+        https://purl.archive.org/domain/ep.ivoa.net
+
+
+    ESAP task types
+
+        Defined on the ESAP wiki to start with.
+        Replaced by IVOA types if they are compatible.
+
+        https://purl.org/esap.escape.eu/task-type/jupyter-notebook
+        https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Software-Execution/task-types/jupyter-notebook
+
+        https://purl.org/esap.escape.eu/task-type/binder-notebook
+        https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Software-Execution/task-types/binder-notebook
+
+        https://purl.org/esap.escape.eu/task-type/oci-container
+        https://git.astron.nl/groups/astron-sdc/escape-wp5/-/wikis/ESAP/Software-Execution/task-types/oci-container
+
+
+    IVOA schema namespaces
+
+        Defined in the ExecutionPlannerNote project to start with.
+        Moved to the ExecutionPlanner standard when it is available.
+
+        https://purl.org/ep.ivoa.net/schema/json/executable-task
+        https://raw.githubusercontent.com/ivoa/ExecutionPlannerNote/main/schema/json/executable-task.json
+
+        https://purl.org/ep.ivoa.net/schema/json/executable-lease
+        https://raw.githubusercontent.com/ivoa/ExecutionPlannerNote/main/schema/json/executable-lease.json
+
+
+
+
+
+
+
+
+
