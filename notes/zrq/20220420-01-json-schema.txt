@@ -92,5 +92,107 @@
     >   ....
     >   branch '20220420-zrq-schema-examples' set up to track 'origin/20220420-zrq-schema-examples'.
 
-    popd
+        popd
+
+    #
+    # OK, I got that wrong.
+    # I should have pulled the upstream changes before creating the new branch.
+    #
+
+# -----------------------------------------------------
+# Delete the new branch.
+#[user@desktop]
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        git checkout main
+
+        git push -d origin "${branchnext:?}"
+
+    >   To github.com:Zarquan/ExecutionPlannerNote.git
+    >    - [deleted]         20220420-zrq-schema-examples
+
+        git branch -d "${branchnext:?}"
+
+    >   Deleted branch 20220420-zrq-schema-examples (was 081b921).
+
+        popd
+
+
+# -----------------------------------------------------
+# Fetch the upstream changes and merge them into our fork.
+#[user@desktop]
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        git checkout main
+
+        git fetch upstream
+
+    >   remote: Enumerating objects: 2, done.
+    >   remote: Counting objects: 100% (2/2), done.
+    >   remote: Compressing objects: 100% (2/2), done.
+    >   remote: Total 2 (delta 0), reused 1 (delta 0), pack-reused 0
+    >   Unpacking objects: 100% (2/2), 835 bytes | 835.00 KiB/s, done.
+    >   From https://github.com/ivoa/ExecutionPlannerNote
+    >      081b921..f7982f1  main       -> upstream/main
+
+        git merge upstream/main
+
+    >   Updating 081b921..f7982f1
+    >   Fast-forward
+    >    schema/json/executable-lease.json  |  35 ++++++++-----
+    >    schema/json/executable-task.json   | 295 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------
+    >    schema/json/execution-planner.json |   4 +-
+    >    3 files changed, 251 insertions(+), 83 deletions(-)
+
+
+        git status
+
+    >   On branch main
+    >   Your branch is ahead of 'origin/main' by 8 commits.
+    >     (use "git push" to publish your local commits)
+
+
+        git push
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   To github.com:Zarquan/ExecutionPlannerNote.git
+    >      081b921..f7982f1  main -> main
+
+
+        popd
+
+
+# -----------------------------------------------------
+# Create a branch for the ExecPlanner examples.
+#[user@desktop]
+
+    branchname=schema-examples
+
+    source "${HOME}/ivoa-epnote.env"
+    pushd  "${EPNOTE_CODE}"
+
+        branchprev=$(git branch --show-current)
+        branchnext=$(date '+%Y%m%d')-zrq-${branchname:?}
+
+        git checkout main
+        git checkout -b "${branchnext:?}"
+
+    >   ....
+    >   ....
+    >   Switched to a new branch '20220420-zrq-schema-examples'
+
+
+        git push --set-upstream 'origin' "$(git branch --show-current)"
+
+    >   ....
+    >   ....
+    >   branch '20220420-zrq-schema-examples' set up to track 'origin/20220420-zrq-schema-examples'.
+
+        popd
+
+
 
