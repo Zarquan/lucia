@@ -51,25 +51,19 @@
         git checkout main
         git checkout -b "${branchnext:?}"
 
---START--
-Already on 'main'
-Your branch is up to date with 'origin/main'.
---END--
+    >   Already on 'main'
+    >   Your branch is up to date with 'origin/main'.
 
---START--
-Switched to a new branch '20220418-zrq-metadata-schema'
---END--
+    >   Switched to a new branch '20220418-zrq-metadata-schema'
 
 
         git push --set-upstream 'origin' "$(git branch --show-current)"
 
---START--
-....
-....
-To github.com:Zarquan/ExecutionPlannerNote.git
- * [new branch]      20220418-zrq-metadata-schema -> 20220418-zrq-metadata-schema
-branch '20220418-zrq-metadata-schema' set up to track 'origin/20220418-zrq-metadata-schema'.
---END--
+    >   ....
+    >   ....
+    >   To github.com:Zarquan/ExecutionPlannerNote.git
+    >    * [new branch]      20220418-zrq-metadata-schema -> 20220418-zrq-metadata-schema
+    >   branch '20220418-zrq-metadata-schema' set up to track 'origin/20220418-zrq-metadata-schema'.
 
     popd
 

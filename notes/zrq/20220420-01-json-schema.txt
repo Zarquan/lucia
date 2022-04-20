@@ -52,24 +52,22 @@
         git checkout main
         git checkout -b "${branchnext:?}"
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
+    >   Switched to a new branch '20220420-zrq-notes'
 
 
         git push --set-upstream 'origin' "$(git branch --show-current)"
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
+    >   branch '20220420-zrq-notes' set up to track 'origin/20220420-zrq-notes'.
 
     popd
 
 
 # -----------------------------------------------------
-# Create a branch for the examples.
+# Create a branch for the ExecPlanner examples.
 #[user@desktop]
 
     branchname=schema-examples
@@ -83,18 +81,16 @@
         git checkout main
         git checkout -b "${branchnext:?}"
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
+    >   Switched to a new branch '20220420-zrq-schema-examples'
 
 
         git push --set-upstream 'origin' "$(git branch --show-current)"
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
+    >   branch '20220420-zrq-schema-examples' set up to track 'origin/20220420-zrq-schema-examples'.
 
     popd
 
